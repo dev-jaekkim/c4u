@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel ="stylesheet" href="mypage1.1.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="./js/hyeongdon.js"></script>
+    <script>
+        $(function(){
+            $("header").load("header.html");
+            $("footer").load("footer.html");
+        	loginstatus();
+
+            //수강현황
+            var $btLessonListHideObj;
+            var mylessonlistcp = 1;
+
+            //좋아한 강좌
+            var $btHeartHideObj;
+            var heartcp=1;
+                                                //레슨원본   //레슨리스트 복제본
+            var createLessonList = function(arr, $lessonObj, $lessonlistCopyObj){
+                var lessonListTotalPageValue = 0;
+                $(arr).each(function(index,element){
+                    lessonListTotalPageValue = element.total_page;
+                    // console.log("createLessonList totalPage 값 함수: "+lessonListTotalPageValue)
+                    var $lessonCopyObj1 = $lessonObj.clone();
+                    
+                    var $lessonimgCopyObj = $lessonCopyObj1.find("div.lessonimg");
+                    var $lessoninfoCopyObj = $lessonCopyObj1.find("div.lessoninfo");
+
+                    $lessonimgCopyObj.addClass("copylessonimg");
+                    $lessonimgCopyObj.removeClass("lessonimg");
+
+                    $lessoninfoCopyObj.addClass("copylessoninfo");
+                    $lessoninfoCopyObj.removeClass("lessoninfo");
+
+                    var str = "./images/img_mypagelesson_"+element.lesson_id+".jpg";
+
+                    $lessonimgCopyObj.find("img.lessonimgreal").attr("src", str);
+                    $lessonimgCopyObj.find("input.lessonhiddeninput").val(element.lesson_id);
+                    
+                    //강좌 제목 삽입
+                    $lessoninfoCopyObj.find("div.lessontitle").html(element.lesson_name);
+                    
+                    //강좌 상태 기입
+                    $lessoninfoCopyObj.find("div.lessonstatus").hide();
+                    $($lessoninfoCopyObj.find("div.lessonstatus")[element.lesson_status]).show();
+
+                    //강좌 개설 마감일 삽입
+                    $lessoninfoCopyObj.find("div.lessonenddate").html("후원 마감일: "+element.lesson_end);
+
+                    //강좌 개강일 삽입
+                    $lessoninfoCopyObj.find("div.lessonstartdate").html("후원 시작일: "+element.lesson_start);
+
+                    //강좌 가격 삽입
+                    $lessoninfoCopyObj.find("div.lessonfee").html("수강료: "+element.lesson_fee);
+                    
+                    $lessonCopyObj1.show();
+                    $lessonlistCopyObj.append($lessonCopyObj1);
+
+                });
+               $lessonlistCopyObj.show();
+               return lessonListTotalPageValue;
+            };    
+                                                //좋아한 강좌 원본
+            var createHeartList = function(arr, $heartlessontotalObj){
+                var heartlessonListTotalPageValue = 0;
+                $(arr).each(function(index,element){
+                heartlessonListTotalPageValue = element.total_page;
+                // console.log("createHeartList 총 페이지수:"+heartlessonListTotalPageValue);
+
+                $heartlessontotalCopyObj = $heartlessontotalObj.clone();
+
+                var $heartlessonimgCopyObj = $heartlessontotalCopyObj.find("div.heartlessonimg");
+                var $heartlessoninfoCopyObj = $heartlessontotalCopyObj.find("div.heartlessoninfo");
+
+                $heartlessonimgCopyObj.addClass("copyheartlessonimg");
+                $heartlessonimgCopyObj.removeClass("heartlessonimg");
+                $heartlessoninfoCopyObj.addClass("copyheartlessoninfo");
+                $heartlessoninfoCopyObj.removeClass("heartlessoninfo");
+
+                var str = "./images/img_mypageheart_"+element.lesson_id+".jpg";
+
+                $heartlessonimgCopyObj.find("img.heartimgreal").attr("src", str);
+                $heartlessonimgCopyObj.find("input.hearthiddeninput").val(element.lesson_id);
+                
+                $heartlessoninfoCopyObj.find("div.heartlessonname").html(element.lesson_name);
+                $heartlessoninfoCopyObj.find("div.heartlessondescription").html(element.lesson_description);
+                
+                $heartlessoninfoCopyObj.find("div.heartlessontotalamount").html(element.lesson_total_amount);
+                $heartlessoninfoCopyObj.find("div.heartlessontargetpercent").html(element.lesson_target_percent+"%");
+
+                //좋아요 강좌 Dday  삽입
+                if(element.lesson_diff_days == 0  || element.lesson_diff_days <= 0 ){
+                    $heartlessoninfoCopyObj.find("div.heartlessondiffdays").html("후원마감");
+                }else{
+                    $heartlessoninfoCopyObj.find("div.heartlessondiffdays").html("D-"+element.lesson_diff_days);
+                }
+                $("section>article").append($heartlessontotalCopyObj);
+                $heartlessontotalCopyObj.show();
+                });
+                // console.log("createHeartList return 총 페이지수:"+heartlessonListTotalPageValue);
+                return heartlessonListTotalPageValue;
+            };
+                    
+            //DOM 트리에서 마이페이지 소메뉴 모두찾기
+            var $mypagemenuObj = $("body>div.container>nav>ul>li>a");
+            $mypagemenuObj.click(function(event){     
+                // console.log("소메뉴클릭이벤트발생");
+                $("body>div>section>article").empty();
+                //console.log("내용지우기");
+                var hrefValue = $(event.target).attr("href");
+                // console.log(hrefValue);
+                switch(hrefValue){
+                    case 'mypagelessonlist':
+                        // console.log("수강 현황 클릭");
+                        mylessonlistcp = 1;
+                        var $lessonlistObj = $("section div.lessonlist");
+                        var $lessonObj = $("section div.lesson");
+                        $.ajax({
+                            url:hrefValue,
+                            data: {"mylessonlist_current_page": mylessonlistcp},
+                            method:"get",
+                            success: function (responseObj){
+                                // console.log("수강현황 들어옴");
+                                if (responseObj.status == 1){
+                                    // alert("수강한 강좌가 없습니다");
+                                    $divNoLessonListObj = $('section>div.noLessonList');
+                                    $divNoLessonListCloneObj = $divNoLessonListObj.clone();
+                                    $divNoLessonListCloneObj.show();
+                                    $('section>article').append($divNoLessonListCloneObj);
+                                }else{
+                                    var arr = responseObj;
+                                    var $lessonlistCopyObj = $lessonlistObj.clone();
+                                    var $lessonObj = $("section>div.lessonlist>div.lesson"); //원본
+                                    var lessonListTotalPageValue = createLessonList(arr,$lessonObj,$lessonlistCopyObj);
+                                    $("section>article").append($lessonlistCopyObj);
+                                    // console.log("첫 진입 수강현황 총 페이지"+lessonListTotalPageValue);
+                                    if(lessonListTotalPageValue > mylessonlistcp){
+                                        var $divbtMoreObj = $('<div class="divbtlessonmore" style="display:none">');
+                                        var $btMoreObj = $('<input type="button" value="더보기" class="btmypagelessonmore">'); //더보기 조건 관련해서 수정
+                                        // console.log("더보기추가");
+                                        $divbtMoreObj.append($btMoreObj);
+                                        $lessonlistCopyObj.append($divbtMoreObj);
+                                        $divbtMoreObj.show();
+                                        // console.log("if문 들어간후 cp값"+mylessonlistcp);
+                                    }
+                                    $btLessonListHideObj = $divbtMoreObj;
+                                }
+                            }
+                        });
+                        return false;
+                    break;
+                    
+                    case 'mypageheart':
+                    heartcp= 1;
+                    var $heartlessontotalObj = $("section>div.heartlessontotal");
+                    $.ajax({
+                    url: hrefValue,
+                    data:{"current_page": heartcp},
+                    method: "get",
+                    success: function(responseObj){    
+                        if(responseObj.status == 1){
+                            // console.log("좋아요 강좌가 없습니다");
+                            $divNoHeartListObj = $('section>div.noHeartList');
+                            $divNoHeartListCloneObj = $divNoHeartListObj.clone();
+                            $divNoHeartListCloneObj.show();
+                            $('section>article').append($divNoHeartListCloneObj);
+                        }else{
+                            // console.log("좋아한 강좌 success");
+                            var arr = responseObj;
+                            var $heartlessontotalObj = $("section>div.heartlessontotal"); //원본
+                            var heartlessonListTotalPageValue = createHeartList(arr, $heartlessontotalObj);
+                            //var a = createHeartList(arr, $heartlessontotalObj);
+                            
+                            // console.log("좋아한강좌 첫진입 후 현재 총 페이지"+heartlessonListTotalPageValue);
+                            if(heartlessonListTotalPageValue > heartcp ){
+                            var $heartdivbtMoreObj = $('<div style="display:none">');
+                            var $heartbtMoreObj = $('<input type="button" value="더보기" class="btmypageheart">'); //더보기 조건 관련해서 수정
+                            // console.log("더보기 추가");
+                            $heartdivbtMoreObj.append($heartbtMoreObj);
+                            $("section>article").append($heartdivbtMoreObj);
+                            $heartdivbtMoreObj.show();
+                            // console.log("좋아한 강좌 처음 화면에서 if문 들어간후 cp:" + heartcp);
+                            }
+                            $btHeartHideObj = $heartdivbtMoreObj;
+                        }
+                        },
+                        error: function(jqXHR){
+                            alert("오류!" + jqXHR.status);
+                        }
+                    });
+                    return false;
+                    break;
+                    case 'mypagemyinfo':
+                        $('table.modifymyinfo').hide();
+                        $.ajax({
+                            url:hrefValue,
+                            method:"get",
+                            success: function(responseObj){
+                                    //서버에서 전송해준 값 수신
+                                    var emailValue = responseObj.student_email;
+                                    var nameValue = responseObj.student_name;
+                                    var phoneValue = responseObj.student_phone;
+                                    
+                                    var $divMyInfoObj = $("div.myinfo");
+                                    var $divMyInfoCloneObj = $divMyInfoObj.clone();
+                                    
+                                    $divMyInfoCloneObj.find("table.default td.nickname").html(nameValue);
+                                    $divMyInfoCloneObj.find("table.default td.email").html(emailValue);
+                                    $divMyInfoCloneObj.find("input[name=student_phone]").val(phoneValue);
+                                    
+                                    $("section>article").append($divMyInfoCloneObj);
+                                    $divMyInfoCloneObj.show();
+                            },
+                            error: function(jqXHR){
+                                alert("오류 내용: "+jqXHR.status);
+                            }
+                        });
+                    return false;
+                    break;
+                }
+                //기본 이벤트처리 막기
+                return false; //event.preventDefault(); event.stopPropagation();
+            });
+        
+            //--수강현황 더보기 클릭시 추가 목록 로드 이벤트 START--
+            $('body').on('click','input[class=btmypagelessonmore]',function(event){
+                // alert("수강현황더보기누름!");
+                $btLessonListHideObj.hide();
+                mylessonlistcp +=1;
+                var hrefValue = "mypagelessonlist";
+                        var $lessonlistCopyObj =$("section>article>div.lessonlist");  //to
+                         var $lessonObj = $("section div.lesson"); //
+                    $.ajax({
+                            url:hrefValue,
+                            data: {"mylessonlist_current_page": mylessonlistcp},
+                            method:"get",
+                            success: function(responseObj){
+                                // console.log("수강현황 들어옴");
+                                if (responseObj.status == 1){
+                                    $divNoLessonListObj = $('section>div.noLessonList');
+                                    $divNoLessonListCloneObj = $divNoLessonListObj.clone();
+                                    $divNoLessonListCloneObj.show();
+                                    $('section>article').append($divNoLessonListCloneObj);
+                                }else{
+                                    //응답 객체 배열로 받기
+                                    var arr = responseObj;
+
+                                    var $lessonlistCopyObj =$("section>article>div.lessonlist");  //to
+                                    var $lessonObj = $("section>div.lessonlist>div.lesson"); //원본
+                                    var lessonListTotalPageValue = createLessonList(arr,$lessonObj,$lessonlistCopyObj);
+                                    // console.log("더보기 클릭후 수강현황 총 페이지"+lessonListTotalPageValue);
+                                    if(lessonListTotalPageValue > mylessonlistcp){
+                                    var $divbtMoreObj = $('<div class="divbtlessonmore" style="display:none">');
+                                    var $btMoreObj = $('<input type="button" value="더보기" class="btmypagelessonmore">'); //더보기 조건 관련해서 수정
+                                    // console.log("더보기추가");
+                                    $divbtMoreObj.append($btMoreObj);
+                                    $lessonlistCopyObj.append($divbtMoreObj);
+                                    $divbtMoreObj.show();
+                                    // console.log("수강현황 더보기 if문 들어간후 cp값"+mylessonlistcp);
+                                    }
+                                    $('section>article').append($lessonlistCopyObj);
+                                    $lessonlistCopyObj.show();
+                                    $btLessonListHideObj = $divbtMoreObj;   
+                                }
+                            },
+                            error: function(jqXHR){
+                                alert("오류 내용: "+jqXHR.status);
+                            }
+                        });
+                        return false;
+            });
+            //--수강현황 더보기 클릭시 추가 목록 로드 이벤트 END--
+
+            //--수강현황 강좌 클릭시 강좌 상세 로드 이벤트 START--
+            $('body').on('click','div.copylessonimg',function(event){
+                var lessonValue = $(event.target).next().val();
+                // console.log("강좌이미지클릭시 강좌 값: "+lessonValue);
+                location.href ="http://localhost:8888/C4U/classdetail.html?lessonId="+lessonValue;
+            });
+            //--수강현황 강좌 클릭시 강좌 상세 로드 이벤트 END--
+
+            //--좋아요 강좌 더보기 클릭시 추가 목록 로드 이벤트 START--
+            $('body').on('click','input[class=btmypageheart]' , function(event){
+                // alert("좋아요 더보기 버튼 누름");
+                $btHeartHideObj.hide();
+                heartcp += 1;
+                var hrefValue = "mypageheart";
+                
+                // var $heartlessontotalObj = $("section div.heartlessontotal");
+                $.ajax({
+                    url: hrefValue,
+                    data:{"current_page": heartcp},
+                    method: "get",
+                    success:function(responseObj){
+                        //응답객체 배열로 받기
+                        var arr = responseObj;
+                        var $heartlessontotalObj = $("section>div.heartlessontotal"); //원본
+                        var heartlessonListTotalPageValue = createHeartList(arr, $heartlessontotalObj);
+                        // console.log("좋아한강좌 더보기 클릭 후  총 페이지"+heartlessonListTotalPageValue);
+                        if(heartlessonListTotalPageValue > heartcp){
+                            var $heartdivbtMoreObj = $('<div style="display:none;">');
+                            var $heartbtMoreObj = $('<input type="button" value="더보기" class="btmypageheart">'); //더보기 조건 관련해서 수정
+                            // console.log("더보기 추가");
+                            $heartdivbtMoreObj.append($heartbtMoreObj);
+                            $("section>article").append($heartdivbtMoreObj);
+                            $heartdivbtMoreObj.show();
+                            // console.log("좋아한 강좌 if문 들어간후 heartcp:" + heartcp);
+                        }
+                        $btHeartHideObj = $heartdivbtMoreObj;
+                        },
+                        error: function(jqXHR){
+                            alert("오류!" + jqXHR.status);
+                    },
+                });
+            });
+            //--좋아요 더보기 클릭시 강좌 상세 목록 로드 이벤트 END--
+
+            //좋아요 강좌 이미지 클릭시 강좌 상세 로드 이벤트 START--
+             $('body').on('click','div.copyheartlessonimg',function(event){
+                // alert("강좌 클릭됨!");
+                var heartlessonValue = $(event.target).next().val();
+                console.log("강좌이미지클릭시 강좌 값: "+heartlessonValue);
+                location.href ="http://localhost:8888/C4U/classdetail.html?lessonId="+heartlessonValue;
+            });
+            //좋아요 강좌 이미지 클릭시 강좌 상세 로드 이벤트 END--
+
+            //----현재 비밀번호 입력 후 확인버튼 클릭 시 개인정보 변경 START----
+            $('body').on('click','input[class=btpwdchk]',function(event){
+                // alert("비밀번호변경버튼누름!");
+                var studentInputPwdValue = $('input[name=student_inputpwd]').val();
+                // console.log(studentInputPwdValue);
+                $.ajax({
+                    url: "mypagemyinfo",
+                    data: {"opt":"1", "student_inputpwd": studentInputPwdValue},
+                    method: "post",
+                    success: function(responseObj){
+                        if(responseObj.status == 1){
+                            $('div.myinfo>form>table.modifymyinfo').show();
+                            $('input[class=btpwdchk]').hide();
+                        }else{
+                            alert("비밀번호를 잘못입력하셨습니다. 다시 입력하세요");
+                        }
+                    },
+                    error: function(jqXHR){
+                        alert(jqXHR.status);
+                    }
+                });
+            });
+            //----현재 비밀번호 입력 후 확인버튼 클릭 시 개인정보 변경 END----
+
+            //--개인정보 수정 후, 확인 버튼 클릭시 개인정보 변경내용 이벤트 START--
+            $('body').on('click','input[class=btok]',function(event){
+                var url="mypagemyinfo";
+                var method="post";
+                var studentInputPwdValue = $('input[name=student_inputpwd]').val();
+                var studentPwdValue = $('input[name=student_pwd]').val();
+                var studentPwdChkValue = $('input[class=pwd1]').val();
+                // console.log('studentPwdValue : '+studentPwdValue+' studentPwdChkValue : '+studentPwdChkValue);
+                var studentPhoneValue = $('input[name=student_phone]').val();
+
+                if(studentPwdValue!=studentPwdChkValue){
+                    alert("비밀번호가 일치하지 않습니다.");
+                    $('input[name=student_pwd]').focus();
+                    return false;
+                }else{
+                    $.ajax({
+                        url: url,
+                        method: method,
+                        data: {"student_inputpwd": studentInputPwdValue, "student_pwd": studentPwdValue, "student_phone":studentPhoneValue},
+                        success: function(responseObj){
+                            if(responseObj.status==2){
+                                alert("개인정보가 변경되었습니다. 재로그인이 필요합니다.");
+                                location.href ="http://localhost:8888/C4U";
+                            }else{
+                                alert("비밀번호를 잘못입력하였습니다.확인해주세요.");
+                            }
+                        },
+                        error: function(jqXHR){
+                            alert(jqXHR.status);
+                        }
+                    });
+                }
+                //--개인정보 수정 후, 확인 버튼 클릭시 개인정보 변경내용 이벤트 END--
+            });
+             //수강 현황 메뉴 클릭이벤트를 강제 발생
+            // console.log($("body>div.container>nav>ul>li>a[href=mypagelessonlist]"));
+            $("body>div.container>nav>ul>li>a[href=mypagelessonlist]").trigger("click");
+        });  
+    </script>
+    
+</head>
+<body>
+    <div class="container">
+        <header></header>
+        <hr>
+        <nav>
+            <ul>
+                <li class=mypagecategory><a href="mypagelessonlist">수강 현황</a></li>
+                <li class=mypagecategory><a href="mypageheart">좋아한강좌</a></li>
+                <li class=mypagecategory><a href="mypagemyinfo">내 정보</a></li>
+            </ul>
+        </nav>
+        <hr>
+        <section>
+            <article>바뀌는영역 article</article>
+            
+            <!-- 수강현황 DIV -->
+            <div class="lessonlist" style="display:none;">
+                <div class="lesson" style="display: none;">
+                    <div class="lessonimg">
+                        <img src="./images/img_mypageheart_1.jpg" class="lessonimgreal">
+                        <input type="hidden" value="1" class="lessonhiddeninput">
+                    </div>
+                    <div class="lessoninfo">
+                        <div class="lessontitle">강좌제목</div>
+                        <div class="lessonstatushold lessonstatus" style="display:none">개설대기</div>
+                        <div class="lessonstatussuccess lessonstatus" style="display:none">개설성공</div>
+                        <div class="lessonstatusfail lessonstatus" style="display:none">개설실패</div>
+                        <div class="lessonenddate">후원마감일</div>
+                        <div class="lessonstartdate">후원시작일</div>
+                        <div class="lessonfee">수강료</div>
+                    </div>
+                </div>
+            </div>
+            <!--수강현황 강좌가 없을 경우-->
+            <div class ="noLessonList" style="display:none;">수강한 강좌가 없습니다.</div>
+            
+            <!--좋아한 강좌 DIV-->
+            <div class="heartlessontotal" style="display:none;">
+                <div class="heartlessonimg">
+                    <img src="./images/img_mypageheart_1.jpg" class="heartimgreal">
+                    <input type="hidden" value="1" class="hearthiddeninput">
+                </div>
+                <div class="heartlessoninfo">
+                    <div class="heartlessonname">강좌제목</div>
+                    <div class="heartlessondescription">상세설명</div>
+                    <div class="heartlessontotalamount">총액</div>
+                    <div class="heartlessontargetpercent">달성률</div>
+                    <div class="heartlessondiffdays">D-DAY</div>
+                </div>
+            </div>
+            <!--좋아한 강좌가 없을 경우-->
+            <div class ="noHeartList" style="display:none;">좋아한 강좌가 없습니다.</div>
+
+            <!-- 강좌개설하기 DIV-->
+
+            <!-- 내정보보기용 DIV -->
+            <div class="myinfo" style="display:none;">
+                <div class="lessonlisttitle">내 정보</div>
+                <form method="post" autocomplete="off">
+                    <table class="default">
+                        <tr><td class="first">닉네임</td><td class="second nickname"></td></tr>
+                        <tr><td class="first">이메일</td><td class="second email"></td></tr>
+                        <tr><td colspan="2" class="pwdinfo">현재 비밀번호를 입력하면, 비밀번호를 변경할 수 있습니다.</td></tr>
+                        <tr><td class="lostpwd" colspan="2"><a href="findpwd.html">혹시 비밀번호를 잊으셨나요?</a></td></tr>
+                        
+                        <tr><td class="first">현재 비밀번호</td><td class="second">
+                            <input type="password" name="student_inputpwd" maxlength="15" class="inputpwd"></td></tr>
+                        <tr><td class="first tdbtpwdchk" colspan="2"><input type="button" value="비밀번호 확인" class="btpwdchk" style="width:200px;"></td></tr>
+                    </table>
+
+                    <table style="display:none" class="modifymyinfo">
+                        <!--현재 비밀번호를 입력하여야 활성화됨-->
+                        <tr><td class="first">변경할비밀번호</td>
+                            <td class="second"><input type="password" placeholder="변경할 비밀번호" name="student_pwd" maxlength="15"></td>
+                        </tr>
+                        <tr><td class="first">변경할 비밀번호 확인</td>
+                            <td class="second"><input type="password" placeholder="변경할 비밀번호 확인" class="pwd1"></td>
+                        </tr>
+                        <tr><td class="first">연락처</td>
+                            <td class="second"><input type="tel" name="student_phone" maxlength="15"></td>
+                        </tr>
+                        <tr>
+                            <td class="tdbtok" colspan="2"><input type="button" value="확인" class="btok" style="width:200px"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </section>
+    </div>
+    <div class="bg">
+        <div class="modal">
+        </div>
+    </div>
+    <footer></footer>
+</body>
+</html>

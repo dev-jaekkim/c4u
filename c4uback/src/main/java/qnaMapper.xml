@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.QNAMapper">
+
+<resultMap id="resultmapAssociation" type="QNA" autoMapping="true">
+	<id property="qnaId" column="qna_id"/>
+	<result property="qnaTitle" column="qna_title"/>
+	<result property="qnaDate" column="qna_date"/>
+	<result property="qnaContent" column="qna_content"/>
+	<result property="qnaComment" column="qna_comment"/>
+	<association property="student" javaType="com.my.vo.Student">
+		<id property="studentId" column="qna_student_id" />
+		<result property="studentName" column="student_name"/>
+	</association>
+</resultMap>
+
+<select id="selectPerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
+SELECT * 
+FROM (
+	  SELECT qna_id, qna_title, qna_date, qna_content, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
+	  FROM qna JOIN student ON qna_student_id = student_id
+	  )
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select>
+
+<select id="selectCnt" resultType="int">
+SELECT COUNT(*)
+FROM qna
+</select>
+
+<!-- <select id="selectByNamePerPage" parameterType="java.util.HashMap" resultMap="resultmap">
+SELECT * 
+FROM (
+	  SELECT qna_id, qna_title, qna_date, qna_content, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
+	  FROM qna JOIN student ON qna_student_id = student_id
+	   WHERE student_name LIKE '%${student_name}%'
+	  )
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select> -->
+
+<select id="selectByNameOrTitleOrContentPerPage" parameterType="java.util.HashMap" resultMap="resultmapAssociation">
+SELECT * 
+FROM (
+	  SELECT qna_id, qna_title, qna_date, qna_content, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
+	  FROM qna JOIN student ON qna_student_id = student_id
+	   WHERE student_name LIKE '%${word}%'
+	   	  OR qna_title LIKE '%${word}%'
+	   	  OR qna_content LIKE '%${word}%'
+	  )
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select>
+
+<select id="selectByStudentIdPerPage" parameterType="java.util.HashMap" resultMap="resultmapAssociation">
+SELECT * 
+FROM (
+	  SELECT qna_id, qna_title, qna_date, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
+	  FROM qna JOIN student ON qna_student_id = student_id
+	   WHERE student_id = #{student_id}
+	  )
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select>
+
+<select id="selectByIdUser" parameterType="java.util.HashMap" resultMap="resultmapAssociation">
+SELECT qna.*, student_name
+FROM qna JOIN student ON qna_student_id = student_id
+WHERE qna_id = #{qna_id} AND student_name = #{student.studentName}
+</select>
+
+<select id="selectByIdAdmin" parameterType="int" resultMap="resultmapAssociation">
+SELECT qna.*, student_name
+FROM qna JOIN student ON qna_student_id = student_id
+WHERE qna_id = #{qna_id}
+</select>
+
+<update id="update" parameterType="QNA">
+UPDATE qna
+<set>
+	<if test="qnaComment !=null">qna_comment=#{qnaComment}</if>
+</set>
+<where>
+	qna_id = #{qnaId}
+</where>
+</update>
+
+<delete id="delete" parameterType="int">
+DELETE qna
+WHERE qna_id = #{qna_id}
+</delete>
+
+<insert id="insert" parameterType="QNA">
+INSERT INTO qna (qna_id, qna_student_id, qna_title, qna_date, qna_content, qna_comment)
+            VALUES (seq_qna_id.NEXTVAL, #{student.studentId}, #{qnaTitle}, SYSDATE, #{qnaContent}, null)
+</insert>
+
+</mapper>

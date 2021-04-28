@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="username" value="popcorn"/>
+	</properties>
+	<typeAliases>
+		<typeAlias alias="Lesson" type="com.my.vo.Lesson"/>
+		<typeAlias alias="Student" type="com.my.vo.Student"/>
+  		<typeAlias alias="Notice" type="com.my.vo.Notice" />
+  		<typeAlias alias="Cart" type="com.my.vo.Cart"/>
+  		<typeAlias alias="QNA" type="com.my.vo.QNA"/>
+	</typeAliases>
+  <environments default="development">
+
+<!--히카리 CP가 대신하는 environment 태그 comment 가능(사용하지 않으므로)-->
+<!--위 properties 태그도 필요 X-->
+  <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="kosta"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="noticeMapper.xml"/>
+    <mapper resource="cartMapper.xml"/>
+    <mapper resource="qnaMapper.xml"/>
+  </mappers>
+</configuration>

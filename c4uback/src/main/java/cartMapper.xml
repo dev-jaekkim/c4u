@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="mybatis.CartMapper">
+ 
+ 	<resultMap id="selectByIdrm" type="Cart" >
+ 		<id property="cartId" column="cart_id" />
+		<collection property="lesson" ofType="Lesson">
+			<id property="lessonId" column="lesson_id" />
+			<result property="lessonName" column="lesson_name" />
+			<result property="lessonEnd" column="lesson_end_date" />
+			<result property="lessonTotalFee" column="lesson_total_amount" />
+		</collection>
+		<collection property="student" ofType="Student">
+			<id property="studentId" column="student_id" />
+		</collection>
+	</resultMap>
+ 	  
+ 	<select id="selectById" resultMap="selectByIdrm">
+ 	SELECT lesson_name, lesson_end_date, lesson_total_amount
+    FROM cart JOIN lesson ON cart_lesson_id = lesson_id
+              JOIN student ON cart_student_id = student_id
+    WHERE cart_student_id = #{studentId}
+    ORDER BY lesson_end_date, lesson_total_amount
+ 	</select>
+ 	
+ </mapper>

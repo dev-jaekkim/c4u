@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    
+    <script>
+        $(function(){
+            $("article.search>input[name=search]").keyup(function(e){if(e.keyCode == 13) search(); });
+        let $menuObj = $("header>article>a");
+        $menuObj.click(function(){
+            let hrefValue = $(this).attr("href");
+            switch(hrefValue) {
+            case 'categorylist':
+                $("div.bg").show();
+                $("div.modal").empty();
+                $.ajax({
+                    url: hrefValue,
+                    method: "get",
+                    success: function(responseObj){ //data는 응답내용, 성공응답
+                        if(responseObj.status == undefined) {
+                            var $tableObj = $("<table>");
+                            var arr = responseObj;
+                            var ct = 100;
+                            var tableData = '<tr>';
+                            $(arr).each(function(index, element){
+                                if(element.categoryId - ct < 10){
+                                    if(element.categoryId%100 == 0){
+                                        tableData += '<th>';
+                                        tableData += element.categoryName;
+                                        tableData += '</th>';
+                                        tableData += '<tr>';
+                                        tableData += '<td><input type="hidden" class="ctid" value="';
+                                        tableData += element.categoryId;
+                                        tableData += '">모든 ';
+                                        tableData += element.categoryName;
+                                        tableData += '</td>';
+                                        tableData += '</tr>';
+                                    }
+                                    if(element.categoryId%100 != 0){
+                                        tableData += '<td><input type="hidden" class="ctid" value="';
+                                        tableData += element.categoryId;
+                                        tableData += '">';
+                                        tableData += element.categoryName;  
+                                        tableData += "</td>";
+                                    }                                	
+                                ct += 100;
+                                }
+                            tableData += '</tr>';
+                            tableData += '<tr>';
+                            });
+                            console.log(tableData);
+                            tableData += '</tr>';
+                            $tableObj.html(tableData);
+                            $("div.modal").append($tableObj);
+                        }
+                        $("div.bg").toggleClass("hide");
+                        var $categoryNameObj = $("div.modal td");
+                        $categoryNameObj.click(function(event){
+                            $("section.classname1").empty();
+                            var categoryIdValue = $(event.target).find("input").val();
+                            $.ajax({
+                                url: "./categorylist",
+                                method: "post",
+                                data: {"categoryId": categoryIdValue},
+                                success: function(responseObj){
+                                    if(responseObj.status == undefined) {
+                                        console.log(responseObj);
+                                        $(responseObj).each(function(index, element){
+                                        //article객체생성
+                                        var $articleObj = $('<article>');
+                                        var articleHtml = "<ul>";
+                                        articleHtml += '<li>';
+                                        articleHtml += "<img src='./images/th"+ element.lesson_id +".jpg' alt='th" + element.lesson_id +".jpg'>";
+                                        articleHtml += "</li>";
+                                        articleHtml += "<li><b>&nbsp;&nbsp;&nbsp;";
+                                        articleHtml += element.lesson_name;
+                                        articleHtml += "</b></li>";
+                                        articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        articleHtml += element.lesson_total_amount;
+                                        articleHtml += "</li>";
+                                        articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        articleHtml += element.targetpercent + "%";
+                                        articleHtml += "</li>";
+                                        articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        articleHtml += element.lesson_diffdays + "일 남음";
+                                        articleHtml += "</li>";
+                                        
+                                        
+                                        articleHtml += "</ul>";
+                                        //    var idValue = getQuery 
+                                        //     data: {"lessonId" : idValue}
+                                        $articleObj.attr("class", element.lesson_id);
+                                        $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lesson_id+"'" );
+                                        $articleObj.html(articleHtml);
+
+                                        $("section.classname1").append($articleObj);
+
+                                        });
+                                        
+                                    }else if(responseObj.status == -1) {
+                                        console.log(responseObj.status);
+                                        var $categoryzeroObj = $('<article>');
+                                        var categoryzeroHtml = "<h5>해당 카테고리에 진행중인 강좌가 없습니다</h5>";
+                                        $categoryzeroObj.html(categoryzeroHtml);
+                                        $categoryzeroObj.css("background-color","white");
+                                        $("section.classname1").append($categoryzeroObj);
+                                    }
+                                    $("div.bg").hide();
+                                },
+                                error: function(jqXHR){ //실패응답
+                                    alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                                } 
+                            });
+                        });
+                    },
+                    error: function(jqXHR){ //실패
+                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                    }
+                });
+                return false;
+                break;
+            case 'logout' :
+                $.ajax({
+                    url : hrefValue,
+                    success: function(){
+                        location.href = "http://localhost:8888/C4U";
+                    },
+                    error: function(jqXHR){ //실패
+                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                    }
+                });
+                return false;
+                break;
+            }
+        });
+    });
+    </script>
+</head>
+<body>
+
+    <!-- $("header>article.mypage").hide();
+				$("header>article.logout").hide();
+				$("header>article.login").show();
+				$("header>article.join").show(); -->
+    <article class = "category"><a href="categorylist">카테고리</a></article>
+        <article class = "classopen"><a href="C4UOpeningACourse.html" onclick="window.open(this.href, '_blank', 'width=1100, height=600'); return false;">강좌 개설하기</a></article>
+        <article class = "logo"><a href="http://localhost:8888/C4U"><p style= "font-size: 25px; font-style: italic; font-weight: 700;">ClassForYou</p></a></article>
+        <article class = "search"><input type="text" placeholder = "강좌검색" name = "search"></article>
+
+        <article class = "login"><a href="login.html">로그인</a></article>
+        <article class = "join"><a href="signup1.0.html">회원가입</a></article>
+
+        <article class = "mypage"><a href="mypage1.4.html">마이페이지</a></article>	
+        <article class = "logout"><a href="logout">로그아웃</a></article>
+</body>
+</html>

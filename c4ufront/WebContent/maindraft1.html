@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>메인페이지</title>
+    <link rel ="stylesheet" href="maindraft1.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./js/hyeongdon.js"></script>
+    <script>
+        $(function(){
+            var $btHideObj;
+            $("header").load("header.html");
+            $("footer").load("footer.html");
+            loginstatus();
+            $("body>div>section>article").empty();
+            var cp = 1;
+            $.ajax ({
+                url : "./lessonlist",
+                method: "get",
+                data: {"current_page" : cp},
+                success: function(responseObj){
+                    //서버에서 전송해준 배열 객체로 저장                     
+                    var startPageValue = 0;
+                    var totalPageValue = 0;
+                    console.log(responseObj.length);
+                    if(responseObj.status == undefined) {
+                        console.log(responseObj);
+                        $(responseObj).each(function(index, element){
+                            startPageValue = element.start_page;
+                            totalPageValue = element.total_page;
+                            //article객체생성
+                            var $articleObj = $('<article>');
+                            var articleHtml = "<ul>";
+                            articleHtml += '<li>';
+                            articleHtml += "<img src='./images/th"+ element.lesson_id +".jpg' alt='th" + element.lesson_id +".jpg'>";
+                            articleHtml += "</li>";
+                            articleHtml += "<li><b>&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.lesson_name;
+                            articleHtml += "</b></li>";
+                            articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.lesson_total_amount;
+                            articleHtml += "</li>";
+                            articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.targetpercent + "%";
+                            articleHtml += "</li>";
+                            articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.lesson_diffdays + "일 남음";
+                            articleHtml += "</li>";
+                            
+                            
+                            articleHtml += "</ul>";
+                            //    var idValue = getQuery 
+                            //     data: {"lessonId" : idValue}
+                            $articleObj.attr("class", element.lesson_id);
+                            $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lesson_id+"'" );
+                            $articleObj.html(articleHtml);
+
+                            $("section.classname1").append($articleObj);
+                        });
+                    }
+                    if(totalPageValue >= cp){
+                        var $btMoreObj = $('<input type="button" class="seemore" value="더보기" style="display:none;">'); //더보기 조건 관련해서 수정
+                        // console.log("더보기추가");
+                        $("section.classname1").append($btMoreObj);
+                        $btMoreObj.show();
+                        // console.log("if문 들어간후 cp값"+cp);
+                    }
+                    $("section.classname1").show();
+                    $btHideObj = $btMoreObj;
+                },
+                error: function(jqXHR){
+                        alert("오류 내용: "+jqXHR.status);
+                }
+            });
+            $("section.classname1").on('click','input[class="seemore"]',function(event){
+                $btHideObj.hide();
+                cp += 1;
+                $.ajax ({
+                url : "./lessonlist",
+                method: "get",
+                data: {"current_page" : cp},
+                success: function(responseObj){
+                    //서버에서 전송해준 배열 객체로 저장                     
+                    var startPageValue = 0;
+                    var totalPageValue = 0;
+                    if(responseObj.status == undefined) {
+                        console.log(responseObj);
+                        $(responseObj).each(function(index, element){
+                            startPageValue = element.start_page;
+                            totalPageValue = element.total_page;
+                            //article객체생성
+                            var $articleObj = $('<article>');
+                            var articleHtml = "<ul>";
+                            articleHtml += '<li>';
+                            articleHtml += "<img src='./images/th"+ element.lesson_id +".jpg' alt='th" + element.lesson_id +".jpg'>";
+                            articleHtml += "</li>";
+                            articleHtml += "<li><b>&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.lesson_name;
+                            articleHtml += "</b></li>";
+                            articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.lesson_total_amount;
+                            articleHtml += "</li>";
+                            articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.targetpercent + "%";
+                            articleHtml += "</li>";
+                            articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            articleHtml += element.lesson_diffdays + "일 남음";
+                            articleHtml += "</li>";
+                            
+                            
+                            articleHtml += "</ul>";
+                            //    var idValue = getQuery 
+                            //     data: {"lessonId" : idValue}
+                            $articleObj.attr("class", element.lesson_id);
+                            $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lesson_id+"'" );
+                            $articleObj.html(articleHtml);
+
+                            $("section.classname1").append($articleObj);
+                        });
+                    }
+                    if(totalPageValue > cp){
+                        var $btMoreObj = $('<input type="button" class="seemore" value="더보기" style="display:none;">'); //더보기 조건 관련해서 수정
+                        console.log("더보기추가");
+                        $("section.classname1").append($btMoreObj);
+                        $btMoreObj.show();
+                        console.log("if문 들어간후 cp값"+cp);
+                    }
+                    $("section.classname1").show();
+                    $btHideObj = $btMoreObj;
+                },
+                error: function(jqXHR){
+                        alert("오류 내용: "+jqXHR.status);
+                }
+            });
+        });
+        
+    });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header></header>
+        
+        <section class = "thebiggestbox">
+            <article class = "pic"></article>
+        </section>
+        <section class="classname1">
+
+        </section>
+
+    	    <div class="bg">
+                <div class="modal">
+                </div>
+            </div>
+
+        <footer></footer>
+    </div>
+</body>
+</html>

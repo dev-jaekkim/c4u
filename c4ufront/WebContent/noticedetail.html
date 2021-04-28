@@ -1,0 +1,29 @@
+<script>
+    $(function(){
+        console.log("강좌 상세 클릭!");
+    });
+    
+    $("section>article>input.backToNoticeMain").click(function(){
+        location.href="http://localhost:8888/C4U/notice.html";
+    });
+</script>
+
+<!--공지사항 세부영역 보기용 div-->
+<div class="noticedetail">
+    <table class="noticeDetailTable">
+        <thead class="noticedetail_thead">
+            <tr class="noticeDetailRow">
+                <th class="noticeDetailTitle">공지사항상세제목</th>
+            </tr>
+        </thead>
+        <tbody class="noticedetail_tbody">
+            <tr class="noticeDetailRow">
+                <td class="noticeDetailDate">2021-11-14</td>
+            </tr>
+            <tr class="noticeDetailRow">
+                <td class="noticeDetailContent">공지사항에 들어가는 내용들입니다. 이러한 내용들이 있어요.</td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="button" class="backToNoticeMain" value="목록으로 돌아가기">
+</div>

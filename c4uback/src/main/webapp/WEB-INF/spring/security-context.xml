@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!-- 	
+	<bean id="myLoginSuccess" class="handler.MyLoginSuccessHandler"></bean>
+	<bean id="myLoginFailure" class="handler.MyLoginFailureHandler"></bean>
+ -->	
+ 	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+	<security:http>
+		<security:intercept-url	pattern="/water/**" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/**" access="permitAll" />
+		<!-- 인증성공되면, 요청한 url로 redirect된다. -->
+		<!-- <security:form-login login-page="/myLogin" 
+				authentication-success-handler-ref="myLoginSuccess" 
+				authentication-failure-handler-ref="myLoginFailure"
+		/> -->
+			<security:form-login login-page="http://localhost:8888/c4ufront/login.html" />
+		<!-- 권한 없이 url 요청한 경우 ex) ROLE_MEMBER 권한으로 
+		/sample/admin 요청한 경우 403응답 오류 발생-->
+		<!-- <security:access-denied-handler error-page=""/> -->
+		
+		<security:logout invalidate-session = "true" logout-url="/myLogout" />
+		
+		<!-- csrf 사용하지 않음 -->
+		<security:csrf disabled="true"/>
+	</security:http>
+	<security:authentication-manager><!-- 인증 관리 -->
+		<security:authentication-provider> 
+			<!-- 인증용 쿼리: users-by-username-query -->
+			<!--  권한 부여 허가: authorities-by-username-query -->
+			<security:jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query=
+				"SELECT student_email, student_pwd, student_status FROM student WHERE student_email=?" 
+				authorities-by-username-query=
+				"SELECT student_role_email, student_role_auth FROM student_role WHERE student_role_email=?"
+			 />
+			<!-- <security:password-encoder ref="passwordEncoder" /> -->
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>
