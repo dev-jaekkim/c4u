@@ -2,11 +2,17 @@ package com.my.vo;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+@Component
 public class Category {
 	private int categoryId;
 	private String categoryName;
 	private int parentCategoryId;
 	private List<Lesson> lesson;
+	
+	public Category() {
+		super();
+	}
 	public Category(int categoryId, String categoryName, int parentCategoryId) {
 		this(categoryId, categoryName, parentCategoryId, null);
 	}

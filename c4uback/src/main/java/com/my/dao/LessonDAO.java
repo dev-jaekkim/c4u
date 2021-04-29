@@ -31,6 +31,7 @@ public interface LessonDAO {
 	 * @throws FindException 카테고리, 쌤, 강좌 이름에 해당하는 강좌가 없으면 예외가 발생한다
 	 */
 	public List<Lesson> selectByUnion(String union) throws FindException;
+	
 	/**
 	 * 강좌 개설 신청
 	 * @param lesson 학생 아이디, 강좌명, 목표금액, 개강일,
@@ -57,14 +58,32 @@ public interface LessonDAO {
 	
 	/**
 	 * 
-	 * @param lesson_id
-	 * @param student_email
-	 * @return
+	 * @param lesson_id 선생님 회원이 개설한 강좌 아이디 
+	 * @param student_email 선생님 회원 이메일
+	 * @returnt
 	 * @throws FindException
 	 */
-	public List<Lesson> selectById(int lesson_id, String student_email) throws FindException;
+	//public List<Lesson> selectById(int lesson_id, String student_email) throws FindException;
+	List<Lesson> selectByLessonOpen(int studentId) throws FindException;
 	
-	public int selectAllCount() throws FindException;
+	public int selectCnt() throws FindException;
+	
+	
+	List<Lesson> selectBySearch(String word) throws FindException;
 	
 	public List<Lesson> selectByPage(int currPage, int dataPerPage) throws FindException;
+	
+	/*
+	 * @param studentId
+	 * @param lesson_status
+	 * @return
+	 * @throws FindException 해당 아이디에 개설한 강좌가 없을때 예외 발생
+	 * 
+	 */
+	List<Lesson> selectByLessonStatus01234 (int studentId, List<Integer> lesson_status) throws FindException;
+
+	public int selectAllCount() throws FindException;
+	
+	//List<Lesson> selectBySearch(int lessonId, int studentId, String union1, String union2) throws FindException;
+
 }

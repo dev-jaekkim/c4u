@@ -91,7 +91,6 @@ public class NoticeDAOOracle {
 		assertEquals(notice_content, notice.getNoticeContent());
 	}
 	
-	
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
 	

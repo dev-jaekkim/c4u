@@ -2,14 +2,17 @@ package com.my.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.my.dao.CartDAO;
 import com.my.dao.CartDAOOracle;
 import com.my.exception.AddException;
-import com.my.exception.RemoveException;
 import com.my.exception.FindException;
+import com.my.exception.RemoveException;
 import com.my.vo.Cart;
 import com.my.vo.Lesson;
 
+@Service
 public class CartService implements ICartService {
 	CartDAO dao = new CartDAOOracle();
 	
@@ -29,8 +32,8 @@ public class CartService implements ICartService {
 	}
 
 	@Override
-	public Cart remove(int lessonId, int studentId) throws RemoveException {
-		return dao.delete(lessonId, studentId);
+	public void remove(int lessonId, int studentId) throws RemoveException {
+		 dao.delete(lessonId, studentId);
 	}
 
 	@Override

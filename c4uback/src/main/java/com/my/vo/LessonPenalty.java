@@ -1,5 +1,8 @@
 package com.my.vo;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class LessonPenalty {
 	private int lpId;
 	private String lpContent;

@@ -3,26 +3,68 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="mybatis.CartMapper">
+	
+ 	<resultMap id="cartMap" type="com.my.vo.Cart" autoMapping="true">
  
- 	<resultMap id="selectByIdrm" type="Cart" >
- 		<id property="cartId" column="cart_id" />
-		<collection property="lesson" ofType="Lesson">
-			<id property="lessonId" column="lesson_id" />
-			<result property="lessonName" column="lesson_name" />
-			<result property="lessonEnd" column="lesson_end_date" />
-			<result property="lessonTotalFee" column="lesson_total_amount" />
-		</collection>
-		<collection property="student" ofType="Student">
-			<id property="studentId" column="student_id" />
-		</collection>
-	</resultMap>
- 	  
- 	<select id="selectById" resultMap="selectByIdrm">
- 	SELECT lesson_name, lesson_end_date, lesson_total_amount
-    FROM cart JOIN lesson ON cart_lesson_id = lesson_id
-              JOIN student ON cart_student_id = student_id
-    WHERE cart_student_id = #{studentId}
-    ORDER BY lesson_end_date, lesson_total_amount
+ 		<collection property="lesson" ofType="com.my.vo.Lesson" autoMapping="true">
+ 			<id property="lessonId" column="CART_LESSON_ID"/>
+ 			<result property="lessonName" column="lesson_name"></result>
+ 			<result property="lessonEnd" column="lesson_end_date"></result>
+ 			<result property="lessonTotalFee" column="lesson_total_amount"></result>
+ 		</collection>
+   	
+ 		<collection property="student" ofType="com.my.vo.Student" autoMapping="true">
+ 			<id property="studentId" column="CART_STUDENT_ID"/>
+ 		</collection>
+ 		
+ 		
+		
+				
+		
+ 	</resultMap>
+ 	
+ 	<select id="selectById" resultMap="cartMap">
+	
+	SELECT lesson.lesson_name, lesson.lesson_end_date, lesson.lesson_total_amount
+    FROM lesson lesson JOIN cart cart ON (lesson.lesson_id = cart.cart_lesson_id)
+	JOIN student student ON (cart.cart_student_id = student.student_id) 
+	WHERE cart.cart_student_id = #{studentId}
+	ORDER BY lesson.lesson_end_date, lesson.lesson_total_amount
+ 	
  	</select>
  	
+ 	<select id = "selectAllCount" resultType ="int" >
+ 
+ 	SELECT COUNT (*) FROM cart
+ 	</select>
+ 	
+ 	<select id = "selectAllCountStudentId" resultType ="int">
+ 	
+ 	SELECT COUNT (*) FROM cart where cart_student_id = #{studentId}
+ 	
+ 	</select>
+ 	
+ 	<select id = "selectByPage" parameterType="java.util.Map" >
+	SELECT * FROM  
+					   (SELECT lesson_id,lesson_name, lesson_end_date, lesson_description,lesson_total_amount,lesson_target_amount,row_number()  
+				        OVER (ORDER BY lesson_end_date DESC) AS rnum
+				        FROM lesson
+				        WHERE lesson_id IN (SELECT cart_lesson_id
+				        FROM cart
+				        WHERE cart_student_id = #{cart_student_id})
+				    )
+				        WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page});
+ 	</select>
+ 	
+ 	<insert id="insert" parameterType="java.util.Map" >
+ 		INSERT INTO cart(cart_id, cart_lesson_id, cart_student_id) VALUES (seq_cart_id.NEXTVAL, #{cart_lesson_id}, #{cart_student_id})
+ 	</insert>
+ 	
+ 	<delete id ="delete" parameterType="java.util.Map" >
+ 		DELETE FROM cart WHERE CART_LESSON_ID = #{cart_lesson_id} AND CART_STUDENT_ID = #{cart_student_id}
+ 	</delete>
+ 	
+ 	
+ 	
+ 
  </mapper>

@@ -7,6 +7,7 @@ import com.my.exception.FindException;
 import com.my.exception.RemoveException;
 import com.my.vo.Cart;
 import com.my.vo.Lesson;
+import com.my.vo.Student;
 
 public interface CartDAO {
 	/**
@@ -33,14 +34,21 @@ public interface CartDAO {
 	 * 좋아요를 누른 프로젝트를 취소한다. 
 	 * @param lessonId, studentId 좋아요 취소를 누른 강좌와 로그인한 수강생ID 
 	 * @return Cart 좋아요를 누른 객체 - 학생, 프로젝트 정보 반환
-	 * @throws RemoveException 좋아요를 누르지 않은 강좌를 좋아요 취소할 경우 예외 발생
+	 * @throws DeleteException 좋아요를 누르지 않은 강좌를 좋아요 취소할 경우 예외 발생
 	 */
-	public Cart delete(int lessonId, int studentId) throws RemoveException;
+	//public Cart delete(int lessonId, int studentId) throws RemoveException;
 	
-	List<Lesson> selectByPage(int currPage, int dataPerPage, int studentId) throws FindException;
+	public void delete(int lessonId, int studentId) throws RemoveException;
+	
+	//List<Lesson> selectByPage(int currPage, int dataPerPage, int studentId) throws FindException;
 
+	List<Lesson> selectByPage(int currentPage, int cnt_per_page, int studentId) throws FindException;
+	
 	public int selectAllCount() throws FindException;
 	
 	public int selectAllCount(int studentId) throws FindException;
 	
+
+	
+
 }

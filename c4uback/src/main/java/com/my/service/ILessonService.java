@@ -15,4 +15,10 @@ public interface ILessonService {
 	int findAllCount() throws FindException;
 
 	List<Lesson> findByPage(int currPage, int dataPerPage) throws FindException;
+	
+	List<Lesson> findBySearch(String word) throws FindException;
+	
+	List<Lesson> findByLessonStatus01234 (int studentId, List<Integer> lesson_status) throws FindException;
+
+	List<Lesson> findByLessonOpen(int studentId) throws FindException;
 }
