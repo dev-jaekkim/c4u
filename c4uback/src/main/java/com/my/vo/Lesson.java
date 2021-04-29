@@ -3,8 +3,10 @@ package com.my.vo;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+@Component
 public class Lesson {
 	private int lessonId;
 	private Student teacher;
@@ -15,7 +17,6 @@ public class Lesson {
 	private int lessonStatus;
 	private int lessonFee;
 	private String lessonDescription;
-	private int lessonCategory;
 	private Date lessonCreate;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date lessonEnd;
@@ -25,8 +26,12 @@ public class Lesson {
 	private List<LPS> lps;
 	int targetPercent;
 	int diffDays;
+	private int lessonCategory;
 	
-
+	public Lesson() {
+		super();
+	}
+	
 	public Lesson(int lessonId, Student teacher, String lessonName, int lessonTargetFee, int lessonTotalFee,
 			int lessonParticipant, int lessonStatus, int lessonFee, String lessonDescription, int lessonCategory,
 			Date lessonCreate, Date lessonEnd, Date lessonStart,int lessonRecommend) {
@@ -57,9 +62,20 @@ public class Lesson {
 		this.lessonRecommend = lessonRecommend;
 	}
 
-	public Lesson() {
+	
+	public Lesson(Student teacher, String lessonName, int lessonTargetFee, Date lessonStart,
+			 int lessonFee, String lessonDescription, int lessonCategory) {
 		super();
+		this.teacher = teacher;
+		this.lessonName = lessonName;
+		this.lessonTargetFee = lessonTargetFee;
+		this.lessonStart = lessonStart;
+		this.lessonFee = lessonFee;
+		this.lessonDescription = lessonDescription;
+		this.lessonCategory = lessonCategory;
+		
 	}
+	
 
 	public Lesson(String lessonName, String lessonDescription, int lessonTotalFee, int targetPercent, int diffDays, int lessonCategory) {
 		super();
@@ -217,6 +233,14 @@ public class Lesson {
 		this.lessonTotalFee = lessonTotalFee;
 	}
 
+	public int getLessonCategory() {
+		return lessonCategory;
+	}
+
+	public void setLessonCategory(int lessonCategory) {
+		this.lessonCategory = lessonCategory;
+	}
+
 	public int getLessonParticipant() {
 		return lessonParticipant;
 	}
@@ -247,14 +271,6 @@ public class Lesson {
 
 	public void setLessonDescription(String lessonDescription) {
 		this.lessonDescription = lessonDescription;
-	}
-
-	public int getLessonCategory() {
-		return lessonCategory;
-	}
-
-	public void setLessonCategory(int lessonCategory) {
-		this.lessonCategory = lessonCategory;
 	}
 
 	public Date getLessonCreate() {

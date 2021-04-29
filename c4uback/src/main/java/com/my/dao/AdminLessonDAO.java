@@ -7,6 +7,7 @@ import com.my.exception.FindException;
 import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.vo.Lesson;
+import com.my.vo.LessonPenaltyStatus;
 
 public interface AdminLessonDAO {
 	
@@ -41,7 +42,7 @@ public interface AdminLessonDAO {
 	 * @param lessonId 레슨 아이디
 	 * @throws AddException 심사 거절 실패시 예외 발생
 	 */
-	public void insertPenalty(int lessonId) throws AddException;
+	public void insertPenaltyStatus(LessonPenaltyStatus lessonps) throws AddException;
 
 	/**
 	 * 강좌 개설 승인
@@ -63,4 +64,6 @@ public interface AdminLessonDAO {
 	 * @throws FindException
 	 */
 	public int selectCnt() throws FindException;
+
+
 }

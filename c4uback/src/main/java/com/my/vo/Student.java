@@ -2,6 +2,8 @@ package com.my.vo;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+@Component
 public class Student {
 	private int studentId;
 	private String studentEmail;
@@ -11,6 +13,7 @@ public class Student {
 	private int studentStatus;
 	public List<LPS> lps;
 	private String inputPwd; //신규
+	private List<PenaltyStatus> penaltyStatus;
 	
 	public Student() {
 		super();
@@ -130,10 +133,18 @@ public class Student {
 		this.lps = lps;
 	}
 
+	public List<PenaltyStatus> getPenaltyStatus() {
+		return penaltyStatus;
+	}
+
+	public void setPenaltyStatus(List<PenaltyStatus> penaltyStatus) {
+		this.penaltyStatus = penaltyStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "Student [studentId=" + studentId + ", studentEmail=" + studentEmail + ", studentPwd=" + studentPwd
 				+ ", studentName=" + studentName + ", studentPhone=" + studentPhone + ", studentStatus=" + studentStatus
-				+ ", lps=" + lps + "]";
-	}		
+				+ ", lps=" + lps + ", inputPwd=" + inputPwd + ", penaltyStatus=" + penaltyStatus + "]";
+	}
 }

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.StudentMapper">
+
+<resultMap type="Student" id="studentrm">
+<id property="studentId" column="student_id"/>
+<result property="studentEmail" column="student_email"/>
+<result property="studentPwd" column="student_pwd"/>
+<result property="studentName" column="student_name"/>
+<result property="studentPhone" column="student_phone"/>
+<result property="studentStatus" column="student_status"/>
+<collection property="penaltyStatus" ofType="com.my.vo.PenaltyStatus" autoMapping="true">
+	<id property="psId" column="ps_student_id" />
+	
+</collection>
+</resultMap>
+
+<!-- 회원 전체 조회-->
+<select resultMap="studentrm" id="selectStudentList">
+SELECT *
+FROM (SELECT student_id, student_email, student_name, student_phone, student_status, p.ps_student_id, row_number() OVER(ORDER BY student_id asc) AS rnum
+		FROM student s LEFT JOIN penalty_status p ON (s.student_id = p.ps_student_id)
+		WHERE student_name NOT IN ('admin')
+	)
+WHERE rnum BETWEEN FUN_START_ROW(#{currentPage}, 10)
+	  AND FUN_END_ROW(#{currentPage}, 10) 
+</select>
+
+<!--전체 회원수 조회-->
+<select resultType="java.lang.Integer" id="selectCnt">
+	SELECT COUNT(*) FROM student WHERE student_name NOT IN ('admin')
+</select>
+
+<!-- 회원 검색-->
+<select resultMap="studentrm" id="selectByEmailOrNameOrPhone" parameterType="java.lang.String">
+SELECT student_id, student_email, student_name, student_phone, student_status,
+		<!--(CASE 
+			WHEN student_status = 1 THEN 'O' 
+			WHEN student_status IN (0, 2) THEN 'X' END) AS student_status, -->
+			p.ps_student_id
+			<!--(SELECT COUNT(*) 
+		FROM penalty_status 
+		WHERE ps_student_id = student_id) 경고횟수-->
+FROM student s
+LEFT JOIN penalty_Status p ON (s.student_id = p.ps_student_id)
+WHERE student_email LIKE '%${word}%' 
+		OR student_name LIKE '%${word}%' 
+		OR student_phone LIKE '%${word}%'
+</select>
+
+<!--페이징-->
+<!--회원전체조회-->
+<!--<select resultType="Student" id ="selectCnt" parameterType="map">
+SELECT student_id studentId, 
+			student_email studentEmail, 
+			student_pwd studentPwd, 
+			student_name studentName, 
+			student_phone studentPhone,
+			student_status StudentStatus
+FROM (SELECT student_email, student_name, student_phone, 
+CASE WHEN student_status = 1 THEN 'O' 
+WHEN student_status = 0 THEN 'X' END AS 회원상태, 
+(SELECT COUNT(*) 
+FROM penalty_status 
+WHERE ps_student_id = student_id) 경고횟수,
+row_number() 
+over (ORDER BY student_id DESC) 
+as rnum
+FROM student)
+where rnum between 1 and 10;
+</select>-->
+
+<!--아이디로 회원 찾기-->
+<select resultMap="studentrm" id="selectById" parameterType="java.lang.Integer">
+SELECT student_id, student_email, student_name,
+		student_pwd, student_phone, student_status, p.ps_student_id
+FROM student s
+LEFT JOIN penalty_Status p ON (s.student_id = p.ps_student_id)
+WHERE student_id = #{studentId}
+</select>
+
+<!--이메일로 검색-->
+<select resultType="Student" id="selectByEmail" parameterType="java.lang.String">
+	SELECT student_id studentId, 
+			student_email studentEmail, 
+			student_pwd studentPwd, 
+			student_name studentName, 
+			student_phone studentPhone,
+			student_status StudentStatus
+	FROM student 
+	WHERE student_email = #{student_mail}
+</select>
+
+<!--이름으로 찾기-->
+<select resultType="Student" id="selectByName" parameterType="java.lang.String">
+	SELECT student_id studentId, 
+			student_email studentEmail, 
+			student_pwd studentPwd, 
+			student_name studentName, 
+			student_phone studentPhone,
+			student_status StudentStatus
+	FROM student 
+	WHERE student_name = #{student_name}
+</select>
+
+<!--비밀번호 조회-->
+<select id="selectByPwd" resultType="Student" parameterType="java.lang.String">
+SELECT  student_id studentId, 
+			student_email studentEmail, 
+			student_pwd studentPwd, 
+			student_name studentName, 
+			student_phone studentPhone,
+			student_status StudentStatus
+FROM student 
+WHERE student_pwd = #{inputPwd}
+</select>
+
+<!-- 경고 항목 조회 -->
+<select id="selectPenaltyAll" resultType="Penalty">
+SELECT penalty_id penaltyId, penalty_content penaltyContent FROM penalty
+</select>
+
+<!--회원 가입-->
+<insert id="insert" parameterType="Student">
+INSERT INTO student (student_id, 
+			student_email, 
+			student_pwd, 
+			student_name, 
+			student_phone,
+			student_status)
+VALUES (SEQ_STUDENT_ID.NEXTVAL, #{studentEmail}, #{studentPwd}, #{studentName}, #{studentPhone}, 1)
+</insert>
+
+<!--회원 정보 수정-->
+<update id="update" parameterType="java.util.Map">
+	UPDATE student
+	<set>
+		<if test="student.studentPwd != null">student_pwd = #{student.studentPwd},</if>
+		<if test="student.studentPhone != null">student_phone = #{student.studentPhone} </if>
+	</set>
+	WHERE student_email = #{student.studentEmail} AND student_pwd = #{inputPwd}
+</update>
+
+<!--탈퇴 처리-->
+<update id="updateStatus" parameterType="java.lang.Integer">
+UPDATE student
+SET student_status = 2  
+WHERE student_id =  #{student_id}
+</update>
+
+<!--관리자 비밀번호 변경-->
+<update id="updateAdminPwd" parameterType="Student">
+UPDATE student
+SET student_pwd = #{studentPwd}
+WHERE student_email = 'admin@admin.com'
+</update>
+
+
+
+</mapper>
+
+

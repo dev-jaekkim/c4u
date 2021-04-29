@@ -7,10 +7,15 @@
 		<property name="username" value="popcorn"/>
 	</properties>
 	<typeAliases>
+		<typeAlias alias="Category" type="com.my.vo.Category"/>
 		<typeAlias alias="Lesson" type="com.my.vo.Lesson"/>
 		<typeAlias alias="Student" type="com.my.vo.Student"/>
-  		<typeAlias alias="Notice" type="com.my.vo.Notice" />
+		<typeAlias alias="PenaltyStatus" type="com.my.vo.PenaltyStatus"/>
+		<typeAlias alias="Penalty" type="com.my.vo.Penalty"/>
+		<typeAlias alias="LessonPenaltyStatus" type="com.my.vo.LessonPenaltyStatus"/>
+		<typeAlias alias="LessonPenalty" type="com.my.vo.LessonPenalty"/>
   		<typeAlias alias="Cart" type="com.my.vo.Cart"/>
+  		<typeAlias alias="Notice" type="com.my.vo.Notice" />
   		<typeAlias alias="QNA" type="com.my.vo.QNA"/>
 	</typeAliases>
   <environments default="development">
@@ -28,8 +33,13 @@
     </environment>
   </environments>
   <mappers>
+  	<mapper resource="categoryMapper.xml"/>
+	<mapper resource="lessonMapper.xml"/>
+	<mapper resource="studentMapper.xml"/>
+	<mapper resource="penaltyStatusMapper.xml"/>
+	<mapper resource="adminLessonMapper.xml"/>
+	<mapper resource="cartMapper.xml"/>
     <mapper resource="noticeMapper.xml"/>
-    <mapper resource="cartMapper.xml"/>
     <mapper resource="qnaMapper.xml"/>
   </mappers>
 </configuration>

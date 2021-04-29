@@ -5,48 +5,144 @@
 
 <mapper namespace="mybatis.LessonMapper">
 
-<!--개설하기-->
-<insert id="insert" parameterType="java.util.Map">
-	INSERT INTO lesson (lesson_id, lesson_teacher_id, lesson_name,
-	        lesson_target_amount, lesson_status, lesson_start_date, 
-	        lesson_fee, lesson_description,
-	        lesson_category_id)
-	VALUES (seq_lesson_id.NEXTVAL, #{student_id}, #{lesson_name}, 
-        		#{lesson_target_amount}, 3, #{lesson_start_date}, 
-      	  	#{lesson_fee}, #{lesson_description},
-        		{#lesson_category_id})
-</insert>
+<resultMap type="com.my.vo.Lesson" id="lessonrm">
+<id property="lessonId" column="lesson_id"/>
+<result property="lessonCategory" column="lesson_category_id"/>
+<result property="lessonCreate" column="lesson_create_date"/>
+<result property="lessonEnd" column="lesson_end_date"/>
+<result property="lessonDescription" column="lesson_description"/>
+<result property="lessonFee" column="lesson_fee"/>
+<result property="lessonName" column="lesson_name"/>
+<result property="lessonParticipant" column="lesson_participant"/>
+<result property="lessonRecommend" column="lesson_recommend_cnt"/>
+<result property="lessonStart" column="lesson_start_date"/>
+<result property="lessonStatus" column="lesson_status"/>
+<result property="lessonTargetFee" column="lesson_target_amount"/>
+<result property="lessonTotalFee" column="lesson_total_amount"/>
+<result property="teacher.studentId" column="lesson_teacher_id"/>
+</resultMap>
 
-<!--재심사-->
-<update id="update" parameterType="java.util.Map">
-	UPDATE lesson
-	SET lesson_name=#{lesson_name}
-		lesson_target_amount = #{lesson_target_amount},
-		lesson_status = 3
-		lesson_start_date= #{lesson_start_date}, 
-      		lesson_fee =#{#lesson_fee},
-		lesson_description =#{lesson_description}
-	WHERE lesson_id =#{lesson_id} <!-- AND lesson_teacher_id = #{student_id}-->
 
-</update>
+<!--강좌 전체 조회-->
+<select id="selectAll" resultMap="lessonrm">
+select * from lesson where lesson_status = 0 order by lesson_end_date
+</select>
 
-<!-- 심사 승인-->
-<update id="updateLesson" parameterType="java.lang.Integer">
-	UPDATE lesson
-	SET lesson_status = 0, 
-	      lesson_create_date = SYSDATE,
-	      lesson_end_date= SYSDATE+30
-	WHERE lesson_id = #{lesson_id} <!-- AND lesson_teacher_id = #{student_id}-->
-</update>
+<!--아이디로 강좌 조회-->
+<select id="selectById" resultMap="lessonrm" parameterType="java.lang.Integer">
+SELECT lesson_id, 
+			lesson_teacher_id,
+			lesson_name, 
+			lesson_total_amount,
+			lesson_target_amount, 
+			lesson_participant,
+			lesson_create_date,
+			lesson_end_Date,
+			lesson_status, 
+			lesson_start_date, 
+	        lesson_fee, 
+			lesson_description,
+	        lesson_category_id,
+			lesson_recommend_cnt
+FROM lesson 
+WHERE lesson_id = #{lessonId} 
+</select>
 
-<!-- 심사 거절-->
-<!--<update id="rejectLesson" parameterType="java.lang.Integer">
-	UPDATE lesson
-	SET lesson_status =4,
-		lesson_create_date = null,
-		lesson_end_date = null
-	WHERE lesson_id = #{lesson_id}--><!-- AND lesson_teacher_id = #{student_id}-->
-<!--</update>-->
+<!--selectByUnion-->
+<select id="selectByUnion" resultMap="lessonrm" parameterType="java.lang.String">
+ SELECT *
+FROM lesson
+WHERE lesson_status = 0 AND (lesson_name LIKE '%'||#{union}||'%'
+OR lesson_category_id IN (SELECT category_id FROM category WHERE category_parent_id IN (SELECT category_id FROM category WHERE category_name LIKE '%'||#{union}||'%')) 
+OR lesson_category_id IN (SELECT category_id FROM category WHERE category_name LIKE '%'||#{union}||'%')) 
+ORDER BY lesson_end_date
+</select>
+
+<!--내가 개설한 강좌  -->
+<select id="selectByLessonOpen" resultType="map">
+SELECT l.lesson_id, c.category_name, l.lesson_name,
+       l.lesson_start_date,l.lesson_create_date,l.lesson_end_date,
+       l.lesson_fee,l.lesson_participant,l.lesson_target_amount,
+       l.lesson_total_amount, l.lesson_status, lp.lp_content, lps.lessonps_date
+FROM lesson l
+LEFT JOIN lesson_penalty_status lps
+     ON l.lesson_id = lps.lessonps_id
+LEFT JOIN category c
+     ON l.lesson_category_id = c.category_id
+LEFT JOIN lesson_penalty lp 
+     ON lps.lessonps_evaluation_id = lp.lp_id
+LEFT JOIN student s
+     ON l.lesson_teacher_id = s.student_id
+WHERE s.student_id = #{student_id}
+ORDER BY l.lesson_id ASC	
+</select>
+
+<!--내가 개설한 강좌 검색  -->
+<select id="selectByLessonSearch" resultType="map">
+SELECT l.lesson_id, c.category_name, l.lesson_name,
+       l.lesson_start_date,l.lesson_create_date,l.lesson_end_date,
+       l.lesson_fee,l.lesson_participant,l.lesson_target_amount,
+       l.lesson_total_amount, l.lesson_status, lp.lp_content
+FROM lesson l
+LEFT JOIN lesson_penalty_status lps
+     ON l.lesson_id = lps.lessonps_id
+LEFT JOIN category c
+     ON l.lesson_category_id = c.category_id
+LEFT JOIN lesson_penalty lp 
+     ON lps.lessonps_evaluation_id = lp.lp_id
+LEFT JOIN student s
+     ON l.lesson_teacher_id = s.student_id
+WHERE (l.lesson_name LIKE '%${word}%' OR c.category_name LIKE '%${word}%')
+ORDER BY l.lesson_id ASC
+</select>
+
+<!-- 개설성공 -->
+<select id="selectByLessonStatus1" resultType="map">
+SELECT l.lesson_id, c.category_name, l.lesson_name,
+       l.lesson_start_date,l.lesson_create_date,l.lesson_end_date,
+       l.lesson_fee,l.lesson_participant,l.lesson_target_amount,
+       l.lesson_total_amount, l.lesson_status, lp.lp_content, lps.lessonps_date
+FROM lesson l
+LEFT JOIN lesson_penalty_status lps
+     ON l.lesson_id = lps.lessonps_id
+LEFT JOIN category c
+     ON l.lesson_category_id = c.category_id
+LEFT JOIN lesson_penalty lp 
+     ON lps.lessonps_evaluation_id = lp.lp_id
+LEFT JOIN student s
+     ON l.lesson_teacher_id = s.student_id
+WHERE s.student_id = #{student_id}
+AND l.lesson_status = #{lesson_status}
+ORDER BY l.lesson_id ASC
+</select>
+
+
+<!-- 내가갱설한 강좌 / 체크박스 -->
+
+<select id="selectByLessonStatus01234" resultType="map">
+SELECT l.lesson_id, c.category_name, l.lesson_name,
+       l.lesson_start_date,l.lesson_create_date,l.lesson_end_date,
+       l.lesson_fee,l.lesson_participant,l.lesson_target_amount,
+       l.lesson_total_amount, l.lesson_status, lp.lp_content, lps.lessonps_date
+FROM lesson l
+LEFT JOIN lesson_penalty_status lps
+     ON l.lesson_id = lps.lessonps_id
+LEFT JOIN category c
+     ON l.lesson_category_id = c.category_id
+LEFT JOIN lesson_penalty lp 
+     ON lps.lessonps_evaluation_id = lp.lp_id
+LEFT JOIN student s
+      ON l.lesson_teacher_id = s.student_id
+WHERE student_id = #{student_id} AND 
+<if test="lesson_status != null">
+lesson_status IN 
+</if>
+<foreach collection = "lesson_status" item="status" separator="," open="(" close=")">
+#{status}
+</foreach>
+ORDER BY l.lesson_id ASC
+</select>
+
 </mapper>
 
 

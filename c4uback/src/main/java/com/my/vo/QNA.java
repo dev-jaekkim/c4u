@@ -7,7 +7,7 @@ public class QNA {
 	private String qnaTitle;
 	private Date qnaDate;
 	private String qnaContent;
-	private String qnaComment; 
+	private String qnaComment;
 	private Student student;
 	
 	public QNA() {

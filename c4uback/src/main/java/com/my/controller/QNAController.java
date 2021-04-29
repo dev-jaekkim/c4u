@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.my.service.QNAService;
+import com.my.service.StudentService;
 import com.my.vo.PageGroupBean;
 import com.my.vo.QNA;
+import com.my.vo.Student;
 
 import lombok.extern.log4j.Log4j;
 
@@ -27,7 +29,10 @@ import lombok.extern.log4j.Log4j;
 public class QNAController {
 	
 	@Autowired
-	private QNAService service;
+	private QNAService qnaService;
+	
+	@Autowired
+	private StudentService studentService;
 	
 	@GetMapping(value= {"/qna/list",
 						"/qna/list/{currentPage}"})
@@ -35,7 +40,7 @@ public class QNAController {
 		
 		int currentPage = 1;
 		int cnt_per_page = 10;
-		int totalCnt = service.findCnt();
+		int totalCnt = qnaService.findCnt();
 		
 		List<QNA> list = null;
 		Map<String, Object> map = new HashMap<>();
@@ -44,7 +49,7 @@ public class QNAController {
 		if(optCurrentPage.isPresent()) {
 			currentPage = optCurrentPage.get();
 		}
-		list = service.findPerPage(currentPage, cnt_per_page);
+		list = qnaService.findPerPage(currentPage, cnt_per_page);
 		pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 		
 		log.debug(pgb);
@@ -62,7 +67,7 @@ public class QNAController {
 		int student_id = 0;
 		int currentPage = 1;
 		int cnt_per_page = 10;
-		int totalCnt = service.findCnt();
+		int totalCnt = qnaService.findCnt();
 		
 		List<QNA> list = null;		
 		Map<String, Object>map = new HashMap<>();
@@ -75,7 +80,7 @@ public class QNAController {
 		if(wrapperStudent_id != null) {
 			student_id = wrapperStudent_id;
 			
-			list = service.findByStudentIdPerPage(student_id, currentPage, cnt_per_page);
+			list = qnaService.findByStudentIdPerPage(student_id, currentPage, cnt_per_page);
 			pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 			log.debug(pgb);
 			map.put("pgb", pgb);
@@ -94,7 +99,7 @@ public class QNAController {
 										@PathVariable("word")Optional<String> optWord)throws Exception{
 		int currentPage = 1;
 		int cnt_per_page = 10;
-		int totalCnt = service.findCnt();
+		int totalCnt = qnaService.findCnt();
 		String word = null;
 		
 		List<QNA> list = null;
@@ -107,9 +112,9 @@ public class QNAController {
 		
 		if(optWord.isPresent()) {
 			word = optWord.get();
-			list = service.findByNameOrTitleOrContentPerPage(word, currentPage, cnt_per_page);
+			list = qnaService.findByNameOrTitleOrContentPerPage(word, currentPage, cnt_per_page);
 		}else {
-			list = service.findPerPage(currentPage, cnt_per_page);
+			list = qnaService.findPerPage(currentPage, cnt_per_page);
 		}
 		pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 		log.debug(pgb);
@@ -128,9 +133,8 @@ public class QNAController {
 		Integer wrapperStudentId = (Integer)session.getAttribute("loginInfo");
 		if(wrapperStudentId != null) {
 			student_id = wrapperStudentId;
-			
-			//service.findById(qna_id, student);
-			QNA qna = service.findById(qna_id);
+			Student student = studentService.findById(student_id);
+			QNA qna = qnaService.findById(qna_id, student);
 			log.debug(qna);
 			map.put("qna", qna);
 			map.put("status", 1);
@@ -144,7 +148,7 @@ public class QNAController {
 	@GetMapping("/admin/qna/{qna_id}")
 	public Map<String, Object> adminDetail(@PathVariable int qna_id) throws Exception{
 		Map<String, Object> map = new HashMap<>();
-		QNA qna = service.findById(qna_id);
+		QNA qna = qnaService.findById(qna_id);
 		log.debug(qna);
 		map.put("qna", qna);
 		map.put("status", 1);
@@ -154,7 +158,7 @@ public class QNAController {
 	@PostMapping("/qna/write")
 	public Map<String, Object> write(@RequestBody QNA qna) throws Exception{
 		Map<String, Object> map = new HashMap<>();
-		service.add(qna);
+		qnaService.add(qna);
 		log.debug(qna);
 		map.put("status", 1);
 		return map;
@@ -164,7 +168,7 @@ public class QNAController {
 	public Map<String, Object> adminReply(@PathVariable int qna_id,
 										  @RequestBody QNA qna) throws Exception{
 		Map<String, Object> map = new HashMap<>();
-		service.modify(qna);
+		qnaService.modify(qna);
 		log.debug(qna);
 		map.put("status", 1);
 		return map;
@@ -173,7 +177,7 @@ public class QNAController {
 	@DeleteMapping("/admin/qna/delete/{qna_id}")
 	public Map<String, Object> adminDelete(@PathVariable int qna_id) throws Exception{
 		Map<String, Object> map = new HashMap<>();
-		service.remove(qna_id);
+		qnaService.remove(qna_id);
 		log.debug(qna_id);
 		map.put("status", 1);
 		return map;

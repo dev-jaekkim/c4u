@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.PenaltyStatusMapper">
+
+
+<!--경고 주기-->
+<!--<insert id="insert" parameterType="java.lang.Integer">
+INSERT INTO penalty_status 
+VALUES (ps_id, #{ps_student_id}, #{ps_penalty_id})
+</insert>-->
+
+
+<!--경고주기-->
+<insert id="insertPenaltyStatus" parameterType="PenaltyStatus">
+INSERT INTO penalty_status (ps_id, 
+							ps_student_id, 
+							ps_penalty_id, 
+							ps_date)
+VALUES (SEQ_PENALTY_STATUS_ID.NEXTVAL, #{student.studentId}, #{penalty.penaltyId}, SYSDATE)
+</insert>
+
+
+</mapper>
+
+

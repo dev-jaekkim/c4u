@@ -16,7 +16,7 @@ public interface ICartService {
 	
 	void add(int lessonId, int studentId) throws AddException;
 	
-	Cart remove(int lessonId, int studentId) throws RemoveException;
+	void remove(int lessonId, int studentId) throws RemoveException;
 
 	int findAllCount() throws FindException;
 	

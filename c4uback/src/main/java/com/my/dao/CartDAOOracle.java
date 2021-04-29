@@ -2,6 +2,7 @@ package com.my.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -13,6 +14,7 @@ import com.my.exception.FindException;
 import com.my.exception.RemoveException;
 import com.my.vo.Cart;
 import com.my.vo.Lesson;
+import com.my.vo.Student;
 
 @Repository
 public class CartDAOOracle implements CartDAO {
@@ -40,43 +42,113 @@ public class CartDAOOracle implements CartDAO {
 		}
 	}
 	
-	@Override
-	public Cart selectById(int lessonId, int studentId) throws FindException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void insert(int lessonId, int studentId) throws AddException {
-		// TODO Auto-generated method stub
 		
+		SqlSession session = null;
+	try {	
+		session = sqlSessionFactory.openSession();
+		Map<String, Integer> map = new HashMap<>();
+		map.put("cart_lesson_id", lessonId);
+		map.put("cart_student_id", studentId);
+		session.insert("mybatis.CartMapper.insert",map);
+		session.commit();
+	}catch(Exception e) {
+		throw new AddException(e.getMessage());
+	}finally {
+		if(session != null) session.close();
+	}
 	}
 
 	@Override
-	public Cart delete(int lessonId, int studentId) throws RemoveException {
-		// TODO Auto-generated method stub
-		return null;
+	public void delete(int lessonId, int studentId) throws RemoveException {
+		SqlSession session = null;     //초기화
+	try {	
+		session = sqlSessionFactory.openSession();
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("cart_lesson_id", lessonId);
+		map.put("cart_student_id", studentId);
+		int rowcnt  = session.delete("mybatis.CartMapper.delete", map);
+		if(rowcnt == 0) {
+			throw new RemoveException("학생번호나 강좌번가 다릅니다.");
+		}
+		session.commit();
+	}catch(Exception e) {
+		throw new RemoveException(e.getMessage());
+	}finally {
+		if(session != null) session.close();
+	}
 	}
 
+
 	@Override
-	public List<Lesson> selectByPage(int currPage, int dataPerPage, int studentId) throws FindException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Lesson> selectByPage(int currentPage, int cnt_per_page, int studentId) throws FindException {
+		SqlSession session = null;
+	try {	
+		session = sqlSessionFactory.openSession();
+		Map<String, Integer> map = new HashMap<>();
+		map.put("cart_student_id", studentId);
+		map.put("currentPage", currentPage);
+		map.put("cnt_per_page", cnt_per_page);
+		List<Lesson> list = session.selectList("mybatis.CartMapper.selectByPage", map);
+		if(list.size() == 0) {
+			throw new FindException("좋아요가 없습니다.");
+		}
+		return list;
+		}catch(Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) session.close();
+						
+		}
 	}
 
 	@Override
 	public int selectAllCount() throws FindException {
-		// TODO Auto-generated method stub
-		return 0;
+
+		SqlSession session = null;
+	try {	
+		session = sqlSessionFactory.openSession();
+		//Map<String, Integer> map = new HashMap<>();
+		int AllCount = session.selectOne("mybatis.CartMapper.selectAllCount");
+		return AllCount;
+	 }catch(Exception e) {
+		 throw new FindException(e.getMessage());
+	 }finally {
+		if(session != null) session.close();
+	}
+	}
+	
+	@Override
+	public int selectAllCount(int studentId) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();			
+			int AllCount = session.selectOne("mybatis.CartMapper.selectAllCountStudentId",studentId);
+			return AllCount;
+		} catch (Exception e) {
+			throw new FindException(e.getMessage());
+		} finally {
+			if (session != null) session.close();
+		}
+	
 	}
 
 	@Override
-	public int selectAllCount(int studentId) throws FindException {
-		// TODO Auto-generated method stub
-		return 0;
+	public Cart selectById(int lessonId, int studentId) throws FindException {
+		return null;
+				
 	}
+
+
+	
+
+		
+	
+
 	  
-//	   @Override
+//	 @Override
 //	   public List<Lesson> selectById(int studentId) throws FindException {
 //			Connection con = null; 
 //			PreparedStatement pstmt = null;
@@ -179,7 +251,7 @@ public class CartDAOOracle implements CartDAO {
 //	}
 //
 //	@Override
-//	public Cart delete(int lessonId, int studentId) throws RemoveExeption {
+//	public Cart delete(int lessonId, int studentId) throws DeleteException {
 //		Connection con = null;
 //		PreparedStatement pstmt = null;
 //		Cart c = new Cart();
@@ -187,7 +259,7 @@ public class CartDAOOracle implements CartDAO {
 //			con = MyConnection.getConnection();
 //		} catch (Exception e) {
 //			e.printStackTrace();
-//			throw new RemoveExeption(e.getMessage());
+//			throw new DeleteException(e.getMessage());
 //		}
 //		String deleteSQL = "DELETE FROM cart WHERE CART_LESSON_ID = ? AND CART_STUDENT_ID = ?";
 //		try {
@@ -195,12 +267,12 @@ public class CartDAOOracle implements CartDAO {
 //			pstmt.setInt(1, lessonId);
 //			pstmt.setInt(2, studentId);
 //			int rowcnt = pstmt.executeUpdate();
-//			if(rowcnt != 1) { //�궘�젣嫄댁닔媛� 0嫄�
-//				throw new RemoveExeption("�궘�젣�떎�뙣: �븘�씠�뵒�뿉 �빐�떦 怨좉컼�씠 �뾾�뒿�땲�떎");
+//			if(rowcnt != 1) { //삭제건수가 0건
+//				throw new DeleteException("삭제실패: 아이디에 해당 고객이 없습니다");
 //			}
 //			return c;
 //		}catch(SQLException e) {
-//			throw new RemoveExeption(e.getMessage());
+//			throw new DeleteException(e.getMessage());
 //		}finally {
 //			MyConnection.close(con, pstmt);
 //		}
@@ -290,7 +362,7 @@ public class CartDAOOracle implements CartDAO {
 //				int lessonTotalFee = rs.getInt("lesson_total_amount");	
 //				int lessonTargetFee = rs.getInt("lesson_target_amount");
 //				enddate.setTime(lessonEnd); 
-//				int targetPercent = (lessonTotalFee*100 / lessonTargetFee);//�띁�꽱�떚吏�
+//				int targetPercent = (lessonTotalFee*100 / lessonTargetFee);//퍼센티지
 //				long diffDays = (enddate.getTimeInMillis() - sysdate.getTimeInMillis()) / 1000 / (24*60*60);  
 //				if(diffDays < 0) {
 //					diffDays = 0;
@@ -308,7 +380,7 @@ public class CartDAOOracle implements CartDAO {
 //				currPageList.add(lesson);
 //			}
 //			if(currPageList.size() == 0) {
-//				throw new FindException("醫뗭븘�슂媛� �뾾�뒿�땲�떎.");
+//				throw new FindException("좋아요가 없습니다.");
 //			}
 //			System.out.println(currPageList);
 //			return currPageList;
@@ -344,7 +416,7 @@ public class CartDAOOracle implements CartDAO {
 //				int selectAllCount = rs.getInt("COUNT(*)");
 //				return selectAllCount;
 //			}else {
-//				throw new FindException("醫뗭븘�슂 �븳 媛뺤쥖媛� �뾾�뒿�땲�떎.");
+//				throw new FindException("좋아요 한 강좌가 없습니다.");
 //			}
 //		} catch (SQLException e) {
 //			e.printStackTrace();
@@ -375,7 +447,7 @@ public class CartDAOOracle implements CartDAO {
 //				int selectAllCount = rs.getInt("COUNT(*)");
 //				return selectAllCount;
 //			}else {
-//				throw new FindException("醫뗭븘�슂 �븳 媛뺤쥖媛� �뾾�뒿�땲�떎.");
+//				throw new FindException("좋아요 한 강좌가 없습니다.");
 //			}
 //		} catch (SQLException e) {
 //			e.printStackTrace();
@@ -394,8 +466,8 @@ public class CartDAOOracle implements CartDAO {
 //	}
 //	try {
 //		dao.delete(5, 10);
-//		System.out.println("�꽦怨�");
-//	} catch (RemoveExeption e) {
+//		System.out.println("성공");
+//	} catch (DeleteException e) {
 //		e.printStackTrace();
 //	}
 //}
