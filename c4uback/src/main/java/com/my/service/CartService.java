@@ -2,6 +2,7 @@ package com.my.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.my.dao.CartDAO;
@@ -14,11 +15,13 @@ import com.my.vo.Lesson;
 
 @Service
 public class CartService implements ICartService {
+	
+	@Autowired
 	CartDAO dao = new CartDAOOracle();
 	
 	@Override
 	public List<Lesson> findById(int studentId) throws FindException {
-		return null;
+		return dao.selectById(studentId);
 	}
 
 	@Override
@@ -38,7 +41,6 @@ public class CartService implements ICartService {
 
 	@Override
 	public int findAllCount() throws FindException {
-		// TODO Auto-generated method stub
 		return dao.selectAllCount();
 	}
 
@@ -50,7 +52,7 @@ public class CartService implements ICartService {
 
 	@Override
 	public List<Lesson> findByPage(int currPage, int dataPerPage, int studentId) throws FindException {
-		// TODO Auto-generated method stub
+
 		return dao.selectByPage(currPage, dataPerPage, studentId);
 	}
 }

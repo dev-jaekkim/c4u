@@ -139,7 +139,7 @@ public class LessonDAOOracle {
 		}
 
 		//내가 개설한 강좌 체크박스 
-		@Test
+		//@Test
 		public void selectByLessonStatus01234() {
 			int student_id = 5;
 			List<Integer> lesson_status = Arrays.asList(0,1,2,3,4);
