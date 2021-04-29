@@ -34,7 +34,7 @@ public class CartDAOOracle {
 	// @Qualifier("oracle")
 	private CartDAO cartdao;
 
-//	@Test
+	//@Test
 	public void selectById() {
 
 		try {
@@ -46,7 +46,7 @@ public class CartDAOOracle {
 		}
 	}
 
-//	@Test
+    //@Test
 	public void insert() {
 
 		int cart_lesson_id = 39;
@@ -58,7 +58,7 @@ public class CartDAOOracle {
 		}
 	}
 
-//	@Test
+   //@Test
 	public void delete() {
 		int cart_lesson_id = 39;
 		int cart_student_id = 18;
@@ -69,7 +69,7 @@ public class CartDAOOracle {
 		}
 	}
 
-//	@Test
+    //@Test
 	public void selectAllCount() {
 		try {
 			int list = cartdao.selectAllCount();
@@ -79,7 +79,7 @@ public class CartDAOOracle {
 		}
 	}
 	
-//	@Test
+	//@Test
 	public void selectAllCountStudent() {
 		int student_id = 2;
 		try {
