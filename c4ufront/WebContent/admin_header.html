@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            font-family:'Raleway', sans-serif;
+            color : #222;
+            line-height : 1.5em;
+            font-weight:300;
+        }
+        section {
+            margin-left: 185px;
+        }
+        .admin_header {
+            margin: 20px;
+        }
+        .admin_header header {
+            width: 100%;
+            height: 80px;
+            padding: 20px;
+            padding: 20px 20px 20px 5px;
+        }
+        .admin_header .header_menu {
+            float: right;
+        }
+        .admin_header .logo {
+            width: 200px;
+            height: 40px;
+            font-style: italic;
+            font-size: 27px;
+            text-align: left;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .admin_header .header_menu>input {
+            width: 130px;
+            height: 40px;
+            background-color: lightgray;
+            border: 0;
+            outline:0;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .admin_header .go_home{
+            margin-right: 8px;
+        }
+        .admin_header nav {
+            width: 180px;
+            text-align: center;
+            float: left;
+        }
+        .admin_header .menu_contents,
+        .admin_header .menu_board,
+        .admin_header .menu_users {
+            margin: 20px 0 15px 0;
+            width: 160px;
+            border : none;
+            border-radius: 3px;
+            padding: 10px;
+            background-color: lightgray;
+            font-weight: 600;
+        }
+        .admin_header .menu_users{
+            cursor: pointer;
+        }
+        .admin_header .menu_list{
+            margin-left: 30px;
+            margin-bottom: 10px;
+            width: 130px;
+            border: 1px solid black;
+            border-radius: 3px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        $(function(){
+            $(".logo").click(function(e){
+                location.href="관리자 메인페이지.html";
+            });
+            $(".go_home").click(function(e){
+                location.href="클래스포유 메인페이지.html";
+            });
+            //관리자 로그아웃 
+            $(".logout").click(function(e){
+                $.ajax({
+                    // url:  
+                    // method:  
+                    // data: 
+                    // success: function(data){
+                    //     alert("로그아웃 되었습니다");
+                    //     //c4u메인페이지로 이동  
+                    // }, 
+                    // error: function(data){
+
+                    // }
+                });
+                return false;
+            });
+            //강좌심사 이동
+            $(".evaluation").click(function(){
+                location.href="admin_lesson_evaluation.html";
+            });
+            $(".lesson_list").click(function(){
+                location.href="강좌내역.html";
+            });
+            $(".adm_notice").click(function(){
+                location.href="admin_notice_list.html";
+            });
+            $(".adm_qna").click(function(){
+                location.href="admin_qna_list.html";
+            });
+            $(".adm_review").click(function(){
+                location.href="admin_review_list.html";
+            });
+            $("#adm_users").click(function(){
+                location.href="./admin_mem_menagement.html";
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+    <div class="admin_header">
+        <header>
+            <!-- 메인페이지 html파일 찾아서 경로쓰기 -->
+            <div class="logo">Class for You</div>
+            <div class="header_menu">
+                <input type="button" class="go_home" value="홈페이지로 이동">
+                <input type="button" class="logout" value="로그아웃">
+            </div>
+        </header>
+        <hr>
+        <nav>
+            <ul class="menu_contents">콘텐츠 관리 </ul>
+                <li class="menu_list" id="evaluation">강좌 심사</li>
+                <li class="menu_list" id="lesson_list">강좌 내역</li>
+            <ul class="menu_board">게시판 관리</ul>
+                <li class="menu_list" id="adm_notice">공지사항</li>
+                <li class="menu_list" id="adm_qna">1:1문의</li>
+                <li class="menu_list" id="adm_review">수강후기</li>
+            <ul class="menu_users" id="adm_users">회원관리</ul>
+        </nav>
+    </div>
+</body>
+</html>

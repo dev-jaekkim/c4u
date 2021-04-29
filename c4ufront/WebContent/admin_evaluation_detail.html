@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강좌 심사</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+         * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            font-family: 'Raleway', sans-serif;
+            color: #222;
+            /* line-height: 1.5em; */
+            font-weight: 300;
+        }
+        .admin_evaluation_detail section {
+            margin-left: 185px;
+        }
+         .admin_evaluation_detail {
+            width: 700px;
+            height: 100%;
+            margin: 30px auto;
+            text-align: center;
+            font-size: 13px;
+        }
+        .admin_evaluation_detail table.eval_detail {
+            width: 700px;
+            border-collapse: collapse;
+            line-height: 30px;
+            /* table-layout: fixed; */
+            /* word-wrap:break-word;  */
+            word-break:break-all;
+            margin: 50px auto;
+        }
+        .admin_evaluation_detail tbody.detail_tbody {
+            text-align: center;
+        }
+        .admin_evaluation_detail th {
+            width: 120px;
+            border: 1px solid;
+            font-weight: bold;
+            background-color:lightgrey;
+            padding: 3px;
+        }
+        .admin_evaluation_detail td{
+            width: 400px;
+            border: 1px solid;
+            padding: 3px;
+        }
+        .admin_evaluation_detail .permission,
+        .admin_evaluation_detail .reject {
+            width: 150px;
+            height: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: lightgray;
+            border: 0;
+        }
+        .admin_evaluation_detail .permission {
+            margin-right: 10px;
+        }
+
+    
+    </style>
+    <script>
+        $(function () {
+            $(".header").load("admin_header.html");
+
+
+            //심사 상세 조회
+            $.ajax({
+                url: "/admin/lesson/detail",
+                method: "get",
+                //data: lesson_id,
+                success: function(responseObj){
+                    //심사 실패 사유가 없을 경유 &nbsp; 추가 
+                //    if(responseObj.심사실패사유 == null) {
+                //     $("#fail_reason").html("&nbsp;");
+                //    }
+                },
+                error: function(){
+                }
+            });
+
+            //input hidden val -> 레슨 아이디 변수 선언하기 
+            //$("input[name=lesson_id]").val();
+
+            //승인
+            $(".permission").click(function(){
+                $.ajax({
+                    url: "/admin/lesson/modifylessonstatus",
+                    method:"put",
+                    // data: lesson_id;
+                    success: function(){
+                        alert("~번 레슨이 승인되어 개설 대기 상태로 변경됩니다.")
+                        // /admin/lesson/list이동 
+                    },
+                    error: function(){
+
+                    }
+                });
+                return false;
+            });
+            
+
+            //거절
+            $(".reject").click(function(){
+                $.ajax({
+                    url: "/admin/lesson/insertlessonpenaltystatus",
+                    method: "post",
+                    //data: lesson_id,
+                    success: function(){
+                        alert("~번 레슨이 심사 거절되었습니다.")
+                        // /admin/lesson/list이동 
+                    },
+                    error: function(){
+
+                    }
+                });
+                return false;
+            });
+            
+        });
+    </script>
+</head>
+<body>
+    <div class="header"></div>
+    <section>
+        <div class="admin_evaluation_detail">
+            <table class="eval_detail">
+                <tbody class="detail_tbody">
+                    <tr>
+                        <th>강좌</th>
+                        <td>나무로 미니어처 그릇만들기</td>
+                    </tr>
+                    <tr>
+                        <th>선생님</th>
+                        <td>박찬익</td>
+                    </tr>
+                    <tr>
+                        <th>강좌 카테고리</th>
+                        <td>조소</td>
+                    </tr>
+                    <tr>
+                        <th>강좌 한 줄 소개</th>
+                        <td>가나다라 마바사아자차카타파하 백바이트는 얼마나 ㅅ길까나이이</td>
+                    </tr>
+                    <tr>
+                        <th>후원 목표 금액</th>
+                        <td>1,000,000</td>
+                    </tr>
+                    <tr>
+                        <th>강좌 개강일</th>
+                        <td>2021-05-17</td>
+                    </tr>
+                    <tr>
+                        <th>강좌 후원 시작일</th>
+                        <td>2021-03-17</td>
+                    </tr>
+                    <tr>
+                        <th>강좌 후원 마감일</th>
+                        <td>2021-04-17</td>
+                    </tr>
+                    <tr>
+                        <th>수강료</th>
+                        <td>10,000</td>
+                    </tr>
+                    <tr>
+                        <th>목표 회원수</th>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <th>심사 실패 사유</th>
+                        <!-- //&nbsp; -->
+                        <td id="fail_reason"> 1. <br>
+                            2.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>대표 이미지</th>
+                         <!-- 첨부파일 다운로드 -->
+                         <td>image.jpg </td>
+                    </tr>
+                    <tr>
+                        <th>상세 이미지</th>
+                        <td>썸네일.jpg</td>
+                    </tr>
+
+                </tbody>
+               
+            </table>
+            <form>
+                <input type="hidden" name="lesson_id">
+            </form>
+            <input type="button" value="승인" class="permission">
+            <input type="button" value="거절" class="reject">
+        </div>
+    </section>
+    
+</body>
+
+</html>
