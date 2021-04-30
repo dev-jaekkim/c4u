@@ -3,7 +3,7 @@ package com.my.vo;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
-
+@Component
 public class Category {
 	private int categoryId;
 	private String categoryName;

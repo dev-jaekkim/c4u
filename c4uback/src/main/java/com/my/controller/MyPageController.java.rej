@@ -1,0 +1,17 @@
+diff a/c4uback/src/main/java/com/my/controller/MyPageController.java b/c4uback/src/main/java/com/my/controller/MyPageController.java	(rejected hunks)
+@@ -48,12 +48,13 @@
+ 			if (optword.isPresent()) {
+ 				word = optword.get();
+ 				log.info("검색어" + word);
+-				list = service.findBySearch(word);
++				list = LessonService.findBySearch(word);
+ 			} else {
+-				list = service.findAll();
++				list = LessonService.findAll();
+ 				log.debug(list);
+ 			}
+ 			map.put("list", list);
++			log.debug(word);
+ 			map.put("status", 1);
+ 		} catch (FindException e) {
+ 			e.printStackTrace();

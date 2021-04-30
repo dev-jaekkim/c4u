@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+@Component
 public class Lesson {
 	private int lessonId;
 	private Student teacher;

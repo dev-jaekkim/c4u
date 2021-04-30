@@ -3,11 +3,15 @@ package com.my.vo;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 =======
 @Component
 >>>>>>> c7f5792f746e574402b274d284f43a24c5b94014
+=======
+@Component
+>>>>>>> parent of cce0371 (canyi 2021-04-30 update)
 public class LessonPenaltyStatus {
 	private int lessonPsId;
 	private Lesson lesson;
