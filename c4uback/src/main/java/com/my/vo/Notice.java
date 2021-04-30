@@ -2,6 +2,8 @@ package com.my.vo;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Notice {

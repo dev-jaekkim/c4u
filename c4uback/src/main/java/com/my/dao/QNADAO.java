@@ -75,7 +75,6 @@ public interface QNADAO {
 	 */
 	QNA selectById(int qna_id, Student student) throws FindException;
 	
-	
 	/**사용자 사용
 	 * 1:1 문의 1개 추가
 	 * @param qna 작성한 1:1 문의 객체

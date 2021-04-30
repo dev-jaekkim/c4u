@@ -5,11 +5,9 @@ public class LPS {
 	private	Lesson lesson;
 	private Student student;
 	
-	
 	public LPS() {
 		super();
 	}
-
 
 	public LPS(int lPSId, Lesson lesson, Student student) {
 		super();
@@ -18,11 +16,9 @@ public class LPS {
 		this.student = student;
 	}
 
-
 	public int getLPSId() {
 		return LPSId;
 	}
-
 
 	public void setLPSId(int lPSId) {
 		LPSId = lPSId;
@@ -33,7 +29,6 @@ public class LPS {
 		return lesson;
 	}
 
-
 	public void setLesson(Lesson lesson) {
 		this.lesson = lesson;
 	}
@@ -43,11 +38,9 @@ public class LPS {
 		return student;
 	}
 
-
 	public void setStudent(Student student) {
 		this.student = student;
 	}
-
 
 	@Override
 	public String toString() {

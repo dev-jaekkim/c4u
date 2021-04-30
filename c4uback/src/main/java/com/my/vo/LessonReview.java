@@ -37,9 +37,7 @@ public class LessonReview {
       this.lps = lps;
    }
 
-
-
-public int getReviewId() {
+   public int getReviewId() {
       return reviewId;
    }
 
