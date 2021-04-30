@@ -1,70 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>강좌상세</title>
-    
-    <link rel ="stylesheet" href="classdetail1.0.css">
+
+    <link rel="stylesheet" href="classdetail1.0.css">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+
         body {
-            font-family:'Raleway', sans-serif;
-            color : #222;
-            line-height : 1.5em;
-            font-weight:300;
+            font-family: 'Raleway', sans-serif;
+            color: #222;
+            line-height: 1.5em;
+            font-weight: 300;
         }
-     </style>
-   	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-     <script src="./js/hyeongdon.js"></script>
-     <!-- <script src="./js/reviewjs.js"></script> -->
-     <script>
-     $(function(){
-    	loginstatus();
-    	var lessonId = getQueryString("lessonId");
-        
-        //강좌 상세정보 불러오기
-    	 $.ajax({
-    		 url: "./lessondetail",
-    		 method: "get",
-    		 data: {"lessonId" : lessonId},
-             success :function(responseObj){
-                console.log(responseObj.lessonId);
-                if(responseObj.lessonStatus == 0) {
-                    responseObj.lessonStatus = "진행중";
-                }else if (responseObj.lessonStatus == 1) {
-                    responseObj.lessonStatus = "<p align='center' style='font-size: 18px; font-weight:bold; color:#464646;'>개강성공!</p>";
-                }else if (responseObj.lessonStatus == 2) {
-                    responseObj.lessonStatus = "<p align='center' style='font-size: 18px; font-weight:bold; color:#464646;'>개강실패</p>";
-                }
-                var $divObj = $("<div>");
-                var lessonNameTitle = '<h1>';
-                    lessonNameTitle += responseObj.lessonName;
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./js/hyeongdon.js"></script>
+    <!-- <script src="./js/reviewjs.js"></script> -->
+    <script>
+        $(function () {
+            loginstatus();
+            var lessonId = getQueryString("lessonId");
+
+            //강좌 상세정보 불러오기
+            $.ajax({
+                "method": "GET",
+                "transformRequest": [
+                    null
+                ],
+                "transformResponse": [
+                    null
+                ],
+                "jsonpCallbackParam": "callback",
+                //레슨아이디 받아오기!!!
+                // "url": "/c4uback/lesson/" + lessonId,
+                "url": "/c4uback/lesson/21",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function (responseObj) {
+                    console.log(responseObj);
+                    var lessonStatus = responseObj.lesson.lessonStatus;
+                    if (lessonStatus == 0) {
+                        lessonStatus = "<p align='center' style='font-size: 18px; font-weight:bold; color:#464646;'>진행중</p>";
+                    } else if (lessonStatus == 1) {
+                        lessonStatus = "<p align='center' style='font-size: 18px; font-weight:bold; color:#464646;'>개강성공!</p>";
+                    } else if (lessonStatus == 2) {
+                        lessonStatus = "<p align='center' style='font-size: 18px; font-weight:bold; color:#464646;'>개강실패</p>";
+                    }
+                    var $divObj = $("<div>");
+                    var lessonNameTitle = '<h1>';
+                    lessonNameTitle += responseObj.lesson.lessonName;
                     lessonNameTitle += '</h1>';
                     $divObj.attr("class", 'lessonname');
                     $divObj.html(lessonNameTitle);
-                    $("section.topsection").prepend($divObj);
-                var $articleObj = $("<article>");
+                    $(".topsection").prepend($divObj);
+                    var $articleObj = $("<div>");
                     $articleObj.attr("class", "lessonpic");
-                    $("section.topsection").append($articleObj);
-                var $ulObj = $("<ul>");
+                    $(".topsection").append($articleObj);
+                    var $ulObj = $("<ul>");
                     $ulObj.attr("class", "lessontext");
-                var lessonTopDetail = '<li>';
+                    var lessonTopDetail = '<li>';
                     lessonTopDetail += "<b>모인금액</b><br>";
-                    lessonTopDetail += responseObj.lessonTotalFee + "원,       " + responseObj.targetPercent + "%";
+                    lessonTopDetail += responseObj.lesson.lessonTotalFee + "원,       " + responseObj.lesson.targetPercent + "%";
                     lessonTopDetail += '</li><br><li><b>남은기간</b><br>';
-                    lessonTopDetail += responseObj.diffDays +"일";
-                    lessonTopDetail += '</li><br><li><b>신청한 사람</b><br>';
-                    lessonTopDetail += responseObj.lessonParticipant + "명";
+                    lessonTopDetail += responseObj.lesson.diffDays + "일";
+                    lessonTopDetail += '</li><br><li><b>신청인원</b><br>';
+                    lessonTopDetail += responseObj.lesson.lessonParticipant + "명";
                     lessonTopDetail += '</li><br><li>';
-                    lessonTopDetail += responseObj.lessonStatus;
+                    lessonTopDetail += lessonStatus;
                     lessonTopDetail += '</li><li><p style="font-size: 17px; color:#3c3c3c;">목표금액인 ';
-                    lessonTopDetail += responseObj.lessonTargetFee +"원이 모여야만 결제가 됩니다.</p></li>";
+                    lessonTopDetail += responseObj.lesson.lessonTargetFee + "원이 모여야만 결제가 됩니다.</p></li>";
                     lessonTopDetail += '<hr>'
-                var $articleObj2 = $("<article>");
-                    $articleObj2.text("금액 : " + responseObj.lessonFee + "원");
+                    var $articleObj2 = $("<div>");
+                    $articleObj2.text("금액 : " + responseObj.lesson.lessonFee + "원");
                     $articleObj2.attr("class", "lessonmoney");
                     $ulObj.html(lessonTopDetail);
-                var $articleObj1 = $("<article>");
+                    var $articleObj1 = $("<div>");
                     $articleObj1.text("신청하기");
                     $articleObj1.attr("class", "register");
                     //$articleObj1.attr("onclick", "location.href='payment1.0.html?lessonId=" + responseObj.lessonId + "'"); // "&studentId=" + studentId + 
@@ -72,274 +88,280 @@
                     $ulObj.append($("<hr>"));
                     $ulObj.append($("<br>"));
                     $ulObj.append($articleObj1);
-                $("section.topsection").append($ulObj);
-                var $heartObj = $("<article>");
+                    $(".topsection").append($ulObj);
+                    var $heartObj = $("<article>");
                     $heartObj.text("좋아요");
                     $heartObj.attr("class", "good");
-                var $rcmdObj = $("<article>");
-                    $rcmdObj.text("추천" + responseObj.lessonRecommend +"개");
+                    var $rcmdObj = $("<div>");
+                    $rcmdObj.text("추천" + responseObj.lesson.lessonRecommend + "개");
                     $rcmdObj.attr("class", "rcmd");
-                var $shareObj = $("<article>");
+                    var $shareObj = $("<div>");
                     $shareObj.text("공유하기");
                     $shareObj.attr("class", "share");
-                $("section.submenu").append($heartObj);
-                $("section.submenu").append($rcmdObj);
-                $("section.submenu").append($shareObj);
-                $(".lessonpic").css("background-image","url('./images/li"+ lessonId +".jpg')");
-            },
-            error: function(jqXHR){ //실패응답
-                alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
-            }
-    	});
-        $(".detailbox1").css("background-image","url('./images/lidetail"+ lessonId +".jpg')");
-        $("section.topsection").on('click', 'article.register', function(){
-            console.log("신청하기 클릭");
-            $.ajax({
-                url : "./payment",
-                method : "get",
-                data : {"lessonId" : lessonId},
-                success : function(responseObj){
-                    console.log(responseObj);
-                    if(responseObj.status == undefined){
-                        location.href = 'payment1.0.html?lessonId=' + lessonId +'&studentId=' + responseObj.studentId;
-                    }else if(responseObj.status == 0){
-                        alert("로그인이 필요합니다");
-                        location.href = 'login.html';
-                    }
-                }
-            });
-        });
-        $("section.submenu").on('click', 'article.good', function(){
-            console.log("좋아요 클릭");
-            $.ajax({
-                url: "./putcart",
-                method: "get",
-                data: {"lessonId" : lessonId},
-                success: function(responseObj) {
-                    console.log(responseObj);
-                    if(responseObj.status == 1) {
-                        alert("좋아요 클릭");
-                    }else if(responseObj.status == 0){
-                        alert("로그인이 필요합니다");
-                        location.href = 'login.html';
-                    }else if(responseObj.status == -2){
-                        alert("이미 좋아한 강좌에 등록되어 있습니다");
-                    }
+                    $(".submenu").append($heartObj);
+                    $(".submenu").append($rcmdObj);
+                    $(".submenu").append($shareObj);
+                    $(".lessonpic").css("background-image", "url('./images/li" + lessonId + ".jpg')");
+
                 },
-                error: function(jqXHR){ //실패
-                    alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                error: function (jqXHR) {
+                    console.log(jqXHR.status);
+                }
+            });
+            $(".detailbox1").css("background-image", "url('./images/lidetail" + lessonId + ".jpg')");
+            $(".topsection").on('click', '.register', function () {
+                console.log("신청하기 클릭");
+                $.ajax({
+                    url: "./payment",
+                    method: "get",
+                    data: { "lessonId": lessonId },
+                    success: function (responseObj) {
+                        console.log(responseObj);
+                        if (responseObj.status == undefined) {
+                            location.href = 'payment1.0.html?lessonId=' + lessonId + '&studentId=' + responseObj.studentId;
+                        } else if (responseObj.status == 0) {
+                            alert("로그인이 필요합니다");
+                            location.href = 'login.html';
+                        }
+                    }
+                });
+            });
+            $(".submenu").on('click', '.good', function () {
+                $.ajax({
+                    url: "./putcart",
+                    method: "get",
+                    data: { "lessonId": lessonId },
+                    success: function (responseObj) {
+                        console.log(responseObj);
+                        if (responseObj.status == 1) {
+                            alert("좋아요 클릭");
+                        } else if (responseObj.status == 0) {
+                            alert("로그인이 필요합니다");
+                            location.href = 'login.html';
+                        } else if (responseObj.status == -2) {
+                            alert("이미 좋아한 강좌에 등록되어 있습니다");
+                        }
+                    },
+                    error: function (jqXHR) { //실패
+                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                    }
+                });
+            });
+            $(".submenu").on('click', '.share', function () {
+                alert(window.location.href + "\n 현재 페이지 주소입니다.");
+            });
+            //상세 설명 및 수강 후기 클릭
+            let $menudetail = $("section>ul>li>a");
+            $menudetail.click(function () {
+                let menuValue = $(this).attr("href");
+                switch (menuValue) {
+                    case 'lessonreviewlist':
+                        $(".menudiv").hide();
+                        var reviewurl = "http://localhost:8888/C4U/lessonreviewlist.html?lessonId=" + lessonId;
+                        $.ajax({
+                            url: reviewurl,
+                            success: function (result) {
+                                $(".menudiv2").html(result);
+                            }
+                        });
+                        return false;
+                        break;
+                    case 'details':
+                        $(".menudiv2").empty();
+                        $(".menudiv").show();
+                        return false;
+                        break;
+                }
+            });
+            // let $detailinfo = $("section>ul>li>a");
+            //검색
+            $("article.search>input[name=search]").keyup(function (e) { if (e.keyCode == 13) search(); });
+            let $menuObj = $("header>article>a");
+            $menuObj.click(function () {
+                let hrefValue = $(this).attr("href");
+                switch (hrefValue) {
+                    case 'categorylist':
+                        $(".bg").show();
+                        $(".modal").empty();
+                        $.ajax({
+                            url: hrefValue,
+                            method: "get",
+                            success: function (responseObj) { //data는 응답내용, 성공응답
+                                if (responseObj.status == undefined) {
+                                    var $tableObj = $("<table>");
+                                    var arr = responseObj;
+                                    var ct = 100;
+                                    var tableData = '<tr>';
+                                    $(arr).each(function (index, element) {
+                                        if (element.categoryId - ct < 10) {
+                                            if (element.categoryId % 100 == 0) {
+                                                tableData += '<th>';
+                                                tableData += element.categoryName;
+                                                tableData += '</th>';
+                                                tableData += '<tr>';
+                                                tableData += '<td><input type="hidden" class="ctid" value="';
+                                                tableData += element.categoryId;
+                                                tableData += '">모든 ';
+                                                tableData += element.categoryName;
+                                                tableData += '</td>';
+                                                tableData += '</tr>';
+                                            }
+                                            if (element.categoryId % 100 != 0) {
+                                                tableData += '<td><input type="hidden" class="ctid" value="';
+                                                tableData += element.categoryId;
+                                                tableData += '">';
+                                                tableData += element.categoryName;
+                                                tableData += "</td>";
+                                            }
+                                            ct += 100;
+                                        }
+                                        tableData += '</tr>';
+                                        tableData += '<tr>';
+                                    });
+                                    console.log(tableData);
+                                    tableData += '</tr>';
+                                    $tableObj.html(tableData);
+                                    $(".modal").append($tableObj);
+                                }
+                                $(".bg").toggleClass("hide");
+                                var $categoryNameObj = $(".modal td");
+                                $categoryNameObj.click(function (event) {
+                                    $(".classname1").empty();
+                                    var categoryIdValue = $(event.target).find("input").val();
+                                    $.ajax({
+                                        url: "./categorylist",
+                                        method: "post",
+                                        data: { "categoryId": categoryIdValue },
+                                        success: function (responseObj) {
+                                            if (responseObj.status == undefined) {
+                                                console.log(responseObj);
+                                                $(responseObj).each(function (index, element) {
+                                                    //article객체생성
+                                                    var $articleObj = $('<div>');
+                                                    var articleHtml = "<ul>";
+                                                    articleHtml += '<li>';
+                                                    articleHtml += "<img src='./images/th" + element.lesson_id + ".jpg' alt='th" + element.lesson_id + ".jpg'>";
+                                                    articleHtml += "</li>";
+                                                    articleHtml += "<li>";
+                                                    articleHtml += element.lesson_name;
+                                                    articleHtml += "</li>";
+                                                    articleHtml += "<li>";
+                                                    articleHtml += element.lesson_total_amount;
+                                                    articleHtml += "</li>";
+                                                    articleHtml += "<li>";
+                                                    articleHtml += element.targetpercent + "%";
+                                                    articleHtml += "</li>";
+                                                    articleHtml += "<li>";
+                                                    articleHtml += element.lesson_diffdays + "일 남음";
+                                                    articleHtml += "</li>";
+
+
+                                                    articleHtml += "</ul>";
+                                                    //    var idValue = getQuery 
+                                                    //     data: {"lessonId" : idValue}
+                                                    $articleObj.attr("class", element.lesson_id);
+                                                    $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lesson_id + "'");
+                                                    $articleObj.html(articleHtml);
+
+                                                    $(".classname1").append($articleObj);
+
+                                                });
+
+                                            }
+                                            $(".bg").hide();
+                                        },
+                                        error: function (jqXHR) { //실패응답
+                                            alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                                        }
+                                    });
+                                });
+                            },
+                            error: function (jqXHR) { //실패
+                                alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                            }
+                        });
+                        return false;
+                        break;
+                    case 'logout':
+                        $.ajax({
+                            url: hrefValue,
+                            success: function () {
+                                location.href = "http://localhost:8888/c4u";
+                            },
+                            error: function (jqXHR) { //실패
+                                alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                            }
+                        });
+                        return false;
+                        break;
                 }
             });
         });
-        $("section.submenu").on('click', 'article.share', function(){
-            alert(window.location.href + "\n 현재 페이지 주소입니다.");
-        });
-        //상세 설명 및 수강 후기 클릭
-        let $menudetail = $("section>ul>li>a");
-        $menudetail.click(function(){
-            let menuValue = $(this).attr("href");
-            switch(menuValue) {
-                case 'lessonreviewlist':
-                    $("div.menudiv").hide();
-                    var reviewurl = "http://localhost:8888/C4U/lessonreviewlist.html?lessonId=" + lessonId;
-                    $.ajax({
-                        url : reviewurl,
-                        success : function(result) {
-                            $("div.menudiv2").html(result);
-                        }
-                    });
-                    return false;
-                    break;
-                case 'details' :
-                    $("div.menudiv2").empty();
-                    $("div.menudiv").show();
-                    return false;
-                    break;
-            }
-        });
-        // let $detailinfo = $("section>ul>li>a");
-        //검색
-        $("article.search>input[name=search]").keyup(function(e){if(e.keyCode == 13) search(); });
-        let $menuObj = $("header>article>a");
-        $menuObj.click(function(){
-            let hrefValue = $(this).attr("href");
-            switch(hrefValue) {
-            case 'categorylist':
-                $("div.bg").show();
-                $("div.modal").empty();
-                $.ajax({
-                    url: hrefValue,
-                    method: "get",
-                    success: function(responseObj){ //data는 응답내용, 성공응답
-                        if(responseObj.status == undefined) {
-                            var $tableObj = $("<table>");
-                            var arr = responseObj;
-                            var ct = 100;
-                            var tableData = '<tr>';
-                            $(arr).each(function(index, element){
-                                if(element.categoryId - ct < 10){
-                                    if(element.categoryId%100 == 0){
-                                        tableData += '<th>';
-                                        tableData += element.categoryName;
-                                        tableData += '</th>';
-                                        tableData += '<tr>';
-                                        tableData += '<td><input type="hidden" class="ctid" value="';
-                                        tableData += element.categoryId;
-                                        tableData += '">모든 ';
-                                        tableData += element.categoryName;
-                                        tableData += '</td>';
-                                        tableData += '</tr>';
-                                    }
-                                    if(element.categoryId%100 != 0){
-                                        tableData += '<td><input type="hidden" class="ctid" value="';
-                                        tableData += element.categoryId;
-                                        tableData += '">';
-                                        tableData += element.categoryName;  
-                                        tableData += "</td>";
-                                    }                                	
-                                ct += 100;
-                                }
-                            tableData += '</tr>';
-                            tableData += '<tr>';
-                            });
-                            console.log(tableData);
-                            tableData += '</tr>';
-                            $tableObj.html(tableData);
-                            $("div.modal").append($tableObj);
-                        }
-                        $("div.bg").toggleClass("hide");
-                        var $categoryNameObj = $("div.modal td");
-                        $categoryNameObj.click(function(event){
-                            $("section.classname1").empty();
-                            var categoryIdValue = $(event.target).find("input").val();
-                            $.ajax({
-                                url: "./categorylist",
-                                method: "post",
-                                data: {"categoryId": categoryIdValue},
-                                success: function(responseObj){
-                                    if(responseObj.status == undefined) {
-                                        console.log(responseObj);
-                                        $(responseObj).each(function(index, element){
-                                        //article객체생성
-                                        var $articleObj = $('<article>');
-                                        var articleHtml = "<ul>";
-                                        articleHtml += '<li>';
-                                        articleHtml += "<img src='./images/th"+ element.lesson_id +".jpg' alt='th" + element.lesson_id +".jpg'>";
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li>";
-                                        articleHtml += element.lesson_name;
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li>";
-                                        articleHtml += element.lesson_total_amount;
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li>";
-                                        articleHtml += element.targetpercent + "%";
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li>";
-                                        articleHtml += element.lesson_diffdays + "일 남음";
-                                        articleHtml += "</li>";
-                                        
-                                        
-                                        articleHtml += "</ul>";
-                                        //    var idValue = getQuery 
-                                        //     data: {"lessonId" : idValue}
-                                        $articleObj.attr("class", element.lesson_id);
-                                        $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lesson_id+"'" );
-                                        $articleObj.html(articleHtml);
+    </script>
 
-                                        $("section.classname1").append($articleObj);
-
-                                        });
-                                        
-                                    }
-                                    $("div.bg").hide();
-                                },
-                                error: function(jqXHR){ //실패응답
-                                    alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
-                                } 
-                            });
-                        });
-                    },
-                    error: function(jqXHR){ //실패
-                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
-                    }
-                });
-                return false;
-                break;
-            case 'logout' :
-                $.ajax({
-                    url : hrefValue,
-                    success: function(){
-                        location.href = "http://localhost:8888/C4U";
-                    },
-                    error: function(jqXHR){ //실패
-                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
-                    }
-                });
-                return false;
-                break;
-            }
-        });
-    });
-</script>
-  	
 </head>
+
 <body>
     <!-- <script src="./js/reviewjs.js"></script> -->
-    <div class="container">
-        <header>
-            <article class = "category"><a href="categorylist">카테고리</a></article>
+    <!-- <div class="container"> -->
+    <header>
+        <!-- <article class = "category"><a href="categorylist">카테고리</a></article>
             <article class = "classopen"><a href="C4UOpeningACourse.html">강좌 개설하기</a></article>
             <article class = "logo"><a href="http://localhost:8888/C4U">C4U</a></article>
             <article class = "search"><input type="text" placeholder = "강좌검색" name = "search"></article>
 
             <article class = "login"><a href="login.html">로그인</a></article>
             <article class = "join"><a href="signup1.0.html">회원가입</a></article>
-
+d
             <article class = "mypage"><a href="mypage1.4.html">마이페이지</a></article>
-            <article class = "logout"><a href="logout">로그아웃</a></article>
-        </header>
-        
-        <hr> 
-        <section class="classname1">
+            <article class = "logout"><a href="logout">로그아웃</a></article> -->
+        <div class="header"></div>
+    </header>
+
+    <hr>
+    <div class="classdetail">
+        <div class="classname1">
             <div>
-                <section class='topsection'>
-                </section>
-                
-                <section class='submenu'>
-                </section>
+                <div class='topsection'>
+                </div>
+
+                <div class='submenu'>
+                </div>
                 <br>
                 <hr id="hr">
-                
-                <section>
+
+                <div>
                     <ul class="detailcate">
                         <li><a href="details">상세 설명</a></li>
                         <!-- <li><a href="aboutteacher">선생님 소개</a></li> -->
                         <li><a href="lessonreviewlist">수강 후기</a></li>
-                    </ul>    
-                </section>
+                    </ul>
+                </div>
                 <br>
                 <div class="menudiv">
-                    <section class="menu1">
-                        <article class="detailbox1"></article>
-                    </section>
+                    <div class="menu1">
+                        <div class="detailbox1"></div>
+                    </div>
                 </div>
                 <div class="menudiv2">
                 </div>
             </div>
-        </section>
+        </div>
         <div class="bg">
             <div class="modal">
             </div>
         </div>
-        <footer>
-            <!-- <div class="left">
+    </div>
+
+    <footer>
+        <!-- <div class="left">
                 <a href="notice.html">Notice</a>
                 <a href="C4UTermsAndConditions.html" onclick="window.open(this.href, '_blank', 'width=1100, height=600'); return false;">Terms and Condition</a>
                 <a href="C4UPrivacyPolicy.html" onclick="window.open(this.href, '_blank', 'width=700, height=600'); return false;">Privacy Policy</a>
                 <a href="#none">Contact US</a>
              </div>  -->
-        </footer>
+    </footer>
     </div>
 </body>
+
 </html>

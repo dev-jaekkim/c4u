@@ -69,7 +69,7 @@ public class CartDAOOracle {
 		}
 	}
 
-    //@Test
+    @Test
 	public void selectAllCount() {
 		try {
 			int list = cartdao.selectAllCount();
