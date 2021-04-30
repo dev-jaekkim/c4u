@@ -80,9 +80,7 @@ public class MyPageController {
 	}
 
 	@GetMapping(value = "/mypage/mylesson/listLessonStatus/{studentId}{lessonStatus}") // 500에러
-	public Map<String, Object> lessonStatus(@PathVariable int studentId, List<Integer> lessonStatus) { // Getmapping은
-																										// @requestbody가
-																										// 안된다.
+	public Map<String, Object> lessonStatus(@PathVariable int studentId, List<Integer> lessonStatus) { // Getmapping은 @requestbody가  안된다.
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -121,15 +119,12 @@ public class MyPageController {
 
 	}
 	
-<<<<<<< HEAD
+
 	@PostMapping("/mypage/mycart/listinsert/{studentId}/{lessonId}")
 	public Map<String, Object> insert(@PathVariable int studentId, @PathVariable int lessonId){
 		
-=======
-	@GetMapping(value = "/mypage/mylesson/listLessonStatus/{studentId}{lessonStatus}")
-	public Map<String, Object> lessonStatus(@PathVariable int studentId,
-											List<Integer> lessonStatus){ //Getmapping은 @requestbody가 안된다.
->>>>>>> c7f5792f746e574402b274d284f43a24c5b94014
+
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			CartService.add(lessonId, studentId);
