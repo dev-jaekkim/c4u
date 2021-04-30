@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
-		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:task="http://www.springframework.org/schema/task"
+   xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+      http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 <!-- Root Context: defines shared resources visible to all other web components -->
 
-<!-- 	<context:component-scan base-package="com.my.vo" /> -->
+<!--    <context:component-scan base-package="com.my.vo" /> -->
 
-	<!-- <context:component-scan base-package="com.my.vo" /> -->
+   <!-- <context:component-scan base-package="com.my.vo" /> -->
 
-	<context:component-scan base-package="com.my.vo" />
+   <context:component-scan base-package="com.my.vo" />
 
-	<context:component-scan base-package="com.my.dao" />
-	<context:component-scan base-package="com.my.service" />
+   <context:component-scan base-package="com.my.dao" />
+   <context:component-scan base-package="com.my.service" />
 
 <!-- DB관련 설정 : HikariCP -->
 <!-- Root Context: defines shared resources visible to all other web components -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+   <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 
-		<!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
-			<property name="jdbcUrl" value="jdbc:oracle:thin:@127.0.0.1:1521:XE"/> -->
+      <!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
+         <property name="jdbcUrl" value="jdbc:oracle:thin:@127.0.0.1:1521:XE"/> -->
 
-		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@127.0.0.1:1521:XE" />
+      <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+      <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@127.0.0.1:1521:XE" />
 
-		<property name="username" value="popcorn" />
-		<property name="password" value="kosta" />
-		<property name="minimumIdle" value="5" />
-		<!-- <property name="maximumPoolSize" value="10" /> -->
-		<!-- <property name="connectionTestQuery" value="select 1 from sys.dual"/> -->
-		<!-- <property name="connectionTimeout" value="300000" /> -->
-	</bean>
+      <property name="username" value="popcorn" />
+      <property name="password" value="kosta" />
+      <property name="minimumIdle" value="5" />
+      <!-- <property name="maximumPoolSize" value="10" /> -->
+      <!-- <property name="connectionTestQuery" value="select 1 from sys.dual"/> -->
+      <!-- <property name="connectionTimeout" value="300000" /> -->
+   </bean>
 
-	<!-- HikariCP configuration -->
-	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
-		destroy-method="close">
-		<qualifier value="hikarids" />
-		<constructor-arg ref="hikariConfig" />
-	</bean>
+   <!-- HikariCP configuration -->
+   <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+      destroy-method="close">
+      <qualifier value="hikarids" />
+      <constructor-arg ref="hikariConfig" />
+   </bean>
 
 <!-- mybatis-spring : sqlsession factory -->
 <bean class="org.mybatis.spring.SqlSessionFactoryBean"
-		id="sqlSessionFactory">
-	<property name="dataSource" ref="dataSource"></property>
-	<property name="configLocation" value="classpath:mybatis-config.xml">
-	</property>
+      id="sqlSessionFactory">
+   <property name="dataSource" ref="dataSource"></property>
+   <property name="configLocation" value="classpath:mybatis-config.xml">
+   </property>
 </bean>
 
 <!-- transaction -->
 <tx:annotation-driven transaction-manager="transactionManager" />
 <bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
+      class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name="dataSource" ref="dataSource" />
 </bean>
 
-	<!-- @Transactional 어노테이션 사용 가능하도록 함 -->
-	<tx:annotation-driven />
+   <!-- @Transactional 어노테이션 사용 가능하도록 함 -->
+   <tx:annotation-driven />
 </beans>

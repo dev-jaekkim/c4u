@@ -143,6 +143,36 @@ lesson_status IN
 ORDER BY l.lesson_id ASC
 </select>
 
+<!--개설하기-->
+<insert id="insert" parameterType="Lesson">
+	INSERT INTO lesson (lesson_id, 
+			lesson_teacher_id, 
+			lesson_name, 
+			lesson_target_amount, 
+			lesson_status, 
+			lesson_start_date, 
+	        lesson_fee, 
+			lesson_description,
+	        lesson_category_id)
+	VALUES (seq_lesson_id.NEXTVAL, #{teacher.studentId}, #{lessonName}, 
+        		#{lessonTargetFee}, 3, #{lessonStart}, 
+      	  		#{lessonFee}, #{lessonDescription},
+        		#{lessonCategory})
+</insert>
+
+<!--재심사 신청-->
+<update id="update" parameterType="Lesson">
+	UPDATE lesson
+	<set>
+		<if test="lessonName != null"> lesson_name =#{lessonName}, </if>
+		<if test="lessonTargetFee != null"> lesson_target_amount = #{lessonTargetFee}, </if>
+		<if test="lessonStart != null"> lesson_start_date = #{lessonStart}, </if>
+		<if test="lessonFee != null"> lesson_fee = #{lessonFee}, </if>
+		<if test="lessonDescription != null"> lesson_description = #{lessonDescription} </if>
+	</set>
+	WHERE lesson_id =#{lessonId} 
+</update>
+
 </mapper>
 
 
