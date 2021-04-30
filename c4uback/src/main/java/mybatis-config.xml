@@ -17,6 +17,8 @@
   		<typeAlias alias="Cart" type="com.my.vo.Cart"/>
   		<typeAlias alias="Notice" type="com.my.vo.Notice" />
   		<typeAlias alias="QNA" type="com.my.vo.QNA"/>
+  		<typeAlias alias="LessonReview" type="com.my.vo.LessonReview"/>
+  		<typeAlias alias="LPS" type="com.my.vo.LPS"/>
 	</typeAliases>
   <environments default="development">
 
@@ -41,5 +43,6 @@
 	<mapper resource="cartMapper.xml"/>
     <mapper resource="noticeMapper.xml"/>
     <mapper resource="qnaMapper.xml"/>
+    <mapper resource="lessonReviewMapper.xml"/>
   </mappers>
 </configuration>
