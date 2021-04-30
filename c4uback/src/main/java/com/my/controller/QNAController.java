@@ -79,7 +79,6 @@ public class QNAController {
 		Integer wrapperStudent_id = (Integer)session.getAttribute("loginInfo");
 		if(wrapperStudent_id != null) {
 			student_id = wrapperStudent_id;
-			
 			list = qnaService.findByStudentIdPerPage(student_id, currentPage, cnt_per_page);
 			pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 			log.debug(pgb);
@@ -123,7 +122,8 @@ public class QNAController {
 		
 		return map;
 	}
-
+	
+	//2021-04-29 김재경
 	@GetMapping("/qna/{qna_id}")
 	public Map<String, Object> detail (HttpSession session,
 									   @PathVariable int qna_id) throws Exception{

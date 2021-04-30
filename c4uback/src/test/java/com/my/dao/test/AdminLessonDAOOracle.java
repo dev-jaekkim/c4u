@@ -35,7 +35,7 @@ public class AdminLessonDAOOracle {
 	@Test
 	public void insertPenaltyStatus() throws FindException,AddException, ParseException {
 		//심사할 강좌 선택
-		int lesson_id =1;
+		int lesson_id =21;
 		Lesson lesson = ldao.selectById(lesson_id);
 		
 		//lessonps

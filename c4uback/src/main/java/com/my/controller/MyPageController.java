@@ -28,12 +28,9 @@ public class MyPageController {
 
 	@GetMapping(value = { "/mypage/mylesson/listWord", "/mypage/mylesson/listWord/{word}"})
 	public Map<String, Object> lessonSearch(@PathVariable("word") Optional<String> optword) throws Exception {
-
 		String word = null;
-
 		List<Lesson> list = null;
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		try {
 			// 비즈니스 로직 호출
 			if (optword.isPresent()) {
@@ -51,9 +48,7 @@ public class MyPageController {
 			map.put("status", -1);
 			map.put("msg", e.getMessage());
 		}
-
 		return map;
-
 	}
 	
 	@GetMapping(value = "/mypage/mylesson/listStudentId/{studentId}")
@@ -77,10 +72,7 @@ public class MyPageController {
 	@GetMapping(value = "/mypage/mylesson/listLessonStatus/{studentId}{lessonStatus}")
 	public Map<String, Object> lessonStatus(@PathVariable int studentId,
 											List<Integer> lessonStatus){ //Getmapping은 @requestbody가 안된다.
-			
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		try {
 			List<Lesson> list  = service.findByLessonStatus01234(studentId, lessonStatus);
 			map.put("status", 1);
