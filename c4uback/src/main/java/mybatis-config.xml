@@ -43,6 +43,7 @@
 	<mapper resource="cartMapper.xml"/>
     <mapper resource="noticeMapper.xml"/>
     <mapper resource="qnaMapper.xml"/>
-    <mapper resource="lessonReviewMapper.xml"/>
+    <mapper resource="lessonReviewMapper.xml"/> 
+    <mapper resource="adminLessonMapper.xml"/>
   </mappers>
 </configuration>
