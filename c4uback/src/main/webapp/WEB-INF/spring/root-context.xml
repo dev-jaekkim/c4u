@@ -12,7 +12,11 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 <!-- Root Context: defines shared resources visible to all other web components -->
+<<<<<<< HEAD
+<!-- 	<context:component-scan base-package="com.my.vo" /> -->
+=======
 	<!-- <context:component-scan base-package="com.my.vo" /> -->
+>>>>>>> c7f5792f746e574402b274d284f43a24c5b94014
 	<context:component-scan base-package="com.my.dao" />
 	<context:component-scan base-package="com.my.service" />
 

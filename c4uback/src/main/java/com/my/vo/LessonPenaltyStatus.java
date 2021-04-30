@@ -4,7 +4,10 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD
+=======
 @Component
+>>>>>>> c7f5792f746e574402b274d284f43a24c5b94014
 public class LessonPenaltyStatus {
 	private int lessonPsId;
 	private Lesson lesson;
