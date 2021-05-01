@@ -33,73 +33,51 @@ FROM (
 WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
 </select>
 
-<select id="selectCnt" resultType="int">
+<select id="userSelectPerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
+SELECT *
+FROM (
+	  SELECT review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
+	  FROM lesson_per_student JOIN review ON lps_id = review_lps_id
+                              JOIN student ON lps_student_id = student_id
+                              JOIN lesson ON lps_lesson_id = lesson_id
+      WHERE lesson_id = #{lessonId}
+	  )
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select>
+
+<select id="adminSelectCnt" resultType="int">
 SELECT COUNT(*)
-FROM qna
+FROM review
 </select>
 
-<!-- <select id="selectByNamePerPage" parameterType="java.util.HashMap" resultMap="resultmap">
-SELECT * 
-FROM (
-	  SELECT qna_id, qna_title, qna_date, qna_content, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
-	  FROM qna JOIN student ON qna_student_id = student_id
-	   WHERE student_name LIKE '%${student_name}%'
-	  )
-WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
-</select> -->
-
-<select id="selectByNameOrTitleOrContentPerPage" parameterType="java.util.HashMap" resultMap="resultmapAssociation">
-SELECT * 
-FROM (
-	  SELECT qna_id, qna_title, qna_date, qna_content, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
-	  FROM qna JOIN student ON qna_student_id = student_id
-	   WHERE student_name LIKE '%${word}%'
-	   	  OR qna_title LIKE '%${word}%'
-	   	  OR qna_content LIKE '%${word}%'
-	  )
-WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+<select id="userSelectCnt" resultType="int">
+SELECT COUNT(*)
+FROM lesson_per_student JOIN review ON review_lps_id = lps_id
+            			JOIN lesson ON lps_lesson_id = lesson_id
+WHERE lesson_id = #{lesson_id}
 </select>
 
-<select id="selectByStudentIdPerPage" parameterType="java.util.HashMap" resultMap="resultmapAssociation">
-SELECT * 
+<select id="selectByLessonTitleORStudentNamePerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
+SELECT *
 FROM (
-	  SELECT qna_id, qna_title, qna_date, student_name, row_number() OVER(ORDER BY qna_id DESC) AS rnum 
-	  FROM qna JOIN student ON qna_student_id = student_id
-	   WHERE student_id = #{student_id}
+	  SELECT review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
+	  FROM lesson_per_student JOIN review ON lps_id = review_lps_id
+                              JOIN student ON lps_student_id = student_id
+                              JOIN lesson ON lps_lesson_id = lesson_id
+      WHERE lesson_name LIKE '%${word}%'
+      	OR  student_name LIKE '%${word}%'
 	  )
 WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
 </select>
 
-<select id="selectByIdUser" parameterType="java.util.HashMap" resultMap="resultmapAssociation">
-SELECT qna.*, student_name
-FROM qna JOIN student ON qna_student_id = student_id
-WHERE qna_id = #{qna_id} AND student_name = #{student.studentName}
-</select>
-
-<select id="selectByIdAdmin" parameterType="int" resultMap="resultmapAssociation">
-SELECT qna.*, student_name
-FROM qna JOIN student ON qna_student_id = student_id
-WHERE qna_id = #{qna_id}
-</select>
-
-<update id="update" parameterType="QNA">
-UPDATE qna
-<set>
-	<if test="qnaComment !=null">qna_comment=#{qnaComment}</if>
-</set>
-<where>
-	qna_id = #{qnaId}
-</where>
-</update>
+<insert id="insert" parameterType="LessonReview">
+INSERT INTO review 
+			VALUES (seq_review_id.NEXTVAL, SYSDATE, #{reviewContent},#{recommend}, #{lps.LPSId})
+</insert>
 
 <delete id="delete" parameterType="int">
-DELETE qna
-WHERE qna_id = #{qna_id}
+DELETE review
+WHERE review_id = #{review_id}
 </delete>
-
-<insert id="insert" parameterType="QNA">
-INSERT INTO qna (qna_id, qna_student_id, qna_title, qna_date, qna_content, qna_comment)
-            VALUES (seq_qna_id.NEXTVAL, #{student.studentId}, #{qnaTitle}, SYSDATE, #{qnaContent}, null)
-</insert>
 
 </mapper>
