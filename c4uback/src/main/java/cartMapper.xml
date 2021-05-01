@@ -15,11 +15,7 @@
    	
  		<collection property="student" ofType="com.my.vo.Student" autoMapping="true">
  			<id property="studentId" column="CART_STUDENT_ID"/>
- 		</collection>
- 		
- 		
-		
-				
+ 		</collection>			
 		
  	</resultMap>
  	

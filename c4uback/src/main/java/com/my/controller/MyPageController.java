@@ -175,6 +175,24 @@ public class MyPageController {
 		return map;
 	}
 	
+	@GetMapping("/mypage/mycart/selectByPage/{studentId}/{currentPage}/{cnt_per_page}")
+	public Map<String, Object> selectByPage(@PathVariable int studentId,
+											@PathVariable int currentPage,
+											@PathVariable int cnt_per_page){
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+			CartService.findByPage(currentPage, currentPage, studentId);
+			map.put("status", 1);
+		} catch (FindException e) {
+			e.printStackTrace();
+			map.put("status", -1);
+			map.put("msg", e.getMessage());
+		}
+		return map;
+		
+	}
+	
 	
 	
 	
