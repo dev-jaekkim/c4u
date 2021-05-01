@@ -8,9 +8,12 @@
  
  		<collection property="lesson" ofType="com.my.vo.Lesson" autoMapping="true">
  			<id property="lessonId" column="CART_LESSON_ID"/>
+ 			<result property="lessonId" column="lesson_id"></result>
  			<result property="lessonName" column="lesson_name"></result>
  			<result property="lessonEnd" column="lesson_end_date"></result>
+ 			<result property="lessonDescription" column="lesson_description"></result>
  			<result property="lessonTotalFee" column="lesson_total_amount"></result>
+ 			<result property="lessonTargetFee" column="lesson_target_amount"></result>
  		</collection>
    	
  		<collection property="student" ofType="com.my.vo.Student" autoMapping="true">
@@ -40,7 +43,7 @@
  	
  	</select>
  	
- 	<select id = "selectByPage" parameterType="java.util.Map" >
+ 	<select id = "selectByPage" parameterType="java.util.Map" resultMap="cartMap"  >
 	SELECT * FROM  
 					   (SELECT lesson_id,lesson_name, lesson_end_date, lesson_description,lesson_total_amount,lesson_target_amount,row_number()  
 				        OVER (ORDER BY lesson_end_date DESC) AS rnum
@@ -49,7 +52,7 @@
 				        FROM cart
 				        WHERE cart_student_id = #{cart_student_id})
 				    )
-				        WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page});
+				        WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page})
  	</select>
  	
  	<insert id="insert" parameterType="java.util.Map" >

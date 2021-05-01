@@ -69,7 +69,7 @@ public class CartDAOOracle {
 		}
 	}
 
-    @Test
+    //@Test
 	public void selectAllCount() {
 		try {
 			int list = cartdao.selectAllCount();
@@ -88,5 +88,21 @@ public class CartDAOOracle {
 		} catch (FindException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void selectByPage() {
+		int student_id = 2;
+		int currentPage = 1;     //현재페이지
+		int cnt_per_page = 10;   //페이지별 보여줄 목록 수 
+		
+		try {
+		List<Lesson> list =	cartdao.selectByPage(currentPage, cnt_per_page, student_id);
+		assertNotNull(list);
+		} catch (FindException e) {
+		
+			e.printStackTrace();
+		}
+		
 	}
 }
