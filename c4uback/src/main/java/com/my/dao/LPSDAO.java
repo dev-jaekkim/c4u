@@ -6,6 +6,7 @@ import com.my.exception.AddException;
 import com.my.exception.FindException;
 import com.my.vo.LPS;
 import com.my.vo.Lesson;
+import com.my.vo.Student;
 
 public interface LPSDAO {
 	
@@ -61,4 +62,13 @@ public interface LPSDAO {
 	
 	//마이페이지 수강현황 강좌 상태별 페이징 기능 구현
 	public List<Lesson> selectByPage(int currPage, int dataPerPage, int studentId, int lessonStatus) throws FindException;
+	
+	//마이페이지 강좌관리 수강생 정보 불러오기
+	public List<Student> selectByStudentInformation(int lessonId) throws FindException;
+	
+	//마이페이지  수강현황 학생번호별 강좌 세기
+	public int selectByStudentAllLessonCnt(int studentId) throws FindException;
+	
+	//마이페이지 수강현황 페이징
+	public List<Lesson> selectByPageStudentLesson(int currentPage, int cnt_per_page, int studentId) throws FindException;
 }

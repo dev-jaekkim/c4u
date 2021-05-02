@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.my.dao.LPSDAO;
 import com.my.exception.AddException;
 import com.my.exception.FindException;
 import com.my.exception.RemoveException;
 import com.my.service.CartService;
+import com.my.service.LPSService;
 import com.my.service.LessonService;
+import com.my.vo.LPS;
 import com.my.vo.Lesson;
+import com.my.vo.Student;
 
 import lombok.extern.log4j.Log4j;
 
@@ -34,8 +38,11 @@ public class MyPageController {
 
 	@Autowired
 	private CartService CartService;
+	
+	@Autowired
+	private LPSService LPSService;
 
-	@GetMapping(value = { "/mypage/mylesson/listWord", "/mypage/mylesson/listWord/{word}" })
+	@GetMapping(value = {"/mypage/mylesson/listWord", "/mypage/mylesson/listWord/{word}"})
 	public Map<String, Object> lessonSearch(@PathVariable("word") Optional<String> optword) throws Exception {
 		String word = null;
 		List<Lesson> list = null;
@@ -98,7 +105,7 @@ public class MyPageController {
 
 	}
 
-	//내가 개설한 강좌 시작
+	//내가 좋아한 강좌 시작
 	@GetMapping(value = "/mypage/mycart/listSelectById/{studentId}")
 	public Map<String, Object> selectById(@PathVariable int studentId) {
 
@@ -123,8 +130,6 @@ public class MyPageController {
 	@PostMapping("/mypage/mycart/listinsert/{studentId}/{lessonId}")
 	public Map<String, Object> insert(@PathVariable int studentId, @PathVariable int lessonId){
 		
-
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			CartService.add(lessonId, studentId);
@@ -165,8 +170,9 @@ public class MyPageController {
 		Map<String, Object> map = new HashMap<>();
 		
 		try {
-			CartService.findAllCount(studentId);
+			int count = CartService.findAllCount(studentId);
 			map.put("status", 1);
+			map.put("list", count);
 		} catch (FindException e) {
 			e.printStackTrace();
 			map.put("status", -1);
@@ -182,8 +188,9 @@ public class MyPageController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		try {
-			CartService.findByPage(currentPage, currentPage, studentId);
+			List<Lesson> list =  CartService.findByPage(currentPage, currentPage, studentId);
 			map.put("status", 1);
+			map.put("list", list);
 		} catch (FindException e) {
 			e.printStackTrace();
 			map.put("status", -1);
@@ -193,6 +200,70 @@ public class MyPageController {
 		
 	}
 	
+	//마이페이지 강좌관리
+	@GetMapping("/mypage/myStudent/selectByStudentInformation/{lessonId}")
+	public Map<String, Object> selectByStudentInformation(@PathVariable int lessonId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+			List<Student> list = LPSService.findByStudentInformation(lessonId);
+			map.put("status", 1);
+			map.put("list", list);
+			
+		} catch (FindException e) {
+			e.printStackTrace();
+			map.put("status", -1);
+			map.put("msg", e.getMessage());
+		}
+		
+		return map;
+		
+	}
+	
+	//마이페이지  수강현황
+	
+	@GetMapping("/mypage/myStudentLesson/selectByPageStudentLesson/{studentId}/{currentPage}/{cnt_per_page}")
+	public Map<String, Object> selectByPageStudentLesson(@PathVariable int studentId,
+												@PathVariable int currentPage,
+												@PathVariable int cnt_per_page){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+			List<Lesson> list = LPSService.findByPageStudentLesson(currentPage, cnt_per_page, studentId);
+			map.put("status", 1);
+			map.put("list", list);
+		} catch (FindException e) {
+			
+			e.printStackTrace();
+			map.put("status", -1);
+			map.put("msg", e.getMessage());
+		}
+		
+		return map;
+		
+	}
+	
+	@GetMapping("/mypage/myStudentLesson/selectByStudentAllLessonCnt/{studentId}")
+	public Map<String, Object> selectByStudentAllLessonCnt(@PathVariable int studentId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+			int count = LPSService.findByStudentAllLessonCnt(studentId);
+			map.put("status", 1);
+			map.put("list", count);
+		} catch (FindException e) {
+		
+			e.printStackTrace();
+			map.put("status", 1);
+			map.put("list", e.getMessage());
+		}
+		
+		return map;
+		
+	}
 	
 	
 	

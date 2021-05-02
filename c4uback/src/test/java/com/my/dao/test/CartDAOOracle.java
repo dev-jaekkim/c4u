@@ -1,5 +1,5 @@
 //cartdao test
-package com.my.dao.test;
+package com.my.dao.test;	
 
 import static org.junit.Assert.assertNotNull;
 
@@ -94,7 +94,7 @@ public class CartDAOOracle {
 	public void selectByPage() {
 		int student_id = 2;
 		int currentPage = 1;     //현재페이지
-		int cnt_per_page = 10;   //페이지별 보여줄 목록 수 
+		int cnt_per_page = 3;   //페이지별 보여줄 목록 수 
 		
 		try {
 		List<Lesson> list =	cartdao.selectByPage(currentPage, cnt_per_page, student_id);

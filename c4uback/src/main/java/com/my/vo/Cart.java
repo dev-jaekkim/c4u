@@ -4,17 +4,26 @@ public class Cart {
 	private int cartId;
 	private Lesson lesson;
 	private Student student;
+	private int rnum;
 	
 	public Cart() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
-
-	public Cart(int cartId, Lesson lesson, Student student) {
+	
+	
+	public Cart(int cartId, Lesson lesson, Student student, int rnum) {
 		super();
 		this.cartId = cartId;
 		this.lesson = lesson;
 		this.student = student;
+		this.rnum = rnum;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Cart [cartId=" + cartId + ", lesson=" + lesson + ", student=" + student + ", rnum=" + rnum + "]";
 	}
 
 	public int getCartId() {
@@ -41,8 +50,12 @@ public class Cart {
 		this.student = student;
 	}
 
-	@Override
-	public String toString() {
-		return "Cart [cartId=" + cartId + ", lesson=" + lesson + ", student=" + student + "]";
+	public int getRnum() {
+		return rnum;
 	}
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+	
 }
