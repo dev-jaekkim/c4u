@@ -188,10 +188,16 @@
                     "timeout": {},
                     "data": "",
                     success: function (responseObj) {
-                        showList(responseObj);
+                        if(responseObj.status == 1) {
+                            location.href="/c4ufront/login.html";
+                        }
+                        
+                        // console.log("성공: "+responseObj);
+                        // showList(responseObj);
                     },
                     error: function (jqXHR) {
                         console.log(jqXHR.status);
+                        console.log(jqXHR);
                     }
                 });
                 return false;
