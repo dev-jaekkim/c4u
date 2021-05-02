@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강좌 심사</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+         * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            font-family: 'Raleway', sans-serif;
+            color: #222;
+            /* line-height: 1.5em; */
+            font-weight: 300;
+        }
+        
+        .admin_notice_list .admin_notice_title{
+            margin-left: 50px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        .admin_notice_list hr{
+            opacity: 35%;
+            width: 730px;
+            margin-left: 50px;
+        }
+
+        .admin_notice_list div.notice_write{
+            margin-top: 3%;
+            border: 1px solid;
+            width: 75px;
+            margin-left: 70%;
+            text-align: center;
+            background-color: lightgray;
+            font-weight: 300;
+        }
+
+        .admin_notice_list div.notice_write:hover{
+            font-weight: 800;
+        }
+
+        .admin_notice_list .notice_list{
+            border: 1px solid;
+            border-collapse: collapse;
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+
+        .admin_notice_list .notice_list th,td{
+            border: 1px solid;
+        }
+
+        .admin_notice_list .notice_list th{
+            text-align: center;
+            background-color: lightgrey;
+            font-weight: 800;
+        }
+
+        .admin_notice_list .notice_list td{
+            text-align: center;
+        }
+
+        .admin_notice_list td.notice_body_no{
+            width: 60px;
+            font-size: 0.8em;
+        }
+
+        .admin_notice_list td.notice_body_title{
+            text-align: left;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 700px;
+        }
+
+        .admin_notice_list td.notice_body_title:hover{
+            font-weight: 800;
+        }
+
+        .admin_notice_list td.notice_body_date{
+            width: 130px;
+        }
+
+        .admin_notice_list td.notice_body_modify{
+            width: 70px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .admin_notice_list td.notice_body_modify:hover{
+            font-weight: 800;
+        }
+
+        .admin_notice_list td.notice_body_delete{
+            width: 70px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .admin_notice_list td.notice_body_delete:hover{
+            font-weight: 800;
+        }
+
+        .admin_notice_list span:hover{
+            font-weight: 800;
+            color: rgb(255, 87, 87);
+        }
+
+        .admin_notice_list div.page_group{
+            margin-left: 40%;
+            margin-top: 20px;
+        }
+
+        .admin_notice_list div.search{
+            margin-left: 35%;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .admin_notice_list input.btsearch{
+            width: 40px;
+            height: 24px;
+            vertical-align: -1px;
+        }
+        
+        .admin_notice_list input.inputsearch{
+            width: 200px;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".header").load("admin_header.html");
+            $.ajax({
+                "url": "/c4uback/admin/notice/list",
+                "method": "GET",
+                "transformRequest": [
+                null
+                ],
+                "transformResponse": [
+                null
+                ],
+                "jsonpCallbackParam": "callback",
+                "headers": {
+                "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function(responseObj){
+                    // alert(responseObj);
+                    console.log(responseObj);
+                    // showList(responseObj);
+                    if(responseObj.status == 9){
+                        location.href="http://localhost:8888/c4ufront/login.html";
+                    }else{
+                        console.log("로그인 완료");
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="header"></div>
+    <section>
+        <div class="admin_notice_list">
+            <div class="admin_notice_title">
+                <h1>공지사항 관리</h1>
+            </div>
+            <hr>
+            <div class="notice_write">글쓰기</div>
+            <table class="notice_list">
+                <thead class="notice_head">
+                    <tr class="notice_head_tr">
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성일</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody class="notice_body">
+                    <tr class="notice_body_tr">
+                        <td class="notice_body_no">10</td>
+                        <td class="notice_body_title">공지사항제목</td>
+                        <td class="notice_body_date">2021-11-14</td>
+                        <td class="notice_body_modify">수정</td>
+                        <td class="notice_body_delete">삭제</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page_group">
+                <span class="page_btnext">&#9664;</span>
+                <span class="page_1">1</span>
+                <span class="page_btnext">&#9654;</span>
+            </div>
+            <div class="search">
+                <input type="text" placeholder="검색어를 입력하세요" class="inputsearch">
+                <input type="button" value="검색" class="btsearch">
+            </div>
+        </div>
+    </section>
+    <footer><div class="footer"></div></footer>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항</title>
+    <link rel ="stylesheet" href="notice1.1.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="./js/hyeongdon.js"></script>
+    <script>
+        $(function(){
+                var $btHideObj;
+                $("header").load("header.html");
+                $("footer").load("footer.html");
+                //loginstatus();
+                $("body>div>section.noticesection>article").empty();
+                var cp = 1;
+                var method = "get";
+                var url = "http://localhost:8888/c4uback/admin/notice/list/1";
+                                                    
+                var createNoticeList = function(arr, $trObj, $noticeCopyObj){
+                    var totalPageValue = 0;
+                    $(arr).each(function(index, element){
+                        totalPageValue = element.total_page;
+                        $trCopyObj = $trObj.clone();
+
+                        $trCopyObj.find('td.notice_id').html(element.notice_id);
+                        $trCopyObj.find('td.notice_title').html(element.notice_title);
+                        $trCopyObj.find('td>notice_date').html(element.notice_date);
+                        
+                        $noticeCopyObj.find('tbody.notice_tbody').append($trCopyObj);
+                        $trCopyObj.show();
+                    });
+                    $noticeCopyObj.show();
+                    return totalPageValue;
+                }
+
+                $.ajax({
+                    url:url,
+                    //data: {"current_page":cp},
+                    method: method,
+                    
+                    success: function(responseObj, status, xhr){ 
+                        var ct = xhr.getResponseHeader("content-type") || "";
+                        if (ct.indexOf('html') > -1) {
+                          
+                        }
+                        if (ct.indexOf('json') > -1) {
+	                    	console.log("----------");
+	                    	console.log(responseObj);
+	                    	console.log("----------");
+	                        // alert("공지사항 조회");
+	                        var arr = responseObj;
+	                        var $noticeObj = $('div.notice');
+	                        var $noticeCopyObj = $noticeObj.clone();
+	                        var $trObj = $noticeCopyObj.find('tr.notice_detail');
+	
+	                        var totalPageValue = createNoticeList(arr, $trObj, $noticeCopyObj);
+	                        $('section.noticesection>article').append($noticeCopyObj);
+	                        //더보기 버튼 추가
+	                        if(totalPageValue > cp){
+	                        var $btMoreObj = $('<input type="button" class="seemore" value="더보기" style="display:none;">'); //더보기 조건 관련해서 수정
+	                        // console.log("더보기추가");
+	                        $('section.noticesection>article').append($btMoreObj);
+	                        $btMoreObj.show();
+	                        // console.log("if문 들어간후 cp값"+cp);
+	                        }
+	                        $btHideObj = $btMoreObj;
+	                        } 
+                    },
+                    error: function(jqXHR){
+                        alert("오류 내용: "+jqXHR.status);
+                    }
+                });
+
+            //----공지사항 더보기 클릭 시 목록 생성 START-----
+            $("section.noticesection>article").on('click','input[class="seemore"]',function(event){
+                $btHideObj.hide();
+                cp +=1;
+                // console.log("더보기를 누른다");
+                var url = 'noticelist';
+                var method = "get";
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: {"current_page": cp},
+                    success: function(responseObj){
+                        //서버에서 전송해준 배열 객체로 저장
+                        var arr = responseObj;                     
+                        
+                        var $noticeCopyObj = $('section.noticesection>article>div.notice');
+                        var $trObj = $('section.noticesection>div.notice tr.notice_detail');
+
+                        //기존에 생성된 table에서 append해야 한다. 
+                        var totalPageValue = createNoticeList(arr, $trObj, $noticeCopyObj);
+
+                        //더보기 버튼 추가
+                        if(totalPageValue > cp){
+                        var $btMoreObj = $('<input type="button" class="seemore" value="더보기" style="display:none;">'); //더보기 조건 관련해서 수정
+                        // console.log("더보기추가");
+                        $('section.noticesection>article').append($btMoreObj);
+                        $btMoreObj.show();
+                        // console.log("if문 들어간후 cp값"+cp);
+                        }
+                        $btHideObj = $btMoreObj;
+                    },
+                    error: function(jqXHR){
+                        alert(jqXHR.status);
+                    }
+                });
+            });
+            //----공지사항 더보기 클릭 시 목록 생성 END-----
+            
+            // body > div.container > section.noticesection > article > div > table > tbody > tr:nth-child(8) > td.notice_title
+
+            //----공지사항 상세 게시글 클릭 시 페이지 이동 START-----
+            $('section.noticesection>article').on('click','td.notice_title',function(event){
+                $("body>div>section.noticesection>article").empty();
+                var noticeIdValue = $(event.target).prev().html();
+                console.log(noticeIdValue);
+                $('section.noticesection>article').load("noticedetail.html", function(){
+                    // $("body>div>section.noticesection>article").empty();
+                    $.ajax({
+                        url: "/noticedetail",
+                        method: "get",
+                        data: "notice_id="+ noticeIdValue,
+                        success: function(responseObj){
+                            console.log("상세게시물 요청 성공 / 객체: "+responseObj);
+                            $("th.noticeDetailTitle").html(responseObj.noticeTitle);
+                            $("th.noticeDetailDate").html(responseObj.noticeDate);
+                            $("th.noticeDetailContent").html(responseObj.noticeContent);
+                        },
+                        error: function(jqXHR){
+                            alert("에러 :"+ jqXHR.status);
+                        }
+                    });
+                });
+            });
+            //----공지사항 상세 게시글 클릭 시 페이지 이동 END-----
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header></header>
+        <hr>
+        <nav>
+        <div class="noticetitle">공지사항</div>
+        <hr>
+        </nav>
+
+        <section class="noticesection">
+            <article>바뀌는영역 article</article>
+            <!--공지사항 게시판 보기용 div-->
+            <div class="notice" style="display:none;">
+                <table class="noticetable">
+                    <thead class="notice_thead">
+                        <tr class="notice_heading">
+                            <th class="no">번호</th>
+                            <th class="title">제목</th>
+                            <th class="date">날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody class="notice_tbody">
+                        <tr class="notice_detail" style="display: none;">
+                            <td class="notice_id">1</td>
+                            <td class="notice_title">공지사항제목
+                            </td>
+                            <td class="notice_date">2021-11-14</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="classname1"></section>
+    </div>
+    <div class="bg">
+        <div class="modal"></div>
+    </div>
+<!--푸터영역-->
+    <footer></footer>
+</body>
+</html>
