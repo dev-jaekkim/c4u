@@ -19,8 +19,8 @@ public class PageGroupBean<T> {
 		super();
 	}
 
-	public PageGroupBean(int totalCnt, int CurrentPage, List<T> list) {
-		this(totalCnt, CurrentPage, list, 10, 10);
+	public PageGroupBean(int totalCnt, int currentPage, List<T> list) {
+		this(totalCnt, currentPage, list, 10, 10);
 	}
 	public PageGroupBean(int totalCnt, 
 			int currentPage, 

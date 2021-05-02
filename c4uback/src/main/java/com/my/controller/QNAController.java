@@ -8,6 +8,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,38 +93,6 @@ public class QNAController {
 		return map;
 	}
 	
-	@GetMapping(value= {"/admin/qna/list",
-						"/admin/qna/list/{currentPage}", 
-						"/admin/qna/list/{currentPage}/{word}"})
-	public Map<String, Object> adminList(@PathVariable ("currentPage")Optional<Integer> optCurrentPage,
-										@PathVariable("word")Optional<String> optWord)throws Exception{
-		int currentPage = 1;
-		int cnt_per_page = 10;
-		int totalCnt = qnaService.findCnt();
-		String word = null;
-		
-		List<QNA> list = null;
-		Map<String, Object> map = new HashMap<>();
-		PageGroupBean<QNA> pgb = null;
-		
-		if(optCurrentPage.isPresent()) {
-			currentPage = optCurrentPage.get();
-		}
-		
-		if(optWord.isPresent()) {
-			word = optWord.get();
-			list = qnaService.findByNameOrTitleOrContentPerPage(word, currentPage, cnt_per_page);
-		}else {
-			list = qnaService.findPerPage(currentPage, cnt_per_page);
-		}
-		pgb = new PageGroupBean<>(totalCnt, currentPage, list);
-		log.debug(pgb);
-		map.put("pgb", pgb);
-		map.put("status", 1);
-		
-		return map;
-	}
-	
 	//2021-04-29 김재경
 	@GetMapping("/qna/{qna_id}")
 	public Map<String, Object> detail (HttpSession session,
@@ -145,16 +115,6 @@ public class QNAController {
 		return map;
 	}
 	
-	@GetMapping("/admin/qna/{qna_id}")
-	public Map<String, Object> adminDetail(@PathVariable int qna_id) throws Exception{
-		Map<String, Object> map = new HashMap<>();
-		QNA qna = qnaService.findById(qna_id);
-		log.debug(qna);
-		map.put("qna", qna);
-		map.put("status", 1);
-		return map;
-	}
-	
 	@PostMapping("/qna/write")
 	public Map<String, Object> write(@RequestBody QNA qna) throws Exception{
 		Map<String, Object> map = new HashMap<>();
@@ -164,22 +124,91 @@ public class QNAController {
 		return map;
 	}
 	
-	@PutMapping("/admin/qna/reply/{qna_id}")
-	public Map<String, Object> adminReply(@PathVariable int qna_id,
-										  @RequestBody QNA qna) throws Exception{
+	@GetMapping(value= {"/admin/qna/list",
+						"/admin/qna/list/{currentPage}", 
+						"/admin/qna/list/{currentPage}/{word}"},
+				produces=MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> adminList(@PathVariable ("currentPage")Optional<Integer> optCurrentPage,
+										@PathVariable("word")Optional<String> optWord,
+										Authentication auth)throws Exception{
+		int currentPage = 1;
+		int cnt_per_page = 10;
+		int totalCnt = qnaService.findCnt();
+		String word = null;
+		
+		List<QNA> list = null;
 		Map<String, Object> map = new HashMap<>();
-		qnaService.modify(qna);
-		log.debug(qna);
-		map.put("status", 1);
+		PageGroupBean<QNA> pgb = null;
+		
+		if(auth!= null) {
+			if(optCurrentPage.isPresent()) {
+				currentPage = optCurrentPage.get();
+			}
+			
+			if(optWord.isPresent()) {
+				word = optWord.get();
+				list = qnaService.findByNameOrTitleOrContentPerPage(word, currentPage, cnt_per_page);
+			}else {
+				list = qnaService.findPerPage(currentPage, cnt_per_page);
+			}
+			pgb = new PageGroupBean<>(totalCnt, currentPage, list);
+			log.debug(pgb);
+			map.put("pgb", pgb);
+			map.put("status", 1);
+		}else {
+			log.warn("adminList"+auth);
+			map.put("status", 9);
+		}
 		return map;
 	}
 	
-	@DeleteMapping("/admin/qna/delete/{qna_id}")
-	public Map<String, Object> adminDelete(@PathVariable int qna_id) throws Exception{
+	@GetMapping(value="/admin/qna/{qna_id}",
+				produces=MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> adminDetail(@PathVariable int qna_id,
+											Authentication auth) throws Exception{
 		Map<String, Object> map = new HashMap<>();
-		qnaService.remove(qna_id);
-		log.debug(qna_id);
-		map.put("status", 1);
+		if(auth != null) {
+			QNA qna = qnaService.findById(qna_id);
+			log.debug(qna);
+			map.put("qna", qna);
+			map.put("status", 1);
+		}else {
+			log.warn("adminDetail"+auth);
+			map.put("status", 9);
+		}
+		return map;
+	}
+	
+	@PutMapping(value="/admin/qna/reply/{qna_id}",
+				produces=MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> adminReply(@PathVariable int qna_id,
+										  @RequestBody QNA qna,
+										  Authentication auth) throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		if(auth!=null) {
+			qnaService.modify(qna);
+			log.debug(qna);
+			map.put("status", 1);
+		}else {
+			log.warn("adminReply"+auth);
+			map.put("status", 9);
+		}
+		return map;
+	}
+	
+	@DeleteMapping(value="/admin/qna/delete/{qna_id}",
+				   produces=MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> adminDelete(@PathVariable int qna_id,
+											Authentication auth) throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		if(auth!=null) {
+			qnaService.remove(qna_id);
+			log.debug(qna_id);
+			map.put("status", 1);
+		}else {
+			log.warn("adminDelete"+auth);
+			map.put("status", 9);
+		}
 		return map;
 	}
 }
