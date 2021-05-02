@@ -38,11 +38,11 @@ public interface LessonReviewDAO {
 	
 	/**사용자 사용
 	 * 수강후기 관리 게시판 페이징 처리를 위하여, 게시글 전체 조회
-	 * @param lessonId 조회하고자 하는 수업
+	 * @param lesson_id 조회하고자 하는 수업
 	 * @return DB에 저장된 수강후기 게시글 개수
 	 * @throws FindException 수강후기가 없으면, 예외가 발생한다.
 	 */
-	int selectCnt(int lessonId) throws FindException;
+	int selectCnt(int lesson_id) throws FindException;
 	
 	/** 관리자 사용
 	 * 수강 후기 관리 게시판 중 강좌 이름, 학생 이름 일치하는 글 조회
@@ -58,16 +58,16 @@ public interface LessonReviewDAO {
 	
 	/** 사용자 사용
 	 * 수강 후기 1개 추가 (수강한 수업만) 
-	 * @param review 작성한 수강 후기 객체 
+	 * @param lessonReview 작성한 수강 후기 객체 
 	 * @throws AddException 수강 후기를 이미 남겼을 경우, 예외가 발생한다.
 	 */
-	void insert(LessonReview review) throws AddException;
+	void insert(LessonReview lessonReview) throws AddException;
 	
 	/** 관리자 사용
 	 * 수강 후기 관리 게시판 객체 1개 삭제
-	 * @param reviewId 삭제하고자 하는 수강 후기 review_id
+	 * @param review_id 삭제하고자 하는 수강 후기 review_id
 	 * @return int 삭제한 수강 후기 번호
 	 * @throws RemoveException 삭제할 수강 후기 객체가 없을 경우, 예외가 발생한다.
 	 */
-	int delete(int reviewId) throws RemoveException;
+	int delete(int review_id) throws RemoveException;
 }

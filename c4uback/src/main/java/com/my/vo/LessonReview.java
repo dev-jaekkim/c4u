@@ -12,14 +12,13 @@ public class LessonReview {
    private Date reviewDate;
    private int recommend;
    private LPS lps;
-
    
    public LessonReview() {
-   super();
+	   super();
    }
 
    public LessonReview(int reviewId, String reviewContent, Date reviewDate, int recommend) {
-      this(reviewId, reviewContent, reviewDate, recommend, null);
+	   this(reviewId, reviewContent, reviewDate, recommend, null);
    }
    
    public LessonReview(String reviewContent, Date reviewDate, int recommend) {
