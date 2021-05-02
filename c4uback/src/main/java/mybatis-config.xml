@@ -45,5 +45,6 @@
     <mapper resource="qnaMapper.xml"/>
     <mapper resource="lessonReviewMapper.xml"/> 
     <mapper resource="adminLessonMapper.xml"/>
+    <mapper resource="lpsMapper.xml"/>
   </mappers>
 </configuration>

@@ -6,6 +6,7 @@ import com.my.exception.AddException;
 import com.my.exception.FindException;
 import com.my.vo.LPS;
 import com.my.vo.Lesson;
+import com.my.vo.Student;
 
 
 public interface ILPSService {
@@ -26,5 +27,11 @@ public interface ILPSService {
 	
 	List<Lesson> findByPage(int currPage, int dataPerPage, int studentId) throws FindException;
 	
+	List<Lesson> findByPageStudentLesson(int currentPage, int cnt_per_page, int studentId) throws FindException;
+	
 	public List<Lesson> findByPage(int currPage, int dataPerPage, int studentId, int lessonStatus) throws FindException;
+	
+	public List<Student> findByStudentInformation(int lessonId) throws FindException;
+	
+	public int findByStudentAllLessonCnt(int studentId) throws FindException;
 }

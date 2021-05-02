@@ -22,5 +22,8 @@ public interface ICartService {
 	
 	int findAllCount(int studentId) throws FindException;
 	
-	List<Lesson> findByPage(int currPage, int dataPerPage,int studentId) throws FindException;
+	//List<Lesson> findByPage(int currPage, int dataPerPage,int studentId) throws FindException;
+	
+	List<Lesson> findByPage(int cnt_per_page, int currentPage,int studentId) throws FindException;
+	
 }
