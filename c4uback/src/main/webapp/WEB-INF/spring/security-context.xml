@@ -4,8 +4,8 @@
 	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="myLoginSuccess" class="handler.MyLoginSuccessHandler"></bean>
-	<bean id="myLoginFailure" class="handler.MyLoginFailureHandler"></bean>
+	<bean id="myLoginSuccess" class="com.my.handler.MyLoginSuccessHandler"></bean>
+	<bean id="myLoginFailure" class="com.my.handler.MyLoginFailureHandler"></bean>
  	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
 	<security:http>
 		<security:intercept-url	pattern="/water/**" access="hasRole('ROLE_ADMIN')" />
