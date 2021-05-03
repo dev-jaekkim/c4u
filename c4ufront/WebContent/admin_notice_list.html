@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강좌 심사</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./js/hyeongdon.js"></script>
     <style>
          @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
          * {
@@ -134,6 +135,12 @@
     </style>
     <script>
         $(function () {
+        	if(adminLoginStatus()==-1){
+        		//어드민로그인실패
+        		location.href="http://localhost:8888/c4uback/myLogin";
+        		return;
+        	}        	
+        	console.log("front 쿠키 정보 확인");
             $(".header").load("admin_header.html");
             $.ajax({
                 "url": "/c4uback/admin/notice/list",
@@ -154,8 +161,9 @@
                     // alert(responseObj);
                     console.log(responseObj);
                     // showList(responseObj);
-                    if(responseObj.status == 9){
-                        location.href="http://localhost:8888/c4ufront/login.html";
+                    if(responseObj.status == 1){
+                        //location.href="http://localhost:8888/c4uback/myLogin";
+                        console.log("front에서 보내는 요청");
                     }else{
                         console.log("로그인 완료");
                     }

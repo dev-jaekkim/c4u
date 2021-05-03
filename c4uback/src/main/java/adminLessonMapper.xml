@@ -3,35 +3,59 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mybatis.AdminLessonMapper">
-
+<resultMap id="lpssMap" type="LessonPenaltyStatus" autoMapping="true">
+     <id property="lessonPsId" column="LESSONPS_ID"/>
+    <result property="lessonPsDate" column="LESSONPS_DATE"/> 
+    
+    <association property="lessonPenalty" javaType="LessonPenalty">
+       <id property="lpId" column="LESSONPS_EVALUATION_ID"/>
+       <result property="lpContent" column="LP_CONTENT"/>
+    </association>
+    
+    <association property="lesson" javaType="Lesson">
+        <id property="lessonId" column="LESSONPS_LESSON_ID"/>
+        <result property="lessonId" column="LESSON_ID"/>
+        <result property="lessonName" column="LESSON_NAME"/>
+        <result property="lessonCreate" column="LESSON_CREATE_DATE"/>
+      <association property="teacher" javaType="Student">
+      <id property="studentId" column="LESSON_TEACHER_ID" />
+       <result property="studentName" column="STUDENT_NAME" />
+       </association>
+    </association>
+   
+    
+    
+</resultMap>
 <!--심사 승인-->
 <update id="updateLesson" parameterType="java.lang.Integer">
-	UPDATE lesson
-	SET lesson_status = 0, 
-	      lesson_create_date = SYSDATE,
-	      lesson_end_date= SYSDATE+30
-	WHERE lesson_id = #{lessonId} 
+   UPDATE lesson
+   SET lesson_status = 0, 
+         lesson_create_date = SYSDATE,
+         lesson_end_date= SYSDATE+30
+   WHERE lesson_id = #{lessonId} 
 </update>
 
 <!--심사 거절 -->
 <insert id="insertPenaltyStatus" parameterType="LessonPenaltyStatus">
-	INSERT INTO lesson_penalty_status(lessonps_id, lessonps_lesson_id, lessonps_evaluation_id, lessonps_date)
-	VALUES(seq_lesson_penalty_status_id.NEXTVAL, #{lesson.lessonId}, #{lessonPenalty.lpId}, SYSDATE)
+   INSERT INTO lesson_penalty_status(lessonps_id, lessonps_lesson_id, lessonps_evaluation_id, lessonps_date)
+   VALUES(seq_lesson_penalty_status_id.NEXTVAL, #{lesson.lessonId}, #{lessonPenalty.lpId}, SYSDATE)
 </insert>
 
-<select id="adminSelectByPage">
+<select id="adminSelectByPage" parameterType ="java.util.HashMap" resultMap="lpssMap">
 
-SELECT l.lesson_id,l.lesson_name,s.student_name,l.lesson_create_date,
-       lp.lp_content, lps.lessonps_date
+SELECT * FROM
+(SELECT lesson_id,lesson_name,student_name,lesson_create_date,
+       lp_content,lessonps_date, row_number() OVER (ORDER BY lps.lessonps_date DESC) AS rnum
 FROM lesson l
-LEFT JOIN lesson_penalty_status lps
-     ON l.lesson_id = lps.lessonps_id
-LEFT JOIN lesson_penalty lp 
+JOIN lesson_penalty_status lps
+     ON l.lesson_id = lps.lessonps_lesson_id
+JOIN lesson_penalty lp 
      ON lps.lessonps_evaluation_id = lp.lp_id
-LEFT JOIN student s
+JOIN student s
      ON l.lesson_teacher_id = s.student_id
-WHERE s.student_id = #{student_id}  AND (l.lesson_name LIKE '%${word}%' OR s.student_name LIKE '%${word}%')
-ORDER BY l.lesson_id ASC;
+WHERE(l.lesson_name LIKE '%${word}%' OR s.student_name LIKE '%${word}%')
+)
+WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page})
 
 </select>
 </mapper>
