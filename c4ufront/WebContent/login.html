@@ -54,45 +54,6 @@
             margin-left: 60px;
         }
         </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        console.log("스크립트시작");
-        $(function(){
-            let $formObj = $("ul>form");
-            console.log("form 객체찾기");
-             $formObj.submit(function(){
-                var emailValue = $("input[class=emailInput]").val();
-                var pwdValue = $("input[class=pwdInput]").val();
-
-                var url = "http://localhost:8888/c4uback/login";
-                var method = "post";
-                var data ={"username": emailValue, "password":pwdValue};
-                console.log("값설정");
-                //localStorage.removeItem("loginInfo");
-                $.ajax({
-                    url: url,
-                    method: method,
-                    data: data,
-                    success: function(responseObj){
-                    	console.log(responseObj);
-                        if(responseObj.status == 1){
-                            //console.log("로그인성공")
-                            alert("로그인 성공");
-                        	//localStorage.setItem("loginInfo", emailValue);
-                            location.href="http://localhost:8888/c4ufront/maindraft1.html";
-                        }else{
-                            alert("로그인 실패");
-                        }
-                    },
-                    error: function(jqXHR){
-                        alert("응답실패: "+jqXHR.status);
-                    }
-                });
-                return false;
-            });
- 
-        });
-    </script>
     </head>
     <body>
         <section>

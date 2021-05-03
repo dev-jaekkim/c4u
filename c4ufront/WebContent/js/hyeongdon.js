@@ -1,8 +1,11 @@
 function search(){
     var union = $("article.search>input[name=search]").val();
     $("section.classname1").empty();
+    $("section.mypagesection").empty();
+    $("section.noticesection").empty();
+    $("nav").remove();
     $.ajax({
-        url : "http://localhost:8888/C4U/lessonlist",
+        url : "./c4uback/lessonlist",
         method: "post",
         data: {"union" : union},
         success: function(responseObj){
@@ -45,6 +48,7 @@ function search(){
                 var $searchObj = $('<article>');
                 var searchHtml = "<h3>검색결과가 없습니다</h3>";
                 $searchObj.html(searchHtml);
+                $searchObj.css("background-color","white");
                 $("section.classname1").append($searchObj);
             }
         },
@@ -53,11 +57,10 @@ function search(){
 
 function loginstatus(){
 	$.ajax({
-		url: "./loginstatus", //서블릿 만들어야함
+		url: "http://localhost:8888/c4uback/loginstatus", //서블릿 만들어야함
 		method: "get",
 		success:function(responseObj){
 			var status = responseObj.status;
-            // alert("lohinstatus: " + status + "mypage selector:" + $("header>article.mypage").html());
 			//var logined = responseObj.loginInfo;
 			if(status == 1) {
 				$("header>article.mypage").show();
@@ -65,7 +68,6 @@ function loginstatus(){
 				$("header>article.login").hide();				
 				$("header>article.join").hide();
 			}else{
-                //body > div > header > article.mypage
 				$("header>article.mypage").hide();
 				$("header>article.logout").hide();
 				$("header>article.login").show();
@@ -76,6 +78,34 @@ function loginstatus(){
 	//var loginedId = localStorage.getItem("loginInfo");
 	//if(loginedId)
 }
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function adminLoginStatus(){
+	var auth = getCookie("auth");
+	  if (auth == "ROLE_ADMIN") {
+return 1;
+	  } else {
+return -1;
+ 		}	
+}
+
+
+
 function getQueryString(key) {
  
     // 전체 Url을 가져온다.

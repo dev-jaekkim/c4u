@@ -14,8 +14,7 @@ public class MyLoginFailureHandler implements AuthenticationFailureHandler {
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-
+//		response.sendRedirect(request.getContextPath()+"/Login?error="+exception.getMessage());
 	}
 
 }
