@@ -7,6 +7,7 @@ import com.my.exception.FindException;
 import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.vo.Lesson;
+import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
 
 public interface AdminLessonDAO {
@@ -36,6 +37,20 @@ public interface AdminLessonDAO {
 	 * @throws FindException 레슨 아이디에 해당하는 강좌가 존재하지 않을 경우 예외 발생
 	 */
 	public Lesson selectLessonDetail(int lessonId) throws FindException;
+	
+	/**
+	 * 레슨 패널티 조회 
+	 * @return 강좌 거절 사유
+	 * @throws FindException 심사 거절 사유가 존재하지 않을 경우 예외 발생 
+	 */
+	public List<LessonPenalty> selectLessonPenaltyAll () throws FindException;
+	
+	/**
+	 * 재심사시 참고용 심사 거절 내역 조회 
+	 * @return 심사거절 내역 
+	 * @throws FindException 
+	 */
+	public List<LessonPenalty> selectLessonPs(int lessonId) throws FindException;
 	
 	/** 
 	 * 강좌 개설 거절 (심사 거절)

@@ -5,13 +5,6 @@
 <mapper namespace="mybatis.PenaltyStatusMapper">
 
 
-<!--경고 주기-->
-<!--<insert id="insert" parameterType="java.lang.Integer">
-INSERT INTO penalty_status 
-VALUES (ps_id, #{ps_student_id}, #{ps_penalty_id})
-</insert>-->
-
-
 <!--경고주기-->
 <insert id="insertPenaltyStatus" parameterType="PenaltyStatus">
 INSERT INTO penalty_status (ps_id, 

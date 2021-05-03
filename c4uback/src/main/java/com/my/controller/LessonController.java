@@ -26,7 +26,6 @@ public class LessonController {
 	@Autowired
 	private LessonService service;
 	
-	//2021-04-29 김보람
 	@PostMapping(value = "/lesson/add")
 	public Map<String,Object> add(MultipartFile[] uploadFile, 
 	          @RequestBody Lesson lesson) throws AddException{

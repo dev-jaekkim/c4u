@@ -17,6 +17,7 @@ public class Lesson {
 	private int lessonStatus;
 	private int lessonFee;
 	private String lessonDescription;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date lessonCreate;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date lessonEnd;
