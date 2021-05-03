@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강좌 심사</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
-         * {
+        @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -18,191 +20,375 @@
             /* line-height: 1.5em; */
             font-weight: 300;
         }
-        .admin_evaluation_detail section {
-            margin-left: 185px;
+
+        .adm_eval_section {
+            margin-left: 200px;
         }
-         .admin_evaluation_detail {
-            width: 700px;
+
+        .admin_evaluation_detail {
+            width: 800px;
             height: 100%;
             margin: 30px auto;
             text-align: center;
             font-size: 13px;
         }
+
         .admin_evaluation_detail table.eval_detail {
-            width: 700px;
+            width: 800px;
             border-collapse: collapse;
             line-height: 30px;
             /* table-layout: fixed; */
             /* word-wrap:break-word;  */
-            word-break:break-all;
+            word-break: break-all;
             margin: 50px auto;
         }
+
         .admin_evaluation_detail tbody.detail_tbody {
             text-align: center;
         }
+
         .admin_evaluation_detail th {
             width: 120px;
             border: 1px solid;
             font-weight: bold;
-            background-color:lightgrey;
+            background-color: lightgrey;
             padding: 3px;
         }
-        .admin_evaluation_detail td{
+
+        .admin_evaluation_detail td {
             width: 400px;
             border: 1px solid;
-            padding: 3px;
+            padding: 10px;
         }
+
+        .admin_evaluation_detail tr {
+            height: 30px;
+        }
+
         .admin_evaluation_detail .permission,
         .admin_evaluation_detail .reject {
             width: 150px;
-            height: 30px;
+            height: 40px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             background-color: lightgray;
             border: 0;
         }
+
         .admin_evaluation_detail .permission {
             margin-right: 10px;
         }
 
-    
+        .admin_evaluation_detail .modal_bg {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            border: 1px soild;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(211, 211, 211, 0.8);
+        }
+
+        .admin_evaluation_detail .modal {
+            display: block;
+            position: relative;
+            border-radius: 5px;
+            background-color: white;
+            z-index: 10000;
+            width: 20%;
+            padding: 20px;
+            top: 30%;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .admin_evaluation_detail .modal_btn,
+        .admin_evaluation_detail .cancel {
+            height: 30px;
+            padding: 4px;
+            background-color: white;
+            border: 1px solid;
+            border-radius: 5px;
+            outline: 0;
+            cursor: pointer;
+        }
+
+        .admin_evaluation_detail .radio_div {
+            margin: 10px 0;
+        }
+
+
+        .admin_evaluation_detail label {
+            cursor: pointer;
+        }
+
+        .admin_evaluation_detail #msg {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .admin_evaluation_detail .modal_btn {
+            margin-right: 10px;
+        }
     </style>
     <script>
         $(function () {
             $(".header").load("admin_header.html");
-
-
-            //심사 상세 조회
-            $.ajax({
-                url: "/admin/lesson/detail",
-                method: "get",
-                //data: lesson_id,
-                success: function(responseObj){
-                    //심사 실패 사유가 없을 경유 &nbsp; 추가 
-                //    if(responseObj.심사실패사유 == null) {
-                //     $("#fail_reason").html("&nbsp;");
-                //    }
-                },
-                error: function(){
-                }
-            });
-
+            // let lessonId = getQueryString();
             //input hidden val -> 레슨 아이디 변수 선언하기 
             //$("input[name=lesson_id]").val();
 
+            //개설신청강좌 상세조회
+            $.ajax({
+                "method": "GET",
+                "transformRequest": [
+                    null
+                ],
+                "transformResponse": [
+                    null
+                ],
+                "jsonpCallbackParam": "callback",
+                // "url": "/c4uback/lesson/" + lessonId,
+                "url": "http://localhost:8888/c4uback/lesson/37",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function(responseObj){
+                    let lsdata = responseObj.lesson;
+                    let sdata = responseObj.lesson.teacher;
+                   
+                    $("#lesson_name").html(lsdata.lessonName);
+                    $("#teacher_name").html(sdata.studentName);
+                    $("#lesson_category").html(lsdata.lessonCategory);
+                    $("#lesson_desc").html(lsdata.lessonDescription);
+                    $("#target_amount").html(lsdata.lessonTargetFee);
+                    $("#start_date").html(lsdata.lessonStart);
+                    $("#create_date").html(lsdata.lessonCreate);
+                    $("#end_date").html(lsdata.lessonEnd);
+                    $("#lesson_fee").html(lsdata.lessonFee);
+                    $("#target_participant").html(lsdata.lessonTargetFee/lsdata.lessonFee);
+                },
+                error: function(jqXHR){
+                    console.log(jqXHR.status);
+                }
+            });
+
             //승인
-            $(".permission").click(function(){
+            $(".permission").click(function () {
+                let lessonId;
                 $.ajax({
-                    url: "/admin/lesson/modifylessonstatus",
-                    method:"put",
-                    // data: lesson_id;
-                    success: function(){
-                        alert("~번 레슨이 승인되어 개설 대기 상태로 변경됩니다.")
+                    "method": "PUT",
+                    "transformRequest": [
+                        null
+                    ],
+                    "transformResponse": [
+                        null
+                    ],
+                    "jsonpCallbackParam": "callback",
+                    "url": "/c4uback/admin/lesson/modifylessonstatus/" + lessonId,
+                    "headers": {
+                        "Accept": "application/json, text/plain, */*",
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    "data": "",
+                    "timeout": {},
+                    success: function () {
+                        alert(lessonId + "번 강좌가 개설 승인되어 개설 대기 상태로 변경됩니다.")
+                        location.href = "";
+
                         // /admin/lesson/list이동 
                     },
-                    error: function(){
+                    error: function () {
 
                     }
                 });
                 return false;
             });
-            
 
-            //거절
-            $(".reject").click(function(){
-                $.ajax({
-                    url: "/admin/lesson/insertlessonpenaltystatus",
-                    method: "post",
-                    //data: lesson_id,
-                    success: function(){
-                        alert("~번 레슨이 심사 거절되었습니다.")
-                        // /admin/lesson/list이동 
-                    },
-                    error: function(){
+            //거절 사유 조회 
+            $.ajax({
+                "method": "GET",
+                "transformRequest": [
+                    null
+                ],
+                "transformResponse": [
+                    null
+                ],
+                "jsonpCallbackParam": "callback",
+                "url": "/c4uback/admin/lesson/lessonpenaltyall",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function (responseObj) {
+                    console.log(responseObj);
+                    let $labelOriginObj = $(".ls_ps");
+                    let $penaltyDiv = $(".radio_div");
+                    $(responseObj.lessonPenalty).each(function (i, e) {
+                        let $labelCopyObj = $labelOriginObj.clone();
 
-                    }
-                });
+                        $labelCopyObj.attr("class", "copy");
+                        $labelCopyObj.find(".ls_ps_input").addClass("ls_ps_copy");
+                        $labelCopyObj.find(".ls_ps_input").removeClass("ls_ps_input");
+                        $labelCopyObj.find(".ls_ps_copy").attr("value", e.lpId);
+                        $labelCopyObj.find(".ls_ps_copy").attr("id", e.lpId);
+                        $labelCopyObj.find(".ls_ps_copy").after(e.lpContent + "<br>");
+                        $labelCopyObj.find(".ls_ps_copy").css("margin-bottom", "10px");
+                        $penaltyDiv.append($labelCopyObj);
+                    });
+                    $labelOriginObj.hide();
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.status);
+                }
+            });
+            //심사 거절
+            let $modalBg = $(".modal_bg");
+            let $modalBtn = $(".modal_btn");
+            let $cancelBtn = $(".cancel");
+            $(".reject").click(function () {
+                $(".modal_bg").css("display", "block");
                 return false;
             });
-            
+            $(".modal_btn").click(function (event) {
+                let penaltyId = $("input[type=radio]:checked").val();
+                if ($("input[type=radio]:checked").val() == null) {
+                    alert("심사 거절 사유를 선택해주세요");
+                } else {
+                    //심사 거절 
+                    $.ajax({
+                        "method": "POST",
+                        "transformRequest": [
+                            null
+                        ],
+                        "transformResponse": [
+                            null
+                        ],
+                        "jsonpCallbackParam": "callback",
+                        "url": "/admin/lesson/insertpenaltystatus",
+                        "headers": {
+                            "Accept": "application/json, text/plain, */*",
+                            "Content-Type": "application/json;charset=utf-8"
+                        },
+                        "data": "{\"lesson\": {\"lessonId\":73}, \"lessonPenalty\": {\"lpId\": 1}}",
+                        "timeout": {},
+                        success: function (responseObj) {
+                            alert(lessonId + "번 강좌가 심사 거절되었습니다.");
+                            location.href = "";
+                            // /admin/lesson/list이동 
+                        },
+                        error: function (jqXHR) {
+                            console.log(jqXHR.status);
+                        }
+                    });
+                }
+                return false;
+            });
+
+            //모달 취소 버튼 클릭 
+            $cancelBtn.click(function () {
+                $modalBg.hide();
+                $("input[name='penalty_id']").prop('checked', false);
+                return false;
+            });
+
         });
     </script>
 </head>
+
 <body>
     <div class="header"></div>
-    <section>
+    <section class="adm_eval_section">
         <div class="admin_evaluation_detail">
             <table class="eval_detail">
                 <tbody class="detail_tbody">
                     <tr>
                         <th>강좌</th>
-                        <td>나무로 미니어처 그릇만들기</td>
+                        <td id="lesson_name"></td>
                     </tr>
                     <tr>
                         <th>선생님</th>
-                        <td>박찬익</td>
+                        <td id="teacher_name"></td>
                     </tr>
                     <tr>
                         <th>강좌 카테고리</th>
-                        <td>조소</td>
+                        <td id="lesson_category"></td>
                     </tr>
                     <tr>
                         <th>강좌 한 줄 소개</th>
-                        <td>가나다라 마바사아자차카타파하 백바이트는 얼마나 ㅅ길까나이이</td>
+                        <td id="lesson_desc"></td>
                     </tr>
                     <tr>
                         <th>후원 목표 금액</th>
-                        <td>1,000,000</td>
+                        <td id="target_amount"></td>
                     </tr>
                     <tr>
                         <th>강좌 개강일</th>
-                        <td>2021-05-17</td>
+                        <td id="start_date"></td>
                     </tr>
                     <tr>
                         <th>강좌 후원 시작일</th>
-                        <td>2021-03-17</td>
+                        <td id="create_date"></td>
                     </tr>
                     <tr>
                         <th>강좌 후원 마감일</th>
-                        <td>2021-04-17</td>
+                        <td id="end_date"></td>
                     </tr>
                     <tr>
                         <th>수강료</th>
-                        <td>10,000</td>
+                        <td id="lesson_fee"></td>
                     </tr>
                     <tr>
                         <th>목표 회원수</th>
-                        <td>100</td>
+                        <td id="target_participant"></td>
                     </tr>
                     <tr>
                         <th>심사 실패 사유</th>
                         <!-- //&nbsp; -->
-                        <td id="fail_reason"> 1. <br>
-                            2.
+                        <td id="fail_reason"><br>
                         </td>
                     </tr>
                     <tr>
                         <th>대표 이미지</th>
-                         <!-- 첨부파일 다운로드 -->
-                         <td>image.jpg </td>
+                        <!-- 첨부파일 다운로드 -->
+                        <td id="thumbnail"></td>
                     </tr>
                     <tr>
                         <th>상세 이미지</th>
-                        <td>썸네일.jpg</td>
+                        <td id="image"></td>
                     </tr>
-
                 </tbody>
-               
             </table>
             <form>
-                <input type="hidden" name="lesson_id">
+                <input type="hidden" name="lesson_id" value="">
             </form>
             <input type="button" value="승인" class="permission">
             <input type="button" value="거절" class="reject">
+
+            <div class="modal_bg">
+                <div class="modal">
+                    <div id="msg">심사 거절 사유를 선택해주세요.</div>
+                    <form class="lesson_penalty_form">
+                        <div class="radio_div">
+                            <label class="ls_ps"><input type="radio" id="" class="ls_ps_input" name="lessonPenaltyId"
+                                    value="">
+                            </label>
+                        </div>
+                        <input type="button" value="심사 거절" class="modal_btn">
+                        <input type="button" value="취소" class="cancel">
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
-    
+
 </body>
 
 </html>

@@ -13,6 +13,7 @@ public class AdminLessonControllerAdvice {
 	@ExceptionHandler
 	public Map<String, Object> except(Exception e) {
 		Map<String,Object> map = new HashMap<>();
+		e.printStackTrace();
 		map.put("status", -1);
 		map.put("msg", e.getMessage());
 		return map;

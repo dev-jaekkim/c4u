@@ -1,6 +1,8 @@
 package com.my.dao.test;
 
+
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,40 +28,66 @@ import com.my.vo.LessonPenaltyStatus;
 //Spring 컨테이너용 XML파일 설정
 @ContextConfiguration(locations={
 		"file:src/main/webapp/WEB-INF/spring/root-context.xml", 
-		"file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
+"file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
 public class AdminLessonDAOOracle {
 
 	@Autowired
 	private AdminLessonDAO dao;
 	@Autowired
 	private LessonDAO ldao;
-	
+
 	//lesson selectById 한 번 더 확인
 	//@Test
 	public void insertPenaltyStatus() throws FindException,AddException, ParseException {
 		//심사할 강좌 선택
 		int lesson_id =21;
 		Lesson lesson = ldao.selectById(lesson_id);
-		
+
 		//lessonps
 		int psId = 1;
 		LessonPenalty lessonPenalty = new LessonPenalty(psId,"내용불충분");
-		
+
 		String from = "2021-04-18";
 		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
 		Date lessonps_dt = fm.parse(from);
-		
+
 		LessonPenaltyStatus lessonps = new LessonPenaltyStatus(1, lesson,lessonPenalty, lessonps_dt);
 		dao.insertPenaltyStatus(lessonps);
 	}
-	
+
 	//@Test 
-	public void updateLesson()throws ModifyException{
-		int lessonId = 17;
+	public void updateLesson() throws FindException, ModifyException{
+		int lessonId = 35;
 		dao.updateLesson(lessonId);
 	}
 	
-	@Test
+
+
+
+	//@Test
+	public void selectLessonPenaltyAll () throws FindException{
+		List<LessonPenalty> list = dao.selectLessonPenaltyAll();
+		int expListSize = 3;
+		assertEquals(expListSize, list.size());
+	}
+	
+//	@Test
+//	public void selectLessonDetail() throws FindException{
+//		int lessonId = 37;
+//		Lesson lesson = dao.selectLessonDetail(lessonId);
+//		int expTeacherId = 18;
+//		assertEquals(expTeacherId, lesson.getTeacher().getStudentId());
+//	}
+	
+	//@Test
+	public void selectLessonPs() throws FindException{
+		int lessonId= 37;
+		List<LessonPenalty> lessonps = dao.selectLessonPs(lessonId);
+		int expSize = 3;
+		assertEquals(expSize, lessonps.size());
+	}
+	
+	//@Test
 	public void adminSelectByPage() {
 		
 		String word = "a";

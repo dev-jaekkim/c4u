@@ -20,8 +20,11 @@
 <result property="lessonTargetFee" column="lesson_target_amount"/>
 <result property="lessonTotalFee" column="lesson_total_amount"/>
 <result property="teacher.studentId" column="lesson_teacher_id"/>
+<result property="teacher.studentName" column="student_name"/>
+<!--<collection property="lessonPenaltyStatus" ofType="com.my.vo.LessonPenaltyStatus" autoMapping="true">
+	<id property="lessonPsId" column="lessonps_id" />
+</collection>-->
 </resultMap>
-
 
 <!--강좌 전체 조회-->
 <select id="selectAll" resultMap="lessonrm">
@@ -43,10 +46,12 @@ SELECT lesson_id,
 	        lesson_fee, 
 			lesson_description,
 	        lesson_category_id,
-			lesson_recommend_cnt
-FROM lesson 
+			lesson_recommend_cnt,
+			s.student_name
+FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
 WHERE lesson_id = #{lessonId} 
 </select>
+
 
 <!--selectByUnion-->
 <select id="selectByUnion" resultMap="lessonrm" parameterType="java.lang.String">
