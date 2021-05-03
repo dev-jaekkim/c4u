@@ -27,7 +27,7 @@ public interface AdminLessonDAO {
 	 * @return List<Lesson> 강좌 전체 목록
 	 * @throws FindException 검색어에 해당하는 강좌나 전체 강좌가 하나도 없을 경우 예외 발생 
 	 */
-	public List<Lesson> selectLessonList(int currentPage, int cntPerPage, String word) throws FindException;
+	public List<Lesson> selectLessonList(int currentPage, int cnt_per_page, String word) throws FindException;
 	
 	/**
 	 * 레슨 아이디에 해당하는 레슨 심사상세 조회 
