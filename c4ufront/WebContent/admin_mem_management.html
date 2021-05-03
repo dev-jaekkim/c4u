@@ -21,8 +21,12 @@
             font-weight: 300;
         }
 
+        .adm_mem_section{
+            margin-left: 200px;
+        }
+
         .admin_mem_management {
-            width: 820px;
+            width: 850px;
             height: 100%;
             margin: 30px auto;
             text-align: center;
@@ -188,12 +192,8 @@
                     "timeout": {},
                     "data": "",
                     success: function (responseObj) {
-                        if(responseObj.status == 1) {
-                            location.href="/c4ufront/login.html";
-                        }
-                        
-                        // console.log("성공: "+responseObj);
-                        // showList(responseObj);
+                        console.log(responseObj);
+                        showList(responseObj);
                     },
                     error: function (jqXHR) {
                         console.log(jqXHR.status);
@@ -488,7 +488,7 @@
 
 <body>
     <div class="header"></div>
-    <section>
+    <section class="adm_mem_section">
         <div class="admin_mem_management">
             <div class="title">회원관리</div>
             <table class="mem_list">

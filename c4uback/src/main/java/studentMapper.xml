@@ -14,7 +14,6 @@
 <result property="studentStatus" column="student_status"/>
 <collection property="penaltyStatus" ofType="com.my.vo.PenaltyStatus" autoMapping="true">
 	<id property="psId" column="ps_student_id" />
-	
 </collection>
 </resultMap>
 

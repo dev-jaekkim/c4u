@@ -47,17 +47,18 @@ public class StudentController {
 	//	}
 
 	//front 페이징
-	//21-05-01 김보람 
 	@GetMapping(value={"/admin/studentlist/{currentPage}", "/admin/studentlist/{currentPage}/{word}"})
 	public Map<String, Object> adminStudentList(@PathVariable("currentPage") int currentPage,
-										@PathVariable("word") Optional<String> word,
-										Authentication auth) throws FindException {
+										@PathVariable("word") Optional<String> word
+//										,
+//										Authentication auth
+										) throws FindException {
 		log.info(word);
 		List<Student> list;
 		int cnt_per_page = 10;
 		Map<String, Object> map = new HashMap<>();
 		
-		if(auth != null) {
+//		if(auth != null) {
 			if(word.isPresent()) { 
 				String search = word.get(); //optional로 받은거  get해서 String으로 
 				list = service.findStudentList(currentPage, cnt_per_page, search);
@@ -75,11 +76,11 @@ public class StudentController {
 				map.put("status", 1);
 			}
 			return map;
-		}else {
-			log.warn("adminDetail"+auth);
-			map.put("status", 9);
-		}
-		return map;
+//		}else {
+//			log.warn("adminDetail"+auth);
+//			map.put("status", 9);
+//		}
+//		return map;
 
 	}
 	
