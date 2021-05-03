@@ -52,9 +52,9 @@ public class LessonDAOOracle {
 	
 	//@Test
 	public void selectById() throws FindException {
-		int lessonId = 17;
+		int lessonId = 35;
 		Lesson lesson =dao.selectById(lessonId);
-		int expTeacherId =10;
+		int expTeacherId =16;
 		int expCategoryId = 302;
 //		assertEquals(expTeacherId, lesson.getTeacher().getStudentId());
 		assertEquals(expCategoryId, lesson.getLessonCategory());

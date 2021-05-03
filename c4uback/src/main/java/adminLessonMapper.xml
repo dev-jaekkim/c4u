@@ -4,6 +4,31 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mybatis.AdminLessonMapper">
 
+<resultMap type="com.my.vo.Lesson" id="adminlessonrm">
+<id property="lessonId" column="lesson_id"/>
+<result property="lessonCategory" column="lesson_category_id"/>
+<result property="lessonCreate" column="lesson_create_date"/>
+<result property="lessonEnd" column="lesson_end_date"/>
+<result property="lessonDescription" column="lesson_description"/>
+<result property="lessonFee" column="lesson_fee"/>
+<result property="lessonName" column="lesson_name"/>
+<result property="lessonParticipant" column="lesson_participant"/>
+<result property="lessonRecommend" column="lesson_recommend_cnt"/>
+<result property="lessonStart" column="lesson_start_date"/>
+<result property="lessonStatus" column="lesson_status"/>
+<result property="lessonTargetFee" column="lesson_target_amount"/>
+<result property="lessonTotalFee" column="lesson_total_amount"/>
+<result property="teacher.studentId" column="lesson_teacher_id"/>
+<result property="teacher.studentName" column="student_name"/>
+</resultMap>
+
+<resultMap type="com.my.vo.LessonPenaltyStatus" id="lessonpsrm">
+<id property="lessonPsId" column="lessonps_id"/>
+<result property="lesson.lessonId" column="lessonps_lesson_id"/>
+<result property="lessonPenalty.lpId" column="lessonps_evaluation_id"/>
+<result property="lessonPsDate" column="lessonps_date"/>
+</resultMap>
+
 <!--심사 승인-->
 <update id="updateLesson" parameterType="java.lang.Integer">
 	UPDATE lesson
@@ -19,8 +44,35 @@
 	VALUES(seq_lesson_penalty_status_id.NEXTVAL, #{lesson.lessonId}, #{lessonPenalty.lpId}, SYSDATE)
 </insert>
 
-<select id="adminSelectByPage">
+<!--관리자페이지 강좌 상세 조회-->
+<!--<select id="selectLessonDetail" parameterType="java.lang.Integer" resultMap="adminlessonrm">
+SELECT lesson_id, 
+			lesson_teacher_id,
+			lesson_name, 
+			lesson_total_amount,
+			lesson_target_amount, 
+			lesson_participant,
+			lesson_create_date,
+			lesson_end_Date,
+			lesson_status, 
+			lesson_start_date, 
+	        lesson_fee, 
+			lesson_description,
+	        lesson_category_id,
+			lesson_recommend_cnt,
+			s.student_name,
+            lps.lessonps_lesson_id,
+            lps.lessonps_evaluation_id,
+            lp.lp_content,
+            c.category_name
+FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
+				LEFT JOIN lesson_penalty_status lps ON (l.lesson_id = lps.lessonps_lesson_id)
+                LEFT JOIN lesson_penalty lp ON (lps.lessonps_evaluation_id = lp.lp_id)
+                LEFT JOIN category c ON (c.category_id = l.lesson_category_id)
+WHERE lesson_id = #{lessonId}
+</select>-->
 
+<select id="adminSelectByPage">
 SELECT l.lesson_id,l.lesson_name,s.student_name,l.lesson_create_date,
        lp.lp_content, lps.lessonps_date
 FROM lesson l
@@ -32,6 +84,44 @@ LEFT JOIN student s
      ON l.lesson_teacher_id = s.student_id
 WHERE s.student_id = #{student_id}  AND (l.lesson_name LIKE '%${word}%' OR s.student_name LIKE '%${word}%')
 ORDER BY l.lesson_id ASC;
+</select>
+
+<!--심사거절 사유 조회 -->
+<select id="selectLessonPenaltyAll" resultType="LessonPenalty">
+SELECT lp_id lpId, lp_content lpContent FROM lesson_penalty
+</select>
+
+<!--재심사 참고용 심사거절 내역 조회 -->
+<select id="selectLessonPs" parameterType="java.lang.Integer" resultMap="lessonpsrm">
+SELECT lessonps_id, lessonps_lesson_id, lessonps_evaluation_id, lessonps_date
+FROM lesson_penalty_status 
+WHERE LESSONPS_LESSON_ID = #{lessonId};
 
 </select>
+
+
+<!--SELECT lesson_id, 
+			lesson_teacher_id,
+			lesson_name, 
+			lesson_total_amount,
+			lesson_target_amount, 
+			lesson_participant,
+			lesson_create_date,
+			lesson_end_Date,
+			lesson_status, 
+			lesson_start_date, 
+	        lesson_fee, 
+			lesson_description,
+	        lesson_category_id,
+			lesson_recommend_cnt,
+			s.student_name,
+            lps.lessonps_lesson_id,
+            lps.lessonps_evaluation_id,
+            lp.lp_content,
+            c.category_name
+FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
+				LEFT JOIN lesson_penalty_status lps ON (l.lesson_id = lps.lessonps_lesson_id)
+                LEFT JOIN lesson_penalty lp ON (lps.lessonps_evaluation_id = lp.lp_id)
+                LEFT JOIN category c ON (c.category_id = l.lesson_category_id)
+WHERE lesson_id = 37;-->
 </mapper>
