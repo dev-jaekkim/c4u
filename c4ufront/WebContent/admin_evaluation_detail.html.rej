@@ -1,0 +1,9 @@
+diff a/c4ufront/WebContent/admin_evaluation_detail.html b/c4ufront/WebContent/admin_evaluation_detail.html	(rejected hunks)
+@@ -170,6 +170,7 @@
+ 
+                     $("#lesson_name").html(lsdata.lessonName);
+                     $("#teacher_name").html(sdata.studentName);
++                    $("#lesson_category").html(lsdata.category.categoryName);
+                     $("#lesson_desc").html(lsdata.lessonDescription);
+                     $("#target_amount").html(lsdata.lessonTargetFee);
+                     $("#start_date").html(lsdata.lessonStart);

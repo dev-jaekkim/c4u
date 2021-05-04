@@ -1,0 +1,10 @@
+diff a/c4uback/src/main/java/com/my/controller/AdminLessonController.java b/c4uback/src/main/java/com/my/controller/AdminLessonController.java	(rejected hunks)
+@@ -44,7 +44,7 @@
+ 		map.put("status", 1);
+ 		//		}else {
+ 		//			log.warn("adminDetail"+auth);
+-		//			map.put("status", 9);
++		//			map.put("status", -9);
+ 		//		}
+ 		return map;
+ 	}
