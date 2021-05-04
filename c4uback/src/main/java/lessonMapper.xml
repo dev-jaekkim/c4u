@@ -7,7 +7,7 @@
 
 <resultMap type="com.my.vo.Lesson" id="lessonrm">
 <id property="lessonId" column="lesson_id"/>
-<result property="lessonCategory" column="lesson_category_id"/>
+<result property="lessonCategory" column="category_id"/>
 <result property="lessonCreate" column="lesson_create_date"/>
 <result property="lessonEnd" column="lesson_end_date"/>
 <result property="lessonDescription" column="lesson_description"/>
@@ -24,6 +24,8 @@
 <!--<collection property="lessonPenaltyStatus" ofType="com.my.vo.LessonPenaltyStatus" autoMapping="true">
 	<id property="lessonPsId" column="lessonps_id" />
 </collection>-->
+
+
 </resultMap>
 
 <!--강좌 전체 조회-->
@@ -47,8 +49,10 @@ SELECT lesson_id,
 			lesson_description,
 	        lesson_category_id,
 			lesson_recommend_cnt,
-			s.student_name
+			s.student_name,
+			c.category_name
 FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
+			JOIN category c ON (l.lesson_category_id = c.category_id)
 WHERE lesson_id = #{lessonId} 
 </select>
 
