@@ -5,9 +5,38 @@
 
 <mapper namespace="mybatis.LessonMapper">
 
+<!-- <resultMap type="com.my.vo.Category" id="categoryrm">
+	<id property="categoryId" column="category_id"/>
+	<result property="categoryName" column="category_name" />
+-->
+	<resultMap type="com.my.vo.Lesson" id="lessonrmtest">
+		<id property="lessonId" column="lesson_id"/>
+			<result property="lessonCategory" column="lesson_category_id"/>
+			<result property="lessonCreate" column="lesson_create_date"/>
+			<result property="lessonEnd" column="lesson_end_date"/>
+			<result property="lessonDescription" column="lesson_description"/>
+			<result property="lessonFee" column="lesson_fee"/>
+			<result property="lessonName" column="lesson_name"/>
+			<result property="lessonParticipant" column="lesson_participant"/>
+			<result property="lessonRecommend" column="lesson_recommend_cnt"/>
+			<result property="lessonStart" column="lesson_start_date"/>
+			<result property="lessonStatus" column="lesson_status"/>
+			<result property="lessonTargetFee" column="lesson_target_amount"/>
+			<result property="lessonTotalFee" column="lesson_total_amount"/>
+				<association property="teacher" javaType="Student">
+					<id property="studentId" column="lesson_teacher_id"/>
+					<result property="studentName" column="student_name"/>
+				</association>
+				
+				<association property="category" javaType="Category" autoMapping="true">
+					<id property="categoryId" column="category_id" />
+					<result property="categoryName" column="category_name"/>
+				</association>
+	</resultMap>
+
 <resultMap type="com.my.vo.Lesson" id="lessonrm">
 <id property="lessonId" column="lesson_id"/>
-<result property="lessonCategory" column="category_id"/>
+<result property="lessonCategory" column="lesson_category_id"/>
 <result property="lessonCreate" column="lesson_create_date"/>
 <result property="lessonEnd" column="lesson_end_date"/>
 <result property="lessonDescription" column="lesson_description"/>
@@ -24,8 +53,6 @@
 <!--<collection property="lessonPenaltyStatus" ofType="com.my.vo.LessonPenaltyStatus" autoMapping="true">
 	<id property="lessonPsId" column="lessonps_id" />
 </collection>-->
-
-
 </resultMap>
 
 <!--강좌 전체 조회-->
@@ -34,7 +61,7 @@ select * from lesson where lesson_status = 0 order by lesson_end_date
 </select>
 
 <!--아이디로 강좌 조회-->
-<select id="selectById" resultMap="lessonrm" parameterType="java.lang.Integer">
+<select id="selectById" resultMap="lessonrmtest" parameterType="java.lang.Integer">
 SELECT lesson_id, 
 			lesson_teacher_id,
 			lesson_name, 
@@ -53,7 +80,10 @@ SELECT lesson_id,
 			c.category_name
 FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
 			JOIN category c ON (l.lesson_category_id = c.category_id)
-WHERE lesson_id = #{lessonId} 
+WHERE lesson_id = #{lessonId}
+
+
+
 </select>
 
 

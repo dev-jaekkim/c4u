@@ -28,7 +28,16 @@ public class Lesson {
 	int targetPercent;
 	int diffDays;
 	private int lessonCategory;
+	private Category category;
 	
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 	public Lesson() {
 		super();
 	}

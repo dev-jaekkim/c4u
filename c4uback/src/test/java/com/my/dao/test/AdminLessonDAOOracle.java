@@ -37,7 +37,7 @@ public class AdminLessonDAOOracle {
 	private LessonDAO ldao;
 
 	//lesson selectById 한 번 더 확인
-	//@Test
+//	@Test
 	public void insertPenaltyStatus() throws FindException,AddException, ParseException {
 		//심사할 강좌 선택
 		int lesson_id =21;
@@ -105,7 +105,7 @@ public class AdminLessonDAOOracle {
 		
 	}
 	
-	@Test
+//	@Test
 	public void adminSelectByPage() {
 		
 		String word = "복";
