@@ -42,7 +42,7 @@ public class CategoryDAOOracle implements CategoryDAO {
 		}
 	}
 
-	//다시
+	
 	@Override
 	public List<Lesson> selectById(int categoryId) throws FindException {
 		SqlSession session = null;

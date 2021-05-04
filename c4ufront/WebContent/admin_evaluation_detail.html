@@ -37,8 +37,6 @@
             width: 800px;
             border-collapse: collapse;
             line-height: 30px;
-            /* table-layout: fixed; */
-            /* word-wrap:break-word;  */
             word-break: break-all;
             margin: 50px auto;
         }
@@ -121,7 +119,6 @@
             margin: 10px 0;
         }
 
-
         .admin_evaluation_detail label {
             cursor: pointer;
         }
@@ -153,16 +150,17 @@
                 ],
                 "jsonpCallbackParam": "callback",
                 // "url": "/c4uback/lesson/" + lessonId,
-                "url": "http://localhost:8888/c4uback/lesson/37",
+                "url": "http://localhost:8888/c4uback/lesson/29",
                 "headers": {
                     "Accept": "application/json, text/plain, */*"
                 },
                 "data": "",
                 "timeout": {},
-                success: function(responseObj){
+                success: function (responseObj) {
                     let lsdata = responseObj.lesson;
                     let sdata = responseObj.lesson.teacher;
-                   
+                    console.log("강좌 상세정보 조회: " + responseObj);
+
                     $("#lesson_name").html(lsdata.lessonName);
                     $("#teacher_name").html(sdata.studentName);
                     $("#lesson_category").html(lsdata.lessonCategory);
@@ -172,42 +170,100 @@
                     $("#create_date").html(lsdata.lessonCreate);
                     $("#end_date").html(lsdata.lessonEnd);
                     $("#lesson_fee").html(lsdata.lessonFee);
-                    $("#target_participant").html(lsdata.lessonTargetFee/lsdata.lessonFee);
+                    $("#target_participant").html(lsdata.lessonTargetFee / lsdata.lessonFee);
+                    if (!(lsdata.lessonStatus == 3)) {
+                        $(".permission, .reject").attr("id", "false");
+                    }
                 },
-                error: function(jqXHR){
+                error: function (jqXHR) {
                     console.log(jqXHR.status);
                 }
             });
+            //심사 거절 내역 조회 
+            $.ajax({
+                "method": "GET",
+                "transformRequest": [
+                    null
+                ],
+                "transformResponse": [
+                    null
+                ],
+                "jsonpCallbackParam": "callback",
+                "url": "http://localhost:8888/c4uback/admin/lesson/lessonps/29",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function (responseObj) {
+                    console.log(responseObj);
+                    let data = responseObj.lessonPenalty;
+                    let $trObj = $("#fail_tr");
+                    let $thObj = $("#fail_th");
+                    let $tdObj = $("#fail_reason");
+                    if (!(data.length == 0)) {
+                        $(data).each(function (i, e) {
+                            let $trCopyObj = $trObj.clone();
+                            $trCopyObj.removeAttr("id", "fail_tr");
+                            $trCopyObj.addClass("copy");
+                            $trCopyObj.find("#fail_th").html("심사 실패 사유 " + (i + 1));
+                            $trCopyObj.find("#fail_reason").html(e.lessonPenalty.lpContent + ", " + e.lessonPsDate);
+                            $trObj.before($trCopyObj);
+                        });
+                        // $tdObj.hide();
+                        $trObj.hide();
+                        // $thObj.hide();
+                    } else {
+                        // $trObj.show();
+                        $tdObj.html("심사 실패 내역이 없습니다.");
+                    }
+                    // }else {
+                    //     $trObj.show();
+                    //     $tdObj.html("심사 실패 내역이 없습니다.");
+                    // }
+
+
+
+                },
+            });
+
 
             //승인
             $(".permission").click(function () {
                 let lessonId;
-                $.ajax({
-                    "method": "PUT",
-                    "transformRequest": [
-                        null
-                    ],
-                    "transformResponse": [
-                        null
-                    ],
-                    "jsonpCallbackParam": "callback",
-                    "url": "/c4uback/admin/lesson/modifylessonstatus/" + lessonId,
-                    "headers": {
-                        "Accept": "application/json, text/plain, */*",
-                        "Content-Type": "application/json;charset=utf-8"
-                    },
-                    "data": "",
-                    "timeout": {},
-                    success: function () {
-                        alert(lessonId + "번 강좌가 개설 승인되어 개설 대기 상태로 변경됩니다.")
-                        location.href = "";
+                if ($(".permission").attr("id") == "false") {
+                    alert("심사 대기중인 강좌가 아닙니다.");
+                } else {
+                    $.ajax({
+                        "method": "PUT",
+                        "transformRequest": [
+                            null
+                        ],
+                        "transformResponse": [
+                            null
+                        ],
+                        "jsonpCallbackParam": "callback",
+                        "url": "/c4uback/admin/lesson/modifylessonstatus/29",
+                        //+lessonId
+                        "headers": {
+                            "Accept": "application/json, text/plain, */*",
+                            "Content-Type": "application/json;charset=utf-8"
+                        },
+                        "data": "",
+                        "timeout": {},
+                        success: function (responseObj) {
+                            alert(
+                                // lessonId + 
+                                "29번 강좌가 개설 승인되어 개설 대기 상태로 변경됩니다.");
+                            // location.href = "";
 
-                        // /admin/lesson/list이동 
-                    },
-                    error: function () {
-
-                    }
-                });
+                            // /admin/lesson/list이동 
+                        },
+                        error: function (jqXHR) {
+                            console.log(jqXHR.status);
+                        }
+                    });
+                }
                 return false;
             });
 
@@ -228,7 +284,6 @@
                 "data": "",
                 "timeout": {},
                 success: function (responseObj) {
-                    console.log(responseObj);
                     let $labelOriginObj = $(".ls_ps");
                     let $penaltyDiv = $(".radio_div");
                     $(responseObj.lessonPenalty).each(function (i, e) {
@@ -254,7 +309,12 @@
             let $modalBtn = $(".modal_btn");
             let $cancelBtn = $(".cancel");
             $(".reject").click(function () {
-                $(".modal_bg").css("display", "block");
+
+                if ($(".reject").attr("id") == "false") {
+                    alert("심사 대기중인 강좌가 아닙니다.");
+                } else {
+                    $(".modal_bg").css("display", "block");
+                }
                 return false;
             });
             $(".modal_btn").click(function (event) {
@@ -263,6 +323,7 @@
                     alert("심사 거절 사유를 선택해주세요");
                 } else {
                     //심사 거절 
+                    console.log(penaltyId);
                     $.ajax({
                         "method": "POST",
                         "transformRequest": [
@@ -272,16 +333,19 @@
                             null
                         ],
                         "jsonpCallbackParam": "callback",
-                        "url": "/admin/lesson/insertpenaltystatus",
+                        "url": "/c4uback/admin/lesson/insertpenaltystatus",
                         "headers": {
                             "Accept": "application/json, text/plain, */*",
                             "Content-Type": "application/json;charset=utf-8"
                         },
-                        "data": "{\"lesson\": {\"lessonId\":73}, \"lessonPenalty\": {\"lpId\": 1}}",
+                        "data": "{\"lesson\": {\"lessonId\":" + lessonId + "}, \"lessonPenalty\": {\"lpId\":" + penaltyId + "}}",
                         "timeout": {},
                         success: function (responseObj) {
-                            alert(lessonId + "번 강좌가 심사 거절되었습니다.");
-                            location.href = "";
+                            alert(
+                                // lessonId + 
+                                "29번 강좌가 심사 거절되었습니다.");
+                            // location.href = "";
+                            location.reload();
                             // /admin/lesson/list이동 
                         },
                         error: function (jqXHR) {
@@ -349,11 +413,9 @@
                         <th>목표 회원수</th>
                         <td id="target_participant"></td>
                     </tr>
-                    <tr>
-                        <th>심사 실패 사유</th>
-                        <!-- //&nbsp; -->
-                        <td id="fail_reason"><br>
-                        </td>
+                    <tr id="fail_tr">
+                        <th id="fail_th">심사 실패 사유</th>
+                        <td id="fail_reason"></td>
                     </tr>
                     <tr>
                         <th>대표 이미지</th>

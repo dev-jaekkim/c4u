@@ -127,14 +127,14 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		SqlSession session = null;
 		try {
 			session = sqlSessionFactory.openSession();
-			session.insert("mybatis.AdminLessonMapper.selectLessonPs", lessonId);
+			List<LessonPenalty> list = session.selectList("mybatis.AdminLessonMapper.selectLessonPs", lessonId);
 			session.commit();
+			return list;
 		}catch(Exception e) {
 			throw new FindException(e.getMessage());
 		}finally {
 			if(session != null) session.close();
 		}
-		return null;
 		
 	}
 

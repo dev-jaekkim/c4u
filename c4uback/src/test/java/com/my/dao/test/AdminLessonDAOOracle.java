@@ -78,7 +78,6 @@ public class AdminLessonDAOOracle {
 //		int expTeacherId = 18;
 //		assertEquals(expTeacherId, lesson.getTeacher().getStudentId());
 //	}
-	
 	//@Test
 	public void selectLessonPs() throws FindException{
 		int lessonId= 37;
@@ -87,8 +86,13 @@ public class AdminLessonDAOOracle {
 		assertEquals(expSize, lessonps.size());
 	}
 	
+<<<<<<< HEAD
 	//@Test
 	public void adminselectLessonEvaluationList() {
+=======
+//	@Test
+	public void adminSelectByPage() {
+>>>>>>> 539f10c5a26c3e2dc3575ad47c5b0e4309687084
 		
 		String word = "a";
 		int currentPage = 1;
@@ -99,7 +103,6 @@ public class AdminLessonDAOOracle {
 			List<Lesson> list = dao.selectLessonEvaluationList(currentPage, cnt_per_page, word);
 			assertTrue(list.size() == expsize);
 		} catch (FindException e) {
-		
 			e.printStackTrace();
 		}
 		

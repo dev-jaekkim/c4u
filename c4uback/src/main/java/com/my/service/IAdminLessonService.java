@@ -23,4 +23,6 @@ public interface IAdminLessonService {
 	
 //	public List<Lesson> findDetailByLessonId (int lessonId) throws FindException;
 	
+	public List<LessonPenalty> findLessonPs(int lessonId) throws FindException;
+	
 }
