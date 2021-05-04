@@ -10,10 +10,12 @@
 		</layout>
 	</appender>
 	
-	
-	
 	<!-- Application Loggers -->
 	<logger name="com.my.c4uback">
+		<level value="info" />
+	</logger>
+	
+	<logger name="com.my.c4ufront">
 		<level value="info" />
 	</logger>
 	

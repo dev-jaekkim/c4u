@@ -94,16 +94,16 @@
             //관리자 로그아웃 
             $(".logout").click(function(e){
                 $.ajax({
-                    // url:  
-                    // method:  
-                    // data: 
-                    // success: function(data){
-                    //     alert("로그아웃 되었습니다");
-                    //     //c4u메인페이지로 이동  
-                    // }, 
-                    // error: function(data){
-
-                    // }
+                     url:  "http://localhost:8888/c4uback/logout",
+                     method: "GET",
+                     success: function(data){
+                         alert("로그아웃 되었습니다");
+                         console.log(data);
+                         location.href="./maindraft1.html";
+                     }, 
+                     error: function(data){
+						console.log(data.status);
+                     }
                 });
                 return false;
             });

@@ -96,7 +96,7 @@ public class LessonReviewController {
 			map.put("status", 1);
 			log.debug(pgb);
 		} else {
-			map.put("status", 9);
+			map.put("status", -1);
 			log.warn("adminList" + auth);
 		}
 		return map;
@@ -111,7 +111,7 @@ public class LessonReviewController {
 			lessonReviewService.remove(review_id);
 			map.put("status", 1);
 		} else {
-			map.put("status", 9);
+			map.put("status", -1);
 			log.warn("adminRemove" + auth);
 		}
 		return map;

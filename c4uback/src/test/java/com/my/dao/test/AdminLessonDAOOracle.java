@@ -1,5 +1,7 @@
 package com.my.dao.test;
 
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.text.ParseException;
@@ -21,7 +23,7 @@ import com.my.exception.ModifyException;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
-@RunWith(SpringJUnit4ClassRunner.class) //Juni4인 경우
+@RunWith(SpringJUnit4ClassRunner.class) //Junit4인 경우
 
 //Spring 컨테이너용 XML파일 설정
 @ContextConfiguration(locations={
@@ -59,6 +61,9 @@ public class AdminLessonDAOOracle {
 		dao.updateLesson(lessonId);
 	}
 	
+
+
+
 	//@Test
 	public void selectLessonPenaltyAll () throws FindException{
 		List<LessonPenalty> list = dao.selectLessonPenaltyAll();
@@ -73,12 +78,29 @@ public class AdminLessonDAOOracle {
 //		int expTeacherId = 18;
 //		assertEquals(expTeacherId, lesson.getTeacher().getStudentId());
 //	}
-
-	@Test
+	//@Test
 	public void selectLessonPs() throws FindException{
 		int lessonId= 37;
 		List<LessonPenalty> lessonps = dao.selectLessonPs(lessonId);
 		int expSize = 3;
 		assertEquals(expSize, lessonps.size());
+	}
+	
+	//@Test
+	public void adminSelectByPage() {
+		
+		String word = "a";
+		int currentPage = 1;
+		int cnt_per_page = 20;
+		int expsize = 1;
+		
+		try {
+			List<Lesson> list = dao.selectLessonList(currentPage, cnt_per_page, word);
+			assertTrue(list.size() == expsize);
+		} catch (FindException e) {
+		
+			e.printStackTrace();
+		}
+		
 	}
 }

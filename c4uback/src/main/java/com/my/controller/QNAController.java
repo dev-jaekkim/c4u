@@ -174,7 +174,7 @@ public class QNAController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminDetail"+auth);
-			map.put("status", 9);
+			map.put("status", -1);
 		}
 		return map;
 	}
@@ -191,7 +191,7 @@ public class QNAController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminReply"+auth);
-			map.put("status", 9);
+			map.put("status", -1);
 		}
 		return map;
 	}
@@ -207,7 +207,7 @@ public class QNAController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminDelete"+auth);
-			map.put("status", 9);
+			map.put("status", -1);
 		}
 		return map;
 	}

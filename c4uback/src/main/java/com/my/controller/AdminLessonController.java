@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.my.service.AdminLessonService;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
@@ -52,7 +54,6 @@ public class AdminLessonController {
 		return map;
 	}
 	
-	//lesson penalty table 조회 
 	@GetMapping("/admin/lesson/lessonpenaltyall")
 	public Map<String, Object> findLessonPenaltyAll() throws Exception{
 		Map<String, Object> map = new HashMap<>();
@@ -80,4 +81,5 @@ public class AdminLessonController {
 //		map.put("status",1);
 //		return map;
 //	}
+
 }
