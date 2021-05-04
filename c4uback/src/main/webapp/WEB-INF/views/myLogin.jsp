@@ -16,8 +16,9 @@
     }
     
     div.loginAction{
-        margin-left: 30%;
-        margin-top: 10%;
+        margin-left: 40%;
+        margin-top: 40%;
+        margin-bottom: 40%;
     }
     
     span{
@@ -35,8 +36,7 @@
         list-style: none;
         padding-left: 0px;
         position: relative;
-        margin-left:40%;
-        margin-top:20%;
+        display: inline-block;
     }
 
     span.emailInputSpan, span.pwdInputSpan{
@@ -65,10 +65,10 @@
         letter-spacing: -0.015em;
     }
     span.signIn{
-        margin-left: 50px;
+        margin-left: 38px;
     }
     span.findPwd{
-        margin-left: 60px;
+        margin-left: 48px;
     }
    
 </style>
@@ -85,7 +85,7 @@
 		       value="${_csrf.token}"></span>
 			<span><input type="submit" value="login" class="btLogin"></span>
 		</form>
-		<span class="signIn">아직 계정이 없으신가요? <a href="signup1.0.html">회원가입</a></span>
+		<span class="signIn">아직 계정이 없으신가요? <a href="signup1.0.html">회원가입</a></span><br>
         <span class="findPwd"><a href="findpwd.html">혹시 비밀번호를 잊으셨나요?</a></span>
 	</div>
 </section>
