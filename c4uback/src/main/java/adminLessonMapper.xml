@@ -50,6 +50,7 @@
 <id property="lessonPsId" column="lessonps_id"/>
 <result property="lesson.lessonId" column="lessonps_lesson_id"/>
 <result property="lessonPenalty.lpId" column="lessonps_evaluation_id"/>
+<result property="lessonPenalty.lpContent" column="lp_content"/>
 <result property="lessonPsDate" column="lessonps_date"/>
 </resultMap>
 
@@ -122,6 +123,12 @@ SELECT lp_id lpId, lp_content lpContent FROM lesson_penalty
 
 <!--재심사 참고용 심사거절 내역 조회 -->
 <select id="selectLessonPs" parameterType="java.lang.Integer" resultMap="lessonpsrm">
+<<<<<<< HEAD
+SELECT lessonps_id, lessonps_lesson_id, lessonps_evaluation_id, lessonps_date,
+		lp.lp_content
+FROM lesson_penalty_status lps JOIN lesson_penalty lp ON (lps.lessonps_evaluation_id = lp.lp_id)
+WHERE lessonps_lesson_id = #{lessonId}
+ORDER BY lessonps_date
 SELECT lessonps_id, lessonps_lesson_id, lessonps_evaluation_id
 FROM lesson_penalty_status 
 WHERE lessonps_lesson_id = #{lessonId}

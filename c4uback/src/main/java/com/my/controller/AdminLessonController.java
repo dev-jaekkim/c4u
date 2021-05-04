@@ -54,11 +54,20 @@ public class AdminLessonController {
 		return map;
 	}
 	
-
 	@GetMapping("/admin/lesson/lessonpenaltyall")
 	public Map<String, Object> findLessonPenaltyAll() throws Exception{
 		Map<String, Object> map = new HashMap<>();
 		List<LessonPenalty> list = service.findLessonPenaltyAll();
+		map.put("lessonPenalty", list);
+		map.put("status", 1);
+		return map;
+	}
+	
+	//해당 강좌의 lessonps 조회 
+	@GetMapping("/admin/lesson/lessonps/{lessonId}")
+	public Map<String,Object> findLessonPs(@PathVariable int lessonId) throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		List<LessonPenalty> list = service.findLessonPs(lessonId);
 		map.put("lessonPenalty", list);
 		map.put("status", 1);
 		return map;

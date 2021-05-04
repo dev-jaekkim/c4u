@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 
 
@@ -11,6 +13,7 @@ public class LessonPenaltyStatus {
 	private int lessonPsId;
 	private Lesson lesson;
 	private LessonPenalty lessonPenalty;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date lessonPsDate;
 	
 	public LessonPenaltyStatus() {
