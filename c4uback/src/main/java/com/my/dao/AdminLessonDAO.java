@@ -47,7 +47,7 @@ public interface AdminLessonDAO {
 	
 	/**
 	 * 재심사시 참고용 심사 거절 내역 조회 
-	 * @return 심사거절 내역 
+	 * @return 해당 강좌의 심사거절 내역 
 	 * @throws FindException 
 	 */
 	public List<LessonPenalty> selectLessonPs(int lessonId) throws FindException;

@@ -34,7 +34,7 @@ public class CategoryDAOOracle {
 		assertTrue(expListSize == list.size());
 	}
 	
-//	@Test
+	//@Test
 	public void selectById() throws FindException {
 		int categoryId = 101;
 		List<Lesson> list = dao.selectById(categoryId);

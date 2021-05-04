@@ -33,6 +33,11 @@ public class AdminLessonService implements IAdminLessonService {
 		return dao.selectLessonPenaltyAll();
 	}
 
+	@Override
+	public List<LessonPenalty> findLessonPs(int lessonId) throws FindException {
+		return dao.selectLessonPs(lessonId);
+	}
+
 //	@Override
 //	public Lesson findDetailByLessonId(int lessonId) throws FindException {
 //		return dao.selectLessonDetail(lessonId);

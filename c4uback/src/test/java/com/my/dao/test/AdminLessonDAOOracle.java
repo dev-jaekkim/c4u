@@ -73,7 +73,7 @@ public class AdminLessonDAOOracle {
 //		int expTeacherId = 18;
 //		assertEquals(expTeacherId, lesson.getTeacher().getStudentId());
 //	}
-	
+
 	@Test
 	public void selectLessonPs() throws FindException{
 		int lessonId= 37;
@@ -81,5 +81,4 @@ public class AdminLessonDAOOracle {
 		int expSize = 3;
 		assertEquals(expSize, lessonps.size());
 	}
-	
 }
