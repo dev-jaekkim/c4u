@@ -24,8 +24,8 @@
             margin-left: 50px;
             margin-top: 30px;
             margin-bottom: 10px;
-        }
-
+        }        
+        
         .admin_notice_list hr{
             opacity: 35%;
             width: 730px;
@@ -112,9 +112,10 @@
             color: rgb(255, 87, 87);
         }
 
-        .admin_notice_list div.page_group{
+        .admin_notice_list div.page_group,origin{
             margin-left: 40%;
             margin-top: 20px;
+            display: inline-block;
         }
 
         .admin_notice_list div.search{
@@ -139,9 +140,102 @@
         		//어드민로그인실패
         		location.href="http://localhost:8888/c4uback/myLogin";
         		return;
-        	}        	
+        	}      	
         	console.log("front 쿠키 정보 확인");
             $(".header").load("admin_header.html");
+
+            function showList(responseObj){
+                console.log(responseObj);
+	            //테이블객체
+	            var $tableObj =$("section>div.admin_notice_list>table.notice_list");
+
+                $("section>div.admin_notice_list>table.notice_list>table tr.copy").remove();
+	
+                //원본행객체
+                var $trOriginObj = $("section>div.admin_notice_list>table tr.origin");
+                $trOriginObj.show(); //원본행객체 보여주기
+                
+                if(responseObj.status == -1){
+                    alert(responseObj.msg);
+                    return false;
+                }else{
+                    $(responseObj.pgb.list).each(function(index, element){
+                        var $trCopyObj = $trOriginObj.clone(); //원본행객체의 복제본만들기
+                        $trCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                        $trCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                        
+                        //복제본행의 내용 채우기 : 게시글번호
+                        $trCopyObj.find("td.notice_body_no").html(element.noticeId);
+                        //console.log("번호"+element.noticeId);
+                       
+                        //복제본행의 내용 채우기 : 게시글제목
+                        $trCopyObj.find("td.notice_body_title").html(element.noticeTitle);
+                        // console.log("제목"+element.noticeTitle);
+
+                        //복제본행의 내용 채우기 : 작성일자
+                        $trCopyObj.find("td.notice_body_date").html(element.noticeDate);
+                        // console.log("날짜"+element.noticeDate);
+
+                        //테이블객체의 자식객체로 복제본행을 추가
+                        $tableObj.append($trCopyObj);
+                    }); //each
+                    
+                    $trOriginObj.hide();
+                }
+            };
+
+            function pageGroup(responseObj){
+                console.log(responseObj);
+                //DIV 그룹 객체
+                // var $divNoticeListObj =$("section>div.admin_notice_list");
+
+                //페이지 그룹 원본 객체
+                // var $pageGroupOriginObj = $("body > section > div > div.page_group\,.origin ");
+                //$pageGroupOriginObj.show(); //원본 객체 보여주기
+                
+                var cnt_per_page_val = responseObj.pgb.cnt_per_page;
+                var cnt_per_page_group_val = responseObj.pgb.cnt_per_page_group;
+                var currentPage_val = responseObj.pgb.currentPage;
+                var startPage_val = responseObj.pgb.startPage;
+                var endPage_val = responseObj.pgb.endPage;
+                var totalPage_val = responseObj.pgb.totalPage;
+                var totalCnt_val = responseObj.pgb.totalCnt;
+
+                if(responseObj.status == -1){
+                    alert(responseObj.msg);
+                    return false;
+                }else{
+                    // $pageGroupCopyObj = $pageGroupOriginObj.clone();
+                    
+                    // $pageGroupCopyObj.addClass("copy");
+                    // $pageGroupCopyObj.removeClass("origin");
+
+                    //  $pageNumberObj = $pageGroupCopyObj.find("body > section > div > div.page_group\,.origin > span.page_number");
+                    
+                     for(var i = startPage_val; i<=endPage_val; i++){
+                         console.log("for문 시작");
+                        // $pageNewNumberObj = $('<span class="page_new_number">');
+                            console.log("객체 생성");
+                        // $pageNumberObj.append($pageNewNumberObj);
+                        // $pageNewNumberObj.html("&nbsp;"+i);
+                        // console.log("i : "+i);
+                    };
+
+                    // $divNoticeListObj.append($pageGroupCopyObj);
+                }
+                // $('<div style="display:none">');
+                // $pageGroupOriginObj.hide();
+
+                console.log("cnt_per_page_group_val : "+cnt_per_page_group_val);
+                console.log("cnt_per_page_val : "+cnt_per_page_val);
+                console.log("currentPage_val : "+currentPage_val);
+                console.log("startPage_val : "+startPage_val);
+                console.log("endPage_val : "+endPage_val);
+                console.log("totalPage_val : "+totalPage_val);
+                console.log("totalCnt_val : "+totalCnt_val);
+                
+            };
+
             $.ajax({
                 "url": "/c4uback/admin/notice/list",
                 "method": "GET",
@@ -159,14 +253,8 @@
                 "timeout": {},
                 success: function(responseObj){
                     // alert(responseObj);
-                    console.log(responseObj);
-                    // showList(responseObj);
-                    if(responseObj.status == 1){
-                        //location.href="http://localhost:8888/c4uback/myLogin";
-                        console.log("front에서 보내는 요청");
-                    }else{
-                        console.log("로그인 완료");
-                    }
+                    showList(responseObj);
+                    pageGroup(responseObj);                   
                 }
             });
         });
@@ -192,7 +280,7 @@
                     </tr>
                 </thead>
                 <tbody class="notice_body">
-                    <tr class="notice_body_tr">
+                    <tr class="notice_body_tr, origin" style="display: none;">
                         <td class="notice_body_no">10</td>
                         <td class="notice_body_title">공지사항제목</td>
                         <td class="notice_body_date">2021-11-14</td>
@@ -201,9 +289,9 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="page_group">
-                <span class="page_btnext">&#9664;</span>
-                <span class="page_1">1</span>
+            <div class="page_group, origin" style="display: none;">
+                <span class="page_btprev">&#9664;</span>
+                <span class="page_number">1</span>
                 <span class="page_btnext">&#9654;</span>
             </div>
             <div class="search">

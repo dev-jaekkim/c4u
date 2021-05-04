@@ -87,19 +87,18 @@ public class AdminLessonDAOOracle {
 		assertEquals(expSize, lessonps.size());
 	}
 	
-	//@Test
+//	@Test
 	public void adminSelectByPage() {
 		
 		String word = "a";
 		int currentPage = 1;
 		int cnt_per_page = 20;
-		int expsize = 1;
+		int expsize = 8;
 		
 		try {
 			List<Lesson> list = dao.selectLessonList(currentPage, cnt_per_page, word);
 			assertTrue(list.size() == expsize);
 		} catch (FindException e) {
-		
 			e.printStackTrace();
 		}
 		
