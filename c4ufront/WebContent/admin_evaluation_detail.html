@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강좌 심사</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     <script src="./js/hyeongdon.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
 
@@ -134,6 +135,11 @@
     </style>
     <script>
         $(function () {
+        	if(adminLoginStatus()==-9){
+        		//어드민로그인실패
+        		location.href="http://localhost:8888/c4uback/myLogin";
+        		return;
+        	}
             $(".header").load("admin_header.html");
             // let lessonId = getQueryString();
             //input hidden val -> 레슨 아이디 변수 선언하기 
@@ -159,11 +165,12 @@
                 success: function (responseObj) {
                     let lsdata = responseObj.lesson;
                     let sdata = responseObj.lesson.teacher;
-                    console.log("강좌 상세정보 조회: " + responseObj);
+                    console.log(responseObj);
+                    console.log(lsdata.category.categoryName);
 
                     $("#lesson_name").html(lsdata.lessonName);
                     $("#teacher_name").html(sdata.studentName);
-                    $("#lesson_category").html(lsdata.lessonCategory);
+                    $("#lesson_category").html(lsdata.category.categoryName);
                     $("#lesson_desc").html(lsdata.lessonDescription);
                     $("#target_amount").html(lsdata.lessonTargetFee);
                     $("#start_date").html(lsdata.lessonStart);

@@ -57,7 +57,7 @@ public class NoticeController {
 		Notice notice = service.findById(notice_id);
 		log.debug(notice);
 		map.put("notice", notice);
-		map.put("status", 1);
+		map.put("status", 1);	
 		return map;
 	}
 
@@ -91,7 +91,7 @@ public class NoticeController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminList"+auth);
-			map.put("status",-1);
+			map.put("status",-9);
 		}
 		return map;
 	}
@@ -107,7 +107,7 @@ public class NoticeController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminDetail"+auth);
-			map.put("status",-1);
+			map.put("status",-9);
 		}
 		return map;
 	}
@@ -123,7 +123,7 @@ public class NoticeController {
 		map.put("status", 1);
 		}else {
 			log.warn("adminModify"+auth);
-			map.put("status",-1);
+			map.put("status",-9);
 		}
 		return map;
 	}
@@ -138,7 +138,7 @@ public class NoticeController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminDelete"+auth);
-			map.put("status",-1);
+			map.put("status",-9);
 		}
 		return map;
 	}
@@ -153,7 +153,7 @@ public class NoticeController {
 			map.put("status", 1);
 		}else {
 			log.warn("adminDelete"+auth);
-			map.put("status",-1);
+			map.put("status",-9);
 		}
 		return map;
 	}

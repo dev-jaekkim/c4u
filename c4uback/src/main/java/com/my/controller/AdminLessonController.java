@@ -44,7 +44,7 @@ public class AdminLessonController {
 		map.put("status", 1);
 		//		}else {
 		//			log.warn("adminDetail"+auth);
-		//			map.put("status", 9);
+		//			map.put("status", -9);
 		//		}
 		return map;
 	}
