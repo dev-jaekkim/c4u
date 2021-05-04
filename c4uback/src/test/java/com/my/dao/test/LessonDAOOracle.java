@@ -50,7 +50,7 @@ public class LessonDAOOracle {
 		assertEquals(expListSize, list.size());
 	}
 	
-	//@Test
+	@Test
 	public void selectById() throws FindException {
 		int lessonId = 35;
 		Lesson lesson =dao.selectById(lessonId);
