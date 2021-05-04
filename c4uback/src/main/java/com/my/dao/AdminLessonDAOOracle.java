@@ -41,7 +41,7 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 	}
 
 	@Override
-	public List<Lesson> selectLessonList(int currentPage, int cnt_per_page, String word) throws FindException {
+	public List<Lesson> selectLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException {
 		SqlSession session = null;
 	try {	
 		session = sqlSessionFactory.openSession();
@@ -49,7 +49,7 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		map.put("word", word);
 		map.put("currentPage", currentPage);
 		map.put("cnt_per_page", cnt_per_page);
-		List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.adminSelectByPage", map);
+		List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.adminselectLessonEvaluationList", map);
 		if(list.size() == 0) {
 			throw new FindException("심사내역이 없습니다.");
 		}
@@ -57,11 +57,33 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 	}catch (Exception e) {
 		throw new FindException(e.getMessage());
 	}finally {
-		if(session != null) {
-			session.close();
+		if(session != null) session.close();
+
+	}
+	}
+	
+	@Override
+	public List<Lesson> selectLessonList(int currentPage, int cnt_per_page, String word) throws FindException {
+		
+		SqlSession session =null;
+	try {	
+		session = sqlSessionFactory.openSession();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("word", word);
+		map.put("currentPage", currentPage);
+		map.put("cnt_per_page", cnt_per_page);
+		List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.adminSelectByPage", map);
+		if(list.size()==0) {
+			throw new FindException("강좌내역이 없습니다.");
 		}
+		return list;
+	}catch(Exception e) {
+		throw new FindException(e.getMessage());
+	}finally {
+		if(session != null) session.close();
 	}
 	}
+
 
 	@Override
 	public Lesson selectLessonDetail(int lessonId) throws FindException {
@@ -156,6 +178,7 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	
 	

@@ -128,7 +128,7 @@ public class QNAController {
 						"/admin/qna/list/{currentPage}", 
 						"/admin/qna/list/{currentPage}/{word}"},
 				produces=MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> adminList(@PathVariable ("currentPage")Optional<Integer> optCurrentPage,
+	public Map<String, Object> adminList(@PathVariable ("currentPage")Optional<Integer> optCurrentPage, 
 										@PathVariable("word")Optional<String> optWord,
 										Authentication auth)throws Exception{
 		int currentPage = 1;

@@ -16,6 +16,10 @@ public interface IAdminLessonService {
 	public void addPenaltyStatus (LessonPenaltyStatus lessonPs) throws AddException;
 	
 	public List<LessonPenalty> findLessonPenaltyAll() throws FindException;
+
+	List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException;
+
+	List<Lesson> findLessonList(int currentPage, int cnt_per_page, String word) throws FindException;
 	
 //	public List<Lesson> findDetailByLessonId (int lessonId) throws FindException;
 	

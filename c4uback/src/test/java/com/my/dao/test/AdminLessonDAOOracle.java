@@ -88,18 +88,35 @@ public class AdminLessonDAOOracle {
 	}
 	
 	//@Test
-	public void adminSelectByPage() {
+	public void adminselectLessonEvaluationList() {
 		
 		String word = "a";
 		int currentPage = 1;
 		int cnt_per_page = 20;
-		int expsize = 1;
+		int expsize = 8;
 		
 		try {
-			List<Lesson> list = dao.selectLessonList(currentPage, cnt_per_page, word);
+			List<Lesson> list = dao.selectLessonEvaluationList(currentPage, cnt_per_page, word);
 			assertTrue(list.size() == expsize);
 		} catch (FindException e) {
 		
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void adminSelectByPage() {
+		
+		String word = "복";
+		int currentPage = 1;
+		int cnt_per_page = 10;
+		int expsize = 4;
+		
+		try {
+			List<Lesson> list = dao.selectLessonList(currentPage, cnt_per_page, word);
+			assertTrue(list.size() == expsize );
+		} catch (FindException e) {
 			e.printStackTrace();
 		}
 		
