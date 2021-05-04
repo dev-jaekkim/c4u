@@ -100,7 +100,7 @@ function adminLoginStatus(){
 	  if (auth == "ROLE_ADMIN") {
 return 1;
 	  } else {
-return -1;
+return -9;
  		}	
 }
 

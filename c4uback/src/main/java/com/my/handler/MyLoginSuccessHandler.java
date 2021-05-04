@@ -21,7 +21,7 @@ public class MyLoginSuccessHandler implements AuthenticationSuccessHandler {
 										Authentication auth) throws IOException, ServletException {
 		
 		List<GrantedAuthority> authorities = (List<GrantedAuthority>) auth.getAuthorities();
-        String strAuth = authorities.get(0).getAuthority();
+		String strAuth = authorities.get(0).getAuthority();
 		
 		Cookie cookie = new Cookie("auth", strAuth);
         cookie.setPath("/"); //쿠키를 설정한 경로 root라고 생각하면 됨
