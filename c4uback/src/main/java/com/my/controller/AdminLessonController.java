@@ -3,7 +3,10 @@ package com.my.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
+
 import com.my.service.AdminLessonService;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
@@ -81,5 +86,19 @@ public class AdminLessonController {
 //		map.put("status",1);
 //		return map;
 //	}
-
+	
+	@GetMapping("admin/lessonEvaluation/list/{currentPage}/{cnt_per_page}/{word}")
+	public Map<String, Object> adminfindLessonList(@PathVariable ("currentPage") Optional<Integer> optCurrentPage, 
+											  	   @PathVariable ("cnt_per_page") Optional<Integer> optCnt_per_page,
+											  	   @PathVariable ("word") Optional<String> optWord,
+											  	   Authentication auth) throws Exception {
+		String word = null;
+		int currentPage = 1;
+		List<Lesson> list = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		int cnt_per_page = 10;
+	
+		return null;
+		
+	}
 }

@@ -19,9 +19,15 @@
 	  	<result property="lessonId" column="LESSON_ID"/>
 	  	<result property="lessonName" column="LESSON_NAME"/>
 	  	<result property="lessonCreate" column="LESSON_CREATE_DATE"/>
+	  	<result property="lessonStatus" column="LESSON_STATUS"/>
+	  	<result property="lessonStart" column="LESSON_START_DATE"/>
+	  	<result property="lessonFee" column="LESSON_FEE"/>
+	  	<result property="lessonParticipant" column="LESSON_PARTICIPANT"/>
+	  	<result property="lessonTotalFee" column="LESSON_TOTAL_AMOUNT"/>
 		<association property="teacher" javaType="Student">
 		<id property="studentId" column="LESSON_TEACHER_ID" />
 	 	<result property="studentName" column="STUDENT_NAME" />
+	 	<result property="studentPhone" column="STUDENT_PHONE"/>
 	    </association>
 	 </association>
 	 		 
@@ -97,7 +103,9 @@ FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
                 LEFT JOIN category c ON (c.category_id = l.lesson_category_id)
 WHERE lesson_id = #{lessonId}
 </select>-->
-<select id="adminSelectByPage" parameterType ="java.util.HashMap" resultMap="lpssMap">
+
+<!-- 강좌심사 -->
+<select id="adminselectLessonEvaluationList" parameterType ="java.util.HashMap" resultMap="lpssMap">
 
 SELECT * FROM
 (SELECT lesson_id,lesson_name,student_name,lesson_create_date,
@@ -113,6 +121,22 @@ WHERE(l.lesson_name LIKE '%${word}%' OR s.student_name LIKE '%${word}%')
 )
 WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page})
 
+</select>
+
+<!-- 강좌내역 -->
+<select id="adminSelectByPage" parameterType="java.util.HashMap" resultMap="lpssMap">
+
+SELECT * 
+FROM
+    (SELECT lesson_id, lesson_name, lesson_status, lesson_create_date, lesson_start_date, 
+     student_name, student_phone, lesson_fee,lesson_participant, lesson_total_amount, 
+     row_number() OVER (ORDER BY lesson_start_date ASC) AS rnum  
+     FROM lesson l
+     LEFT JOIN lesson_per_student lps ON l.lesson_id = lps.lps_lesson_id
+     LEFT JOIN student s ON s.student_id = lps.lps_student_id
+     WHERE (lesson_name LIKE '%${word}%' OR student_name LIKE '%${word}%')
+     )
+WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row (#{currentPage},#{cnt_per_page})
 </select>
 
 

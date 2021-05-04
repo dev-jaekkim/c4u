@@ -86,8 +86,13 @@ public class AdminLessonDAOOracle {
 		assertEquals(expSize, lessonps.size());
 	}
 	
+<<<<<<< HEAD
+	//@Test
+	public void adminselectLessonEvaluationList() {
+=======
 //	@Test
 	public void adminSelectByPage() {
+>>>>>>> 539f10c5a26c3e2dc3575ad47c5b0e4309687084
 		
 		String word = "a";
 		int currentPage = 1;
@@ -95,8 +100,25 @@ public class AdminLessonDAOOracle {
 		int expsize = 8;
 		
 		try {
-			List<Lesson> list = dao.selectLessonList(currentPage, cnt_per_page, word);
+			List<Lesson> list = dao.selectLessonEvaluationList(currentPage, cnt_per_page, word);
 			assertTrue(list.size() == expsize);
+		} catch (FindException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void adminSelectByPage() {
+		
+		String word = "복";
+		int currentPage = 1;
+		int cnt_per_page = 10;
+		int expsize = 4;
+		
+		try {
+			List<Lesson> list = dao.selectLessonList(currentPage, cnt_per_page, word);
+			assertTrue(list.size() == expsize );
 		} catch (FindException e) {
 			e.printStackTrace();
 		}

@@ -32,6 +32,19 @@ public class AdminLessonService implements IAdminLessonService {
 	public List<LessonPenalty> findLessonPenaltyAll() throws FindException {
 		return dao.selectLessonPenaltyAll();
 	}
+	
+	@Override
+	public List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException{
+		return dao.selectLessonEvaluationList(currentPage, cnt_per_page, word);
+		
+	}
+	
+	@Override
+	public List<Lesson> findLessonList(int currentPage, int cnt_per_page, String word) throws FindException{
+		return dao.selectLessonList(currentPage, cnt_per_page, word);
+		
+	}
+	
 
 	@Override
 	public List<LessonPenalty> findLessonPs(int lessonId) throws FindException {
