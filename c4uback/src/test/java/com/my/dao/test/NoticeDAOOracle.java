@@ -56,6 +56,14 @@ public class NoticeDAOOracle {
 		assertTrue(cnt == expcnt);
 	}
 	
+	@Test
+	public void selectCntByTitle() throws FindException{
+		String notice_title = "안내";
+		int cnt = dao.selectCnt(notice_title);
+		int expcnt = 10;
+		assertTrue(cnt == expcnt);
+	}
+	
 //	@Test
 	public void selectTitlePerPage() throws FindException{
 		String notice_title = "3"; 

@@ -57,6 +57,15 @@ FROM lesson_per_student JOIN review ON review_lps_id = lps_id
 WHERE lesson_id = #{lesson_id}
 </select>
 
+<select id="adminSelectCntByWord" resultType="int" parameterType = "java.util.HashMap">
+SELECT COUNT(lesson_name)
+FROM lesson_per_student JOIN review ON lps_id = review_lps_id
+                              JOIN student ON lps_student_id = student_id
+                              JOIN lesson ON lps_lesson_id = lesson_id
+WHERE lesson_name LIKE '%${word}%' 
+  OR  student_name LIKE '%${word}%'
+</select>
+
 <select id="selectByLessonTitleORStudentNamePerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
 SELECT *
 FROM (

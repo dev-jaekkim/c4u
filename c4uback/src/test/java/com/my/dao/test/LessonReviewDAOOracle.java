@@ -64,6 +64,14 @@ public class LessonReviewDAOOracle {
 		assertTrue(cnt == expCnt);
 	}
 	
+	@Test
+	public void adminSelectCntByWord() throws FindException{
+		String word = "우주";
+		int cnt = dao.selectCnt(word);
+		int expCnt = 3;
+		assertTrue(cnt == expCnt);
+	}
+	
 	
 //	@Test
 	public void userSelectCnt() throws FindException{

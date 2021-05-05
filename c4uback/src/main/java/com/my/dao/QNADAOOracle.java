@@ -69,6 +69,28 @@ public class QNADAOOracle implements QNADAO {
 	}
 	
 	@Override
+	public int selectCnt(String word) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("word", word);
+			int cnt = session.selectOne("mybatis.QNAMapper.selectCntByWord", map);
+			if(cnt == 0) {
+				throw new FindException("1:1 문의 글이 없습니다");
+			}
+			log.debug(cnt);
+			return cnt;
+		}catch (Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
+	
+	@Override
 	public List<QNA> selectByNameOrTitleOrContentPerPage(String word, int currentPage, int cnt_per_page) throws FindException {
 		SqlSession session = null;
 		try {

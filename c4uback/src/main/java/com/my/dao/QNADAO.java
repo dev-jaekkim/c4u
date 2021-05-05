@@ -27,6 +27,14 @@ public interface QNADAO {
 	 */
 	int selectCnt() throws FindException;
 	
+	/** 관리자  사용
+	 * 1:1문의 검색 페이징 처리를 위하여, 게시글 전체 조회
+	 * @param word 검색 닉네임 또는 제목 또는 문의 내용
+	 * @return DB에 저장된 1:1 게시글 개수
+	 * @throws FindException 1:1 문의 게시글이 없다면, 예외가 발생한다.
+	 */
+	int selectCnt(String word) throws FindException;
+	
 	/**사용자 사용 (설계변경으로 사용하지 않음)
 	 * 1:1 문의 게시판 중 닉네임이 일치하는 글 조회
 	 * @param student_name 검색 닉네임
@@ -49,7 +57,7 @@ public interface QNADAO {
 	
 	/**관리자 사용
 	 * 1:1 문의 게시판 중 닉네임, 문의 내용, 제목이 일치하는 글 조회
-	 * @param student_name 검색 닉네임 또는 제목 또는 문의 내용
+	 * @param word 검색 닉네임 또는 제목 또는 문의 내용
 	 * @param currentPage 현재 페이지
 	 * @param cnt_per_page 한 페이지당 게시 글 수
 	 * @return List<QNA> 검색된 1:1 문의 목록

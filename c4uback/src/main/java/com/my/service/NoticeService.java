@@ -30,6 +30,11 @@ public class NoticeService implements INoticeService{
 	public int findCnt() throws FindException {
 		return dao.selectCnt();
 	}
+	
+	@Override
+	public int findCnt(String notice_title) throws FindException {
+		return dao.selectCnt(notice_title);
+	}
 
 	@Override
 	public List<Notice> findByTitlePerPage(String notice_title, int currentPage, int cnt_per_page)
