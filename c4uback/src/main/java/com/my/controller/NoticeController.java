@@ -57,7 +57,7 @@ public class NoticeController {
 		Notice notice = service.findById(notice_id);
 		log.debug(notice);
 		map.put("notice", notice);
-		map.put("status", 1);
+		map.put("status", 1);	
 		return map;
 	}
 
