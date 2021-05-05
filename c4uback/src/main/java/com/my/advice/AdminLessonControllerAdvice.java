@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@ControllerAdvice(assignableTypes = com.my.controller.AdminLessonController.class)
+@ControllerAdvice(assignableTypes = {com.my.controller.AdminLessonController.class,
+							com.my.controller.CategoryController.class})
 public class AdminLessonControllerAdvice {
 
 	@ResponseBody

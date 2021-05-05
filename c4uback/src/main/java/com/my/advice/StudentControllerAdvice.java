@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+@CrossOrigin("*")  
 @ControllerAdvice(assignableTypes = com.my.controller.StudentController.class)
 public class StudentControllerAdvice {
 

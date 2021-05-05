@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 관리</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     <script src="./js/hyeongdon.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
 
@@ -172,6 +173,11 @@
     </style>
     <script>
         $(function () {
+        	if(adminLoginStatus()==-9){
+        		//어드민로그인실패
+        		location.href="http://localhost:8888/c4uback/myLogin";
+        		return;
+        	}
             //학생 전체 조회 
             $(document).on('click', ".page_num", function (event) {
                 let currentPage = $(event.target).attr("id");
