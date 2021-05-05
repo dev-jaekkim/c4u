@@ -23,6 +23,7 @@
 			<result property="lessonStatus" column="lesson_status"/>
 			<result property="lessonTargetFee" column="lesson_target_amount"/>
 			<result property="lessonTotalFee" column="lesson_total_amount"/>
+			<result property="studentId" column="lesson_teacher_id"/>
 				<association property="teacher" javaType="Student">
 					<id property="studentId" column="lesson_teacher_id"/>
 					<result property="studentName" column="student_name"/>
@@ -173,7 +174,7 @@ ORDER BY l.lesson_id ASC
 	        lesson_fee, 
 			lesson_description,
 	        lesson_category_id)
-	VALUES (seq_lesson_id.NEXTVAL, #{teacher.studentId}, #{lessonName}, 
+	VALUES (seq_lesson_id.NEXTVAL, #{studentId}, #{lessonName}, 
         		#{lessonTargetFee}, 3, #{lessonStart}, 
       	  		#{lessonFee}, #{lessonDescription},
         		#{lessonCategory})
