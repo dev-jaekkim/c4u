@@ -26,6 +26,14 @@ public interface INoticeService {
 	 */
 	int findCnt() throws FindException;
 	
+	/** 관리자 사용
+	 * 공지사항 게시판 검색 시 페이징 처리를 위하여, 게시글 전체 조회
+	 * @param String notice_title 검색어
+	 * @return int DB에 저장된 공지사항 게시글 개수 
+	 * @throws FindException 공지사항 게시글이 없으면, 예외가 발생한다.
+	 */
+	int findCnt(String notice_title) throws FindException;
+	
 	/** 사용자, 관리자 모두 사용
 	 * 공지사항 게시판 중 일치하는 검색 단어가 있는지 조회
 	 * @param notice_title 검색어

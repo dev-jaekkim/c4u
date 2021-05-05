@@ -148,6 +148,7 @@ public class QNAController {
 			if(optWord.isPresent()) {
 				word = optWord.get();
 				list = qnaService.findByNameOrTitleOrContentPerPage(word, currentPage, cnt_per_page);
+				totalCnt = qnaService.findCnt(word);
 			}else {
 				list = qnaService.findPerPage(currentPage, cnt_per_page);
 			}

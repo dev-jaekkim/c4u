@@ -63,12 +63,12 @@ public class NoticeController {
 
 	@GetMapping(value = {"/admin/notice/list", 
 						 "/admin/notice/list/{currentPage}",
-						 "/admin/notice/list/{currentPage}/{notice_title}"}, 
+						 "/admin/notice/list/{currentPage}/{word}"}, 
 						 produces=MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> adminList(@PathVariable("currentPage") Optional<Integer> optCurrentPage,
-										 @PathVariable("notice_title") Optional<String> optTitle,
+										 @PathVariable("word") Optional<String> optWord,
 										 Authentication auth) throws Exception {
-		String notice_title = null;
+		String word = null;
 		int currentPage = 1;
 		List<Notice> list = null;
 		Map<String, Object> map = new HashMap<>();
@@ -78,10 +78,13 @@ public class NoticeController {
 		if(auth!=null) {
 			if (optCurrentPage.isPresent()) {
 				currentPage = optCurrentPage.get(); // AsInt();
+				log.info("front에서 word 없고 보냄 word: "+word);
 			}
-			if (optTitle.isPresent()) {
-				notice_title = optTitle.get();
-				list = service.findByTitlePerPage(notice_title, currentPage, cnt_per_page);
+			if (optWord.isPresent()) {
+				word = optWord.get();
+				list = service.findByTitlePerPage(word, currentPage, cnt_per_page);
+				totalCnt = service.findCnt(word);
+				log.info("front에서 word포함해서 보냄 word: "+word);
 			} else {
 				list = service.findPerPage(currentPage, cnt_per_page);
 			}

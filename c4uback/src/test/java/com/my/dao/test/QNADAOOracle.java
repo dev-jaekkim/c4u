@@ -54,6 +54,15 @@ public class QNADAOOracle {
 		assertTrue(cnt == expcnt);
 	}
 	
+//	@Test
+	public void selectCntByWord() throws FindException{
+		String word = "a";
+		int cnt = dao.selectCnt(word);
+		log.info(cnt);
+		int expcnt = 2;
+		assertTrue(cnt == expcnt);
+	}
+	
 //	@Test 설계변경으로 사용하지 않음
 //	public void selectByNamePerPage() throws FindException{
 //		String student_name = "on";
@@ -128,7 +137,7 @@ public class QNADAOOracle {
 		assertEquals(qna_comment, newQna.getQnaComment());
 	}
 	
-	@Test
+//	@Test
 	public void delete() throws RemoveException, FindException{
 		int qna_id = dao.delete(1);
 	}
