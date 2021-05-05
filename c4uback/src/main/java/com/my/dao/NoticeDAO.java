@@ -25,6 +25,14 @@ public interface NoticeDAO {
 	 * @throws FindException 공지사항 게시글이 없으면, 예외가 발생한다.
 	 */
 	int selectCnt() throws FindException;
+
+	/** 관리자 사용
+	 * 공지사항 게시판 검색 시 페이징 처리를 위하여, 게시글 전체 조회
+	 * @param String notice_title 검색어
+	 * @return int DB에 저장된 공지사항 게시글 개수 
+	 * @throws FindException 공지사항 게시글이 없으면, 예외가 발생한다.
+	 */
+	int selectCnt(String notice_title) throws FindException;
 	
 	/** 사용자, 관리자 모두 사용
 	 * 공지사항 게시판 중 검색 단어가 있는 글 조회

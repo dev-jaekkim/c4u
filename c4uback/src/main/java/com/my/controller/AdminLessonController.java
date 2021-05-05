@@ -5,20 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 
 import com.my.exception.FindException;
 import com.my.service.AdminLessonService;
@@ -31,6 +28,8 @@ import com.my.vo.QNA;
 import lombok.extern.log4j.Log4j;
 import oracle.net.aso.e;
 
+
+@CrossOrigin("*")  
 @RestController
 @Log4j
 public class AdminLessonController {
@@ -47,10 +46,15 @@ public class AdminLessonController {
 		// if(auth != null) {
 		service.modifyLesson(lessonId);
 		map.put("status", 1);
+
 		// }else {
 		// log.warn("adminDetail"+auth);
 		// map.put("status", 9);
 		// }
+		//		}else {
+		//			log.warn("adminDetail"+auth);
+		//			map.put("status", -9);
+		//		}
 		return map;
 	}
 

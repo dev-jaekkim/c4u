@@ -28,6 +28,11 @@ public class QNAService implements IQNAService {
 	public int findCnt() throws FindException {
 		return dao.selectCnt();
 	}
+	
+	@Override
+	public int findCnt(String word) throws FindException {
+		return dao.selectCnt(word);
+	}
 
 	@Override
 	public List<QNA> findByStudentIdPerPage(int student_id, int currentPage, int cnt_per_page) throws FindException {

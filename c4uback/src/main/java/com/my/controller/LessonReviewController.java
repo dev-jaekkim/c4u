@@ -88,6 +88,7 @@ public class LessonReviewController {
 			if (optWord.isPresent()) {
 				String word = optWord.get();
 				list = lessonReviewService.findByLessonTitleORStudentNamePerPage(word, currentPage, cnt_per_page);
+				totalCnt = lessonReviewService.findCnt(word);
 			} else {
 				list = lessonReviewService.findPerPage(currentPage, cnt_per_page);
 			}

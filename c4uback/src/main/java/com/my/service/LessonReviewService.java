@@ -36,6 +36,11 @@ public class LessonReviewService implements ILessonReviewService {
 	public int findCnt(int lesson_id) throws FindException {
 		return dao.selectCnt(lesson_id);
 	}
+	
+	@Override
+	public int findCnt(String word) throws FindException {
+		return dao.selectCnt(word);
+	}
 
 	@Override
 	public List<LessonReview> findByLessonTitleORStudentNamePerPage(String word, int currentPage, int cnt_per_page)

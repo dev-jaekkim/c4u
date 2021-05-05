@@ -64,6 +64,28 @@ public class NoticeDAOOracle implements NoticeDAO{
 			}
 		}
 	}
+	
+	
+	@Override
+	public int selectCnt(String notice_title) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("notice_title", notice_title);
+			int cnt = session.selectOne("mybatis.NoticeMapper.selectCntByTitle", map);
+			if(cnt == 0) {
+				throw new FindException("게시글이 없습니다.");
+			}
+			return cnt;
+		}catch (Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
 
 	@Override
 	public List<Notice> selectByTitlePerPage(String notice_title, int currentPage, int cnt_per_page)
@@ -109,6 +131,8 @@ public class NoticeDAOOracle implements NoticeDAO{
 			}
 		}
 	}
+
+	
 
 	@Override
 	public Notice update(Notice notice) throws ModifyException {

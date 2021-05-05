@@ -17,7 +17,7 @@
     
     div.loginAction{
         margin-left: 40%;
-        margin-top: 40%;
+        margin-top: 10%;
         margin-bottom: 40%;
     }
     

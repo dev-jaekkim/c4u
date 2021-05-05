@@ -159,9 +159,6 @@ SELECT lessonps_id, lessonps_lesson_id, lessonps_evaluation_id, lessonps_date,
 FROM lesson_penalty_status lps JOIN lesson_penalty lp ON (lps.lessonps_evaluation_id = lp.lp_id)
 WHERE lessonps_lesson_id = #{lessonId}
 ORDER BY lessonps_date
-SELECT lessonps_id, lessonps_lesson_id, lessonps_evaluation_id
-FROM lesson_penalty_status 
-WHERE lessonps_lesson_id = #{lessonId}
 </select>
 
 

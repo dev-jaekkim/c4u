@@ -26,6 +26,12 @@ SELECT COUNT(*)
 FROM notice
 </select>
 
+<select id="selectCntByTitle" resultType="int" parameterType="java.util.HashMap">
+SELECT COUNT(*)
+FROM notice
+WHERE notice_title LIKE '%${notice_title}%'
+</select>
+
 <select id="selectByTitlePerPage" parameterType="java.util.HashMap" resultMap="resultmap">
 SELECT * FROM 
             (SELECT notice_id, notice_title, notice_date, notice_content, row_number() OVER (ORDER BY notice_id DESC) AS rnum 

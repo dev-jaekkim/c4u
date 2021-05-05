@@ -19,24 +19,24 @@
             /* line-height: 1.5em; */
             font-weight: 300;
         }
-        
+
         .admin_notice_list .admin_notice_title{
             margin-left: 50px;
             margin-top: 30px;
             margin-bottom: 10px;
-        }        
-        
+        }
+
         .admin_notice_list hr{
             opacity: 35%;
-            width: 730px;
+            width: 900px;
             margin-left: 50px;
         }
 
         .admin_notice_list div.notice_write{
-            margin-top: 3%;
+            margin-top: 1%;
             border: 1px solid;
             width: 75px;
-            margin-left: 70%;
+            margin-left: 66.7%;
             text-align: center;
             background-color: lightgray;
             font-weight: 300;
@@ -112,7 +112,7 @@
             color: rgb(255, 87, 87);
         }
 
-        .admin_notice_list div.page_group,origin{
+        .admin_notice_list div.page_list{
             margin-left: 40%;
             margin-top: 20px;
             display: inline-block;
@@ -129,19 +129,23 @@
             height: 24px;
             vertical-align: -1px;
         }
-        
+
         .admin_notice_list input.inputsearch{
             width: 200px;
         }
     </style>
     <script>
+        let frontContextPath = "http://localhost:8888/c4ufront";
+        let backContextPath = "http://localhost:8888/c4uback";
+
+
         $(function () {
         	if(adminLoginStatus()==-9){
         		//어드민로그인실패
-        		location.href="http://localhost:8888/c4uback/myLogin";
+        		location.href=backContextPath+"/myLogin";
         		return;
-        	}      	
-        	console.log("front 쿠키 정보 확인");
+        	}//if 어드민 로그인 확인
+        	// console.log("front 쿠키 정보 확인");
             $(".header").load("admin_header.html");
 
             function showList(responseObj){
@@ -149,12 +153,13 @@
 	            //테이블객체
 	            var $tableObj =$("section>div.admin_notice_list>table.notice_list");
 
-                $("section>div.admin_notice_list>table.notice_list>table tr.copy").remove();
-	
+                $("section>div.admin_notice_list>table.notice_list tr.copy").remove();
+                console.log("삭제 과정 거침");
+
                 //원본행객체
                 var $trOriginObj = $("section>div.admin_notice_list>table tr.origin");
                 $trOriginObj.show(); //원본행객체 보여주기
-                
+
                 if(responseObj.status == -1){
                     alert(responseObj.msg);
                     return false;
@@ -163,11 +168,11 @@
                         var $trCopyObj = $trOriginObj.clone(); //원본행객체의 복제본만들기
                         $trCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
                         $trCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
-                        
+
                         //복제본행의 내용 채우기 : 게시글번호
                         $trCopyObj.find("td.notice_body_no").html(element.noticeId);
                         //console.log("번호"+element.noticeId);
-                       
+
                         //복제본행의 내용 채우기 : 게시글제목
                         $trCopyObj.find("td.notice_body_title").html(element.noticeTitle);
                         // console.log("제목"+element.noticeTitle);
@@ -179,65 +184,78 @@
                         //테이블객체의 자식객체로 복제본행을 추가
                         $tableObj.append($trCopyObj);
                     }); //each
-                    
+
                     $trOriginObj.hide();
                 }
-            };
+            };//function showList
 
             function pageGroup(responseObj){
                 console.log(responseObj);
-                //DIV 그룹 객체
-                // var $divNoticeListObj =$("section>div.admin_notice_list");
 
-                //페이지 그룹 원본 객체
-                // var $pageGroupOriginObj = $("body > section > div > div.page_group\,.origin ");
-                //$pageGroupOriginObj.show(); //원본 객체 보여주기
-                
+                var totalCnt_val = responseObj.pgb.totalCnt;
                 var cnt_per_page_val = responseObj.pgb.cnt_per_page;
                 var cnt_per_page_group_val = responseObj.pgb.cnt_per_page_group;
-                var currentPage_val = responseObj.pgb.currentPage;
                 var startPage_val = responseObj.pgb.startPage;
                 var endPage_val = responseObj.pgb.endPage;
                 var totalPage_val = responseObj.pgb.totalPage;
-                var totalCnt_val = responseObj.pgb.totalCnt;
+                var list_size_val = responseObj.pgb.list.length;
+
+                console.log("totalCnt_val :"+totalCnt_val);
+                console.log("cnt_per_page_val: "+cnt_per_page_val);
+                console.log("cnt_per_page_group_val : "+cnt_per_page_group_val);
+                console.log("startPage_val: "+startPage_val);
+                console.log("endPage_val : "+ endPage_val);
+                console.log("totalPage_val : "+ totalPage_val);
+                console.log("list_size_val: "+ list_size_val);
+                //divPageList객체
+	            var $divPageListObj =$("section>div.admin_notice_list>div.page_list");
+
+                $("section>div.admin_notice_list>div.page_list div.copy").remove();
+                $("section>div.admin_notice_list>div.page_list span.copy").remove();
+
+                //원본행객체
+                var $pageGroupOriginObj = $("section>div.admin_notice_list>div.page_list>div.origin");
+                $pageGroupOriginObj.show(); //원본행객체 보여주기
 
                 if(responseObj.status == -1){
                     alert(responseObj.msg);
                     return false;
                 }else{
-                    // $pageGroupCopyObj = $pageGroupOriginObj.clone();
+                    var $pageGroupCopyObj = $pageGroupOriginObj.clone();  //원본행객체의 복제본만들기
+                    $pageGroupCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                    $pageGroupCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+
+                    var $prevArrowObj = $pageGroupCopyObj.find("span.page_btprev"); //복제행 객체의 이전 화살표 찾기
+                    var $nextArrowObj = $pageGroupCopyObj.find("span.page_btnext"); //복제행 객체의 다음 화살표 찾기
+
+                    //이전 화살표 show
+                    if(startPage_val > cnt_per_page_group_val){
+                        $prevArrowObj.show();
+                    }
                     
-                    // $pageGroupCopyObj.addClass("copy");
-                    // $pageGroupCopyObj.removeClass("origin");
+                    //다음 화살표 show
+                    if(endPage_val < totalPage_val){
+                        $nextArrowObj.show();
+                    }
 
-                    //  $pageNumberObj = $pageGroupCopyObj.find("body > section > div > div.page_group\,.origin > span.page_number");
-                    
-                     for(var i = startPage_val; i<=endPage_val; i++){
-                         console.log("for문 시작");
-                        // $pageNewNumberObj = $('<span class="page_new_number">');
-                            console.log("객체 생성");
-                        // $pageNumberObj.append($pageNewNumberObj);
-                        // $pageNewNumberObj.html("&nbsp;"+i);
-                        // console.log("i : "+i);
-                    };
+                    //페이지 넘버 추가
+                    for(var i = startPage_val; i<totalPage_val; i++){
+                        if(totalCnt_val >= cnt_per_page_val){
+                            var $pageNumberObj = $('<span class="page_number, copy">');
+                            $pageNumberObj.html("&nbsp;"+"&nbsp;"+"&nbsp;"+i);
+                            $nextArrowObj.before($pageNumberObj);
+                            $pageNumberObj.show();
+                        }
+                    }; //for
 
-                    // $divNoticeListObj.append($pageGroupCopyObj);
-                }
-                // $('<div style="display:none">');
-                // $pageGroupOriginObj.hide();
+                    $divPageListObj.append($pageGroupCopyObj);
+                } //else
+                $pageGroupOriginObj.hide();
 
-                console.log("cnt_per_page_group_val : "+cnt_per_page_group_val);
-                console.log("cnt_per_page_val : "+cnt_per_page_val);
-                console.log("currentPage_val : "+currentPage_val);
-                console.log("startPage_val : "+startPage_val);
-                console.log("endPage_val : "+endPage_val);
-                console.log("totalPage_val : "+totalPage_val);
-                console.log("totalCnt_val : "+totalCnt_val);
-                
-            };
+            };//function pageGroup
 
             $.ajax({
-                "url": "/c4uback/admin/notice/list",
+                "url": backContextPath+"/admin/notice/list",
                 "method": "GET",
                 "transformRequest": [
                 null
@@ -252,11 +270,146 @@
                 "data": "",
                 "timeout": {},
                 success: function(responseObj){
-                    // alert(responseObj);
                     showList(responseObj);
-                    pageGroup(responseObj);                   
+                    pageGroup(responseObj);
                 }
+            }); //$.ajax
+
+            //--게시물 클릭 시작--
+            $("section>div.admin_notice_list>table>tbody").on("click", "tr>td.notice_body_title", function(event){
+                var notice_board_no = $(event.target).prev().html();
+                console.log(notice_board_no);
+                $("section").load("admin_notice_detail.html", function(){
+                    $.ajax({
+                        "url": backContextPath+"/admin/notice/detail/"+notice_board_no,
+                        "method": "get",
+                        "transformRequest": [
+                            null
+                        ],
+                        "transformResponse": [
+                            null
+                        ],
+                        "jsonpCallbackParam": "callback",
+                        "headers": {
+                            "Accept": "application/json, text/plain, */*"
+                        },
+                        // "data": "notice_board_no=" + notice_board_no,
+                        "timeout": {},
+                        success:function(responseObj){
+                            var notice = responseObj.notice;
+                            console.log(notice);
+                            if(responseObj.status == 1){
+                                $("body > section > section > div > div.notice_detail_info > div.notice_detail_date > span.span_date").html(notice.noticeDate);
+                                $("div.notice_detail_info>div.notice_detail_title>span.span_title").html(notice.noticeTitle);
+                                $("div.notice_detail_info>div.notice_detail_content>div.div_content").html(notice.noticeContent);
+                            }else{
+                                alert(responseObj.msg);
+                            }
+                        },
+                        error:function(jqXHR){
+                            alert("에러:" + jqXHR.status);
+                        }
+                    }); //$.ajax
+                });//load
+                return false;
             });
+            //--게시물 클릭 끝--
+
+            //--검색버튼 클릭 시작--
+            $("section>div.admin_notice_list>form input[type=button]").click(function(){
+                $.ajax({
+                        url: backContextPath+"/admin/notice/list/1/"+$("section>div.admin_notice_list>form input[name=word]").val(),
+                        "method": "GET",
+                        "transformRequest": [
+                            null
+                        ],
+                        "transformResponse": [
+                            null
+                        ],
+                        "jsonpCallbackParam": "callback",
+                        "headers": {
+                            "Accept": "application/json, text/plain, */*"
+                        },
+                        "data": "",
+                        "timeout": {},
+                        success: function(responseObj){
+                            showList(responseObj);
+                            pageGroup(responseObj);
+                            console.log("검색 버튼이 요청함"+responseObj);
+                            // if(responseObj.status = -1){ //Handler 해결 필요
+                            //     alert("검색 결과가 없습니다.");
+                            //     console.log("상태 확인");
+                            // }
+                        },
+                        error: function(jqXHR){
+                            // alert("jqXHR status :"+ jqXHR.status);
+                            alert("검색 결과가 없습니다.");
+                        }
+                });
+                return false;
+            });
+            //--검색버튼 클릭 끝--
+
+            //--글쓰기 버튼 클릭 시작--
+            $("section>div.admin_notice_list>div.notice_write").click(function(){
+                $("section").load("admin_notice_add.html");
+            });
+            //--글쓰기 버튼 클릭 끝--
+
+
+            //body > section > div > div.page_list > div.page_group\,.copy > span:nth-child(9)
+
+            //--페이징 숫자 버튼 클릭 시작--
+            $("body>section>div>div.page_list").on("click","span",function(event){
+                console.log($(event.target).html());
+                var str_page_number = null;
+                if($(event.target).html() == $("span.page_btnext").html()){
+                    var bt_next_arrow_val = $(event.target).prev().html();
+                    console.log("다음 화살표 값 자르기전: "+bt_next_arrow_val);
+                    str_page_number = bt_next_arrow_val.split("&nbsp;&nbsp;&nbsp;");
+                    str_page_number[1] = Number(str_page_number[1]) + 1;
+                    console.log("다음화살표"+str_page_number[1]);
+                }else if($(event.target).html() == $("span.page_btprev").html()){
+                    var bt_prev_arrow_val = $(event.target).next().html();
+                    console.log("이전 화살표 값 자르기전: "+bt_prev_arrow_val);
+                    str_page_number = bt_prev_arrow_val.split("&nbsp;&nbsp;&nbsp;");
+                    str_page_number[1] = Number(str_page_number[1]) - 1;
+                    console.log("이전화살표"+str_page_number[1]);
+                }else{
+                    var bt_page_number_val = $(event.target).html().trim();
+                    str_page_number = bt_page_number_val.split("&nbsp;&nbsp;&nbsp;");
+                    console.log("숫자도 찍힘");
+                }
+                
+                console.log("현재 화살표 값"+str_page_number[1]);
+
+                $.ajax({
+                        url: backContextPath+"/admin/notice/list/"+str_page_number[1],
+                        "method": "GET",
+                        "transformRequest": [
+                            null
+                        ],
+                        "transformResponse": [
+                            null
+                        ],
+                        "jsonpCallbackParam": "callback",
+                        "headers": {
+                            "Accept": "application/json, text/plain, */*"
+                        },
+                        "data": "",
+                        "timeout": {},
+                        success: function(responseObj){
+                            showList(responseObj);
+                            pageGroup(responseObj);
+                        },
+                        error: function(jqXHR){
+                            // alert("jqXHR status :"+ jqXHR.status);
+                            alert("검색 결과가 없습니다.");
+                        }
+                });//$.ajax
+                return false;
+            });
+            //--페이징 숫자 버튼 클릭 끝--
         });
     </script>
 </head>
@@ -268,15 +421,13 @@
                 <h1>공지사항 관리</h1>
             </div>
             <hr>
-            <div class="notice_write">글쓰기</div>
+            
             <table class="notice_list">
                 <thead class="notice_head">
                     <tr class="notice_head_tr">
                         <th>번호</th>
                         <th>제목</th>
                         <th>작성일</th>
-                        <th>수정</th>
-                        <th>삭제</th>
                     </tr>
                 </thead>
                 <tbody class="notice_body">
@@ -284,20 +435,28 @@
                         <td class="notice_body_no">10</td>
                         <td class="notice_body_title">공지사항제목</td>
                         <td class="notice_body_date">2021-11-14</td>
-                        <td class="notice_body_modify">수정</td>
-                        <td class="notice_body_delete">삭제</td>
                     </tr>
                 </tbody>
             </table>
-            <div class="page_group, origin" style="display: none;">
-                <span class="page_btprev">&#9664;</span>
-                <span class="page_number">1</span>
-                <span class="page_btnext">&#9654;</span>
+            
+            <div class="notice_write">글쓰기</div>
+
+            <div class="page_list">
+                <div class="page_group, origin" style="display: none;">
+                    <span class="page_btprev" style="display: none;">&#9664;</span>
+                    <span class="page_btnext" style="display: none;">&#9654;</span>
+                </div>
             </div>
-            <div class="search">
-                <input type="text" placeholder="검색어를 입력하세요" class="inputsearch">
-                <input type="button" value="검색" class="btsearch">
-            </div>
+
+            <form>
+                <div class="search">
+                    <input type="hidden" name="notice_board_no">
+                    <input type="hidden" name="currentPage">
+                    <input type="search" name="word" placeholder="검색어를 입력하세요" class="inputsearch" >
+                    <input type="button" value="검색" class="btsearch">
+                </div>
+            </form>
+            
         </div>
     </section>
     <footer><div class="footer"></div></footer>

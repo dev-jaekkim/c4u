@@ -105,6 +105,27 @@ public class LessonReviewDAOOracle implements LessonReviewDAO {
 			}
 		}
 	}
+	
+	@Override
+	public int selectCnt(String word) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("word", word);
+			int cnt = session.selectOne("mybatis.LessonReviewMapper.adminSelectCntByWord", map);
+			if(cnt == 0) {
+				throw new FindException("수강 후기가 없습니다.");
+			}
+			return cnt;
+		}catch (Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
 
 	@Override
 	public List<LessonReview> selectByLessonTitleORStudentNamePerPage(String word, int currentPage, int cnt_per_page)

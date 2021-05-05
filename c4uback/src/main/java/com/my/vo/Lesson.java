@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Lesson {
 	private int lessonId;
 	private Student teacher;
+	private int studentId;
 	private String lessonName;
 	private int lessonTargetFee;
 	private int lessonTotalFee;
@@ -32,6 +33,15 @@ public class Lesson {
 	private int rnum;
 	
 	
+	
+	public int getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+
 	public Category getCategory() {
 		return category;
 	}

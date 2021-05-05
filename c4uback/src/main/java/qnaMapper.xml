@@ -27,8 +27,17 @@ WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_ro
 
 <select id="selectCnt" resultType="int">
 SELECT COUNT(*)
-FROM qna
+FROM qna	   	  
 </select>
+
+<select id="selectCntByWord" resultType="int" parameterType="java.util.HashMap">
+SELECT COUNT(*)
+FROM qna JOIN student ON qna_student_id = student_id
+WHERE student_name LIKE '%${word}%'
+	   	  OR qna_title LIKE '%${word}%'
+	   	  OR qna_content LIKE '%${word}%'
+</select>
+
 
 <!-- <select id="selectByNamePerPage" parameterType="java.util.HashMap" resultMap="resultmap">
 SELECT * 

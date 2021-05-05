@@ -43,6 +43,16 @@ public interface ILessonReviewService {
 		 */
 		int findCnt(int lesson_id) throws FindException;
 		
+		/**관리자 사용
+		 * 수강후기 관리 게시판 검색 페이징 처리를 위하여, 게시글 전체 조회
+		 * @param word 검색 강좌 이름 또는 학생 이름 
+		 * @param lesson_id 조회하고자 하는 수업
+		 * @return DB에 저장된 수강후기 게시글 개수
+		 * @throws FindException 수강후기가 없으면, 예외가 발생한다.
+		 */
+		int findCnt(String word) throws FindException;
+		
+		
 		/** 관리자 사용
 		 * 수강 후기 관리 게시판 중 강좌 이름, 학생 이름 일치하는 글 조회
 		 * @param word 검색 강좌 이름 또는 학생 이름 
