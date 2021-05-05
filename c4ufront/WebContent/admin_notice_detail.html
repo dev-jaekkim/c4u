@@ -1,64 +1,136 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>admin_notice_detail</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
-        *{
-            box-sizing:border-box;
-            padding: 0;
-            margin: 0;
-            font-family:'Raleway', sans-serif;
-            color : #222;
-            line-height : 1.5em;
-            font-weight:300;
-        }
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+    *{
+        box-sizing:border-box;
+        padding: 0;
+        margin: 0;
+        font-family:'Raleway', sans-serif;
+        color : #222;
+        line-height : 1.5em;
+        font-weight:300;
+    }
 
-         .admin_notice_detail{
-            margin-top: 10px;
-            margin-left: 0%;
+        .admin_notice_detail{
+        margin-top: 10px;
+        margin-left: 0%;
+        margin-bottom: auto;
+    }
+
+    .admin_notice_detail .admin_notice_title{
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+
+    .admin_notice_detail hr{
+        opacity: 35%;
+        width: 700px;
+    }
+
+    .admin_notice_detail div.notice_detail_info{
+        margin-top: 10px;
+    }
+
+    .admin_notice_detail div.notice_detail_date, div.notice_detail_title, div.notice_detail_content{
+        margin-top: 3px;
+    }
+
+    .admin_notice_detail div.notice_detail_title{
+        margin-bottom: 10px;
+    }
+
+
+    .admin_notice_detail span.span_heading{
+        width: 65px;
+        display:inline-block;
+        font-weight: 800;
+    }
+
+    .admin_notice_detail div.div_content{
+        width: 700px;
+        margin-top: 8px;
+        margin-bottom: 30px;
+    }
+
+    .admin_notice_detail span.btnoticemodify{
+        margin-left: 23%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        border: 1px solid;
+        width: 70px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .admin_notice_detail span.btnoticedelete{
+        margin-left: 5%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        border: 1px solid;
+        width: 70px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .admin_notice_detail span.btnoticemodify:hover{
+        background-color:rgb(255, 87, 87);
+        color:lightyellow;
+        font-weight: 400;
+    }
+
+    .admin_notice_detail span.btnoticedelete:hover{
+        background-color:rgb(255, 87, 87);
+        color:lightyellow;
+        font-weight: 400;
+    }
+
+    .admin_notice_modify{
+            margin-top: auto;
             margin-bottom: auto;
+            margin-left: 10%;
+            margin-right: 10%;
         }
 
-        .admin_notice_detail .admin_notice_title{
+        .admin_notice_modify .admin_notice_title{
             margin-top: 30px;
             margin-bottom: 10px;
         }
 
-        .admin_notice_detail hr{
+        .admin_notice_modify hr{
             opacity: 35%;
             width: 700px;
         }
 
-        .admin_notice_detail div.notice_detail_info{
-            margin-top: 10px;
+        .admin_notice_modify div.notice_modify_info{
+            margin-top: 3%;
         }
 
-        .admin_notice_detail div.notice_detail_date, div.notice_detail_title, div.notice_detail_content{
-            margin-top: 3px;
-        }
-
-        .admin_notice_detail div.notice_detail_title{
-            margin-bottom: 10px;
-        }
-
-
-        .admin_notice_detail span.span_heading{
-            width: 65px;
+        .admin_notice_modify span.span_heading{
+            width: 50px;
             display:inline-block;
             font-weight: 800;
+            vertical-align: middle; 
         }
 
-        .admin_notice_detail div.div_content{
+        .admin_notice_modify textarea.textarea_title{
+            resize: none;
             width: 700px;
-            margin-top: 8px;
-            margin-bottom: 30px;
+            height: 24px;
+            text-align:left;
+            padding: 1px;
+            padding-left: 5px;
         }
 
-        .admin_notice_detail span.btnoticemodify{
-            margin-left: 23%;
+        .admin_notice_modify textarea.textarea_content{
+            resize: none;
+            width: 700px;
+            height: 450px;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 5px;
+        }
+
+        .admin_notice_modify span.btnoticemodify{
+            margin-left: 35%;
             margin-top: 3%;
             margin-bottom: 3%;
             border: 1px solid;
@@ -67,7 +139,7 @@
             text-align: center;
         }
 
-        .admin_notice_detail span.btnoticedelete{
+        .admin_notice_modify span.btnoticecancel{
             margin-left: 5%;
             margin-top: 3%;
             margin-bottom: 3%;
@@ -77,20 +149,47 @@
             text-align: center;
         }
 
-        .admin_notice_detail span.btnoticemodify:hover{
+        .admin_notice_modify span.btnoticemodify:hover{
             background-color:rgb(255, 87, 87);
             color:lightyellow;
             font-weight: 400;
         }
 
-        .admin_notice_detail span.btnoticedelete:hover{
+        .admin_notice_modify span.btnoticecancel:hover{
             background-color:rgb(255, 87, 87);
             color:lightyellow;
             font-weight: 400;
         }
-
-    </style>
-</head>
+</style>
+<script>
+    $(function(){
+        //--수정하기 버튼 클릭 시작--
+        $("section>div.admin_notice_detail>span.btnoticemodify").click(function(){
+            console.log("수정버튼 클릭");
+            // $("section>div.reply").hide();
+            // $("section>div.remove").hide();
+            
+            // $("section>div.modify>form>input[name=board_no]").val($("div.detail>span.board_no").html());
+            // $("section>div.modify>form>input[name=board_title]").val($("div.detail>span.board_title").html());
+            // $("section>div.modify").show(); //수정하기 창띄우기
+		    // return false;
+	    });
+        //--수정하기 버튼 클릭 끝--
+        
+        //-- 삭제하기 버튼 클릭 시작 --
+        $("section>div.admin_notice_detail>span.btnoticedelete").click(function(){
+            console.log("삭제버튼 클릭");
+        //     $("section>div.reply").hide();
+        //     $("section>div.remove").hide();
+            
+        //     $("section>div.modify>form>input[name=board_no]").val($("div.detail>span.board_no").html());
+        //     $("section>div.modify>form>input[name=board_title]").val($("div.detail>span.board_title").html());
+        //     $("section>div.modify").show(); //수정하기 창띄우기
+		// return false;
+        //--삭제하기 버튼 클릭 끝--
+        });
+    });//$(function()
+</script>
 <body>
     <header><div class="header"></div></header>
     <section>
@@ -100,6 +199,7 @@
             </div>
             <hr>
             <div class="notice_detail_info">
+                <div class="notice_board_no" style="display: none;"></div>
                 <div class="notice_detail_date">
                     <span class="span_heading">작성일</span>
                     <span class="span_date">2021-05-07 11:14:01</span>
@@ -118,7 +218,29 @@
             <span class="btnoticemodify">수정</span>
             <span class="btnoticedelete">삭제</span>
         </div>
+
+        <div class="admin_notice_modify">
+            <div class="admin_notice_title">
+                <h1>공지사항 수정</h1>
+            </div>
+            <hr>
+            <div class="notice_modify_info">
+                <div class="notice_modify_date">
+                    <span class="span_heading">작성일</span>
+                    <span class="span_date">2021-05-07 11:14:01</span>
+                </div>
+                <div class="notice_modify_title">
+                    <span class="span_heading">제목</span>
+                    <textarea class="textarea_title">[시스템공지사항] 2021-11-14 정기 정검 시행</textarea>
+                </div>
+                <div class="notice_modify_content">
+                    <span class="span_heading">내용</span>
+                    <textarea class="textarea_content">정기 점검이 예정되어있습니다. 정기 점검 시간에는 웹 사이트 이용이 불가합니다. 더 나은 강좌를 만드는 Class For You가 되겠습니다. 감사합니다. </textarea>
+                </div>
+            </div>        
+            <span class="btnoticemodify">수정</span>
+            <span class="btnoticecancel">취소</span>
+        </div>
     </section>
     <footer><div class="footer"></div></footer>
 </body>
-</html>

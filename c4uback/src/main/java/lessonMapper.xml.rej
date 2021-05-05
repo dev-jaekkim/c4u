@@ -8,3 +8,4 @@ diff a/c4uback/src/main/java/lessonMapper.xml b/c4uback/src/main/java/lessonMapp
  SELECT lesson_id, 
  			lesson_teacher_id,
  			lesson_name, 
+	
