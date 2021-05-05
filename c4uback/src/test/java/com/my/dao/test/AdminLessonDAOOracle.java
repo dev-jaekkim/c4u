@@ -87,7 +87,7 @@ public class AdminLessonDAOOracle {
 	}
 	
 
-	//@Test
+	@Test
 	public void adminselectLessonEvaluationList() {
 
 	
@@ -97,7 +97,7 @@ public class AdminLessonDAOOracle {
 		int expsize = 8;
 		
 		try {
-			List<Lesson> list = dao.selectLessonEvaluationList(currentPage, cnt_per_page, word);
+			List<Lesson> list = dao.selectLessonEvaluationList(currentPage,cnt_per_page,word);
 			assertTrue(list.size() == expsize);
 		} catch (FindException e) {
 			e.printStackTrace();
@@ -105,7 +105,7 @@ public class AdminLessonDAOOracle {
 		
 	}
 	
-//	@Test
+	//@Test
 	public void adminSelectByPage() {
 		
 		String word = "복";

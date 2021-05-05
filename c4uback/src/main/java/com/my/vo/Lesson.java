@@ -29,6 +29,8 @@ public class Lesson {
 	int diffDays;
 	private int lessonCategory;
 	private Category category;
+	private int rnum;
+	
 	
 	public Category getCategory() {
 		return category;
@@ -44,16 +46,16 @@ public class Lesson {
 	
 	public Lesson(int lessonId, Student teacher, String lessonName, int lessonTargetFee, int lessonTotalFee,
 			int lessonParticipant, int lessonStatus, int lessonFee, String lessonDescription, int lessonCategory,
-			Date lessonCreate, Date lessonEnd, Date lessonStart,int lessonRecommend) {
+			Date lessonCreate, Date lessonEnd, Date lessonStart,int lessonRecommend,int rnum) {
 		
 		this(lessonId, teacher, lessonName, lessonTargetFee, lessonTotalFee,
 			lessonParticipant, lessonStatus, lessonFee,lessonDescription, 
-			lessonCategory, lessonCreate, lessonEnd, lessonStart, lessonRecommend,null);
+			lessonCategory, lessonCreate, lessonEnd, lessonStart, lessonRecommend,null,rnum);
 	}
 
 	public Lesson(int lessonId, Student teacher, String lessonName, int lessonTargetFee, int lessonTotalFee,
 			int lessonParticipant, int lessonStatus, int lessonFee, String lessonDescription, int lessonCategory,
-			Date lessonCreate, Date lessonEnd, Date lessonStart, int lessonRecommend,List<LPS> lps) {
+			Date lessonCreate, Date lessonEnd, Date lessonStart, int lessonRecommend,List<LPS> lps,int rnum) {
 		super();
 		this.lessonId = lessonId;
 		this.teacher = teacher;
@@ -70,7 +72,8 @@ public class Lesson {
 		this.lessonStart = lessonStart;
 		this.lps = lps;
 		this.lessonRecommend = lessonRecommend;
-	}
+		this.rnum = rnum;
+ 	}
 
 	
 	public Lesson(Student teacher, String lessonName, int lessonTargetFee, Date lessonStart,
@@ -193,14 +196,24 @@ public class Lesson {
 		this.diffDays = diffDays;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Lesson [lessonId=" + lessonId + ", teacher=" + teacher + ", lessonName=" + lessonName
 				+ ", lessonTargetFee=" + lessonTargetFee + ", lessonTotalFee=" + lessonTotalFee + ", lessonParticipant="
 				+ lessonParticipant + ", lessonStatus=" + lessonStatus + ", lessonFee=" + lessonFee
-				+ ", lessonDescription=" + lessonDescription + ", lessonCategory=" + lessonCategory + ", lessonCreate="
-				+ lessonCreate + ", lessonEnd=" + lessonEnd + ", lessonStart=" + lessonStart + ", lessonRecommend="
-				+ lessonRecommend + ", lps=" + lps + "]";
+				+ ", lessonDescription=" + lessonDescription + ", lessonCreate=" + lessonCreate + ", lessonEnd="
+				+ lessonEnd + ", lessonStart=" + lessonStart + ", lessonRecommend=" + lessonRecommend + ", lps=" + lps
+				+ ", targetPercent=" + targetPercent + ", diffDays=" + diffDays + ", lessonCategory=" + lessonCategory
+				+ ", category=" + category + ", rnum=" + rnum + "]";
+	}
+
+	public int getRnum() {
+		return rnum;
+	}
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
 	}
 
 	public int getLessonId() {

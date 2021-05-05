@@ -16,7 +16,10 @@ import com.my.exception.RemoveException;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+
+import lombok.extern.log4j.Log4j;
 @Repository
+@Log4j
 public class AdminLessonDAOOracle implements AdminLessonDAO {
 
 	@Autowired
@@ -49,7 +52,7 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		map.put("word", word);
 		map.put("currentPage", currentPage);
 		map.put("cnt_per_page", cnt_per_page);
-		List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.adminselectLessonEvaluationList", map);
+		List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.adminEvaluationListSearch", map);
 		if(list.size() == 0) {
 			throw new FindException("심사내역이 없습니다.");
 		}
@@ -62,6 +65,7 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 	}
 	}
 	
+	
 	@Override
 	public List<Lesson> selectLessonList(int currentPage, int cnt_per_page, String word) throws FindException {
 		
@@ -69,9 +73,9 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 	try {	
 		session = sqlSessionFactory.openSession();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("word", word);
 		map.put("currentPage", currentPage);
 		map.put("cnt_per_page", cnt_per_page);
+		map.put("word", word);
 		List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.adminSelectByPage", map);
 		if(list.size()==0) {
 			throw new FindException("강좌내역이 없습니다.");
@@ -178,6 +182,10 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+
+
 
 
 	
