@@ -17,12 +17,20 @@ public interface IAdminLessonService {
 	
 	public List<LessonPenalty> findLessonPenaltyAll() throws FindException;
 
-	List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException;
+	List<Lesson> findLessonEvaluationList(String word) throws FindException;
 
 	List<Lesson> findLessonList(int currentPage, int cnt_per_page, String word) throws FindException;
 	
 //	public List<Lesson> findDetailByLessonId (int lessonId) throws FindException;
 	
 	public List<LessonPenalty> findLessonPs(int lessonId) throws FindException;
+
+	int findCnt() throws FindException;
+
+	List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException;
+
+	
+
+
 	
 }

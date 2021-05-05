@@ -38,7 +38,7 @@ public class MemberTest {
         con = ds.getConnection();
         pstmt = con.prepareStatement(sql);
         
-        pstmt.setString(1, pwencoder.encode("p1"));
+        pstmt.setString(1, pwencoder.encode("p2"));
         pstmt.executeUpdate();
       }catch(Exception e) {
         e.printStackTrace();

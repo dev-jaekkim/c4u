@@ -104,8 +104,8 @@ FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
 WHERE lesson_id = #{lessonId}
 </select>-->
 
-<!-- 강좌심사 -->
-<select id="adminselectLessonEvaluationList" parameterType ="java.util.HashMap" resultMap="lpssMap">
+<!-- 강좌심사 paging + 검색 -->
+<select id="adminEvaluationListSearch" parameterType ="java.util.HashMap" resultMap="lpssMap">
 
 SELECT * FROM
 (SELECT lesson_id,lesson_name,student_name,lesson_create_date,
@@ -120,6 +120,12 @@ JOIN student s
 WHERE(l.lesson_name LIKE '%${word}%' OR s.student_name LIKE '%${word}%')
 )
 WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page})
+
+</select>
+
+<!-- 강좌심사 count -->
+
+<select id="">
 
 </select>
 

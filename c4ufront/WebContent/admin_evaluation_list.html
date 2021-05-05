@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강좌 심사</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./js/hyeongdon.js"></script>
+    <style>
+         @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+         * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            font-family: 'Raleway', sans-serif;
+            color: #222;
+            /* line-height: 1.5em; */
+            font-weight: 300;
+        }
+        div.search{
+            margin-left: 35%;
+       }
+       .admin_lesson_history span:hover{
+            font-weight: 800;
+            color: rgb(255, 87, 87);
+       }
+       .admin_lesson_history div.page_group{
+            margin-left: 35%;
+            margin-top: 20px;
+       }
+       .admin_lesson_history>div.admin_lesson_title{
+            margin-left: 50px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+       }
+       .admin_lesson_history>hr{
+            opacity: 35%;
+            width: 1050px;
+            margin-left: 50px;
+       }
+       .admin_lesson_history .lesson_list{
+            border: 1px solid;
+            border-collapse: collapse;
+            margin-left: 50px;
+            margin-top: 20px; 
+       }
+
+       .admin_lesson_history th,td{
+        border: 1px solid;
+       }
+       
+       .admin_lesson_history th{
+            text-align: center;
+            background-color: lightgrey;
+            font-weight: 800;
+       }
+       
+      
+       .admin_lesson_history .lesson_penalty_content{
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 500px;
+       }
+       .admin_lesson_history .lesson_teacher_name{
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100px;
+            text-align: center;
+       }
+       .admin_lesson_history .lesson_name{
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 300px;
+            text-align: center;
+       }
+       .admin_lesson_history .lesson_id{
+        text-align: center;
+       }
+       .admin_lesson_history .lesson_create_date{
+        text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 120px;
+       }
+       .admin_lesson_history .lesson_ps{
+            width: 70px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-weight: 800;
+            text-align: center;
+       }
+    </style>
+    <script>
+         	$(function () {
+        	if(adminLoginStatus()==-9){
+        		//어드민로그인실패
+        		location.href="http://localhost:8888/c4uback/myLogin";
+        		return;
+        	}      	
+        	console.log("front 쿠키 정보 확인");
+            $(".header").load("admin_header.html");
+
+            function showList(responseObj){
+                console.log(responseObj);
+	            //테이블객체
+	            var $tableObj =$("section>div.admin_lesson_history>table.lesson_history");
+
+                $("section>div.admin_lesson_history>table.lesson_history>table tr.copy").remove();
+	
+                //원본행객체
+                var $trOriginObj = $("section>div.admin_lesson_history>table tr.origin");
+                $trOriginObj.show(); //원본행객체 보여주기
+                
+                if(responseObj.status == -1){
+                    alert(responseObj.msg);
+                    return false;
+                }else{
+                    $(responseObj.pgb.list).each(function(index, element){
+                        var $trCopyObj = $trOriginObj.clone(); //원본행객체의 복제본만들기
+                        $trCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                        $trCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                        
+                        //복제본행의 내용 채우기 : 심사번호
+                        $trCopyObj.find("td.lesson_id").html(element.lessonId);
+                        console.log("강좌번호"+element.lessonId);
+                       
+                        //복제본행의 내용 채우기 : 심사강좌제목
+                        $trCopyObj.find("td.lesson_name").html(element.lessonName);
+                        console.log("강좌제목"+element.lessonName);
+
+                        //복제본행의 내용 채우기 : 강사이름
+                        $trCopyObj.find("td.student_name").html(element.studentName);
+                        console.log("강사이름"+element.studentName);
+                        
+                        //복제본행의 내용 채우기 : 개설 날짜
+                        $trCopyObj.find("td.lesson_create_date").html(element.lessonCreate);
+                        console.log("element.lessonCreate");
+
+                        //복제본행의 내용 채우기 : 심사내용
+                        $trCopyObj.find("td.lp_content").html(element.lpContent);
+                        console.log("element.lpContent");
+
+                        //복제본의 내용 채우기: 심사날짜
+                        $trCopyObj.find("td.lessonps_date").html(element.lessonPsDate);
+                        console.log("element.lessonPsDate");
+
+                        //테이블객체의 자식객체로 복제본행을 추가
+                        $tableObj.append($trCopyObj);
+                    }); //each
+                    
+                    $trOriginObj.hide();
+                }
+            };
+
+            function pageGroup(responseObj){
+                console.log(responseObj);
+                //DIV 그룹 객체
+                // var $divNoticeListObj =$("section>div.admin_notice_list");
+
+                //페이지 그룹 원본 객체
+                // var $pageGroupOriginObj = $("body > section > div > div.page_group\,.origin ");
+                //$pageGroupOriginObj.show(); //원본 객체 보여주기
+                
+                var cnt_per_page_val = responseObj.pgb.cnt_per_page;
+                var cnt_per_page_group_val = responseObj.pgb.cnt_per_page_group;
+                var currentPage_val = responseObj.pgb.currentPage;
+                var startPage_val = responseObj.pgb.startPage;
+                var endPage_val = responseObj.pgb.endPage;
+                var totalPage_val = responseObj.pgb.totalPage;
+                var totalCnt_val = responseObj.pgb.totalCnt;
+
+                if(responseObj.status == -1){
+                    alert(responseObj.msg);
+                    return false;
+                }else{
+                    // $pageGroupCopyObj = $pageGroupOriginObj.clone();
+                    
+                    // $pageGroupCopyObj.addClass("copy");
+                    // $pageGroupCopyObj.removeClass("origin");
+
+                    //  $pageNumberObj = $pageGroupCopyObj.find("body > section > div > div.page_group\,.origin > span.page_number");
+                    
+                     for(var i = startPage_val; i<=endPage_val; i++){
+                         console.log("for문 시작");
+                        // $pageNewNumberObj = $('<span class="page_new_number">');
+                            console.log("객체 생성");
+                        // $pageNumberObj.append($pageNewNumberObj);
+                        // $pageNewNumberObj.html("&nbsp;"+i);
+                        // console.log("i : "+i);
+                    };
+
+                    // $divNoticeListObj.append($pageGroupCopyObj);
+                }
+                // $('<div style="display:none">');
+                // $pageGroupOriginObj.hide();
+
+                console.log("cnt_per_page_group_val : "+cnt_per_page_group_val);
+                console.log("cnt_per_page_val : "+cnt_per_page_val);
+                console.log("currentPage_val : "+currentPage_val);
+                console.log("startPage_val : "+startPage_val);
+                console.log("endPage_val : "+endPage_val);
+                console.log("totalPage_val : "+totalPage_val);
+                console.log("totalCnt_val : "+totalCnt_val);
+                
+            };
+
+            $.ajax(
+                {
+                "url": "/c4uback/admin/lessonEvaluation/list",
+                "method": "GET",
+                "transformRequest": [
+                null
+                ],
+                "transformResponse": [
+                null
+                ],
+                "jsonpCallbackParam": "callback",
+                "headers": {
+                "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function(responseObj){
+                    // alert(responseObj);
+                    showList(responseObj);
+                    pageGroup(responseObj);                   
+                }
+            });
+            $("section>div.search>input[type=button]").click(function(){
+                $.ajax({               
+                        "method": "GET",
+                        "transformRequest": [
+                            null
+                        ],
+                        "transformResponse": [
+                            null
+                        ],
+                        "jsonpCallbackParam": "callback",
+                        "url": "http://localhost:8888/c4uback/admin/lessonEvaluation/list/1/10/a",
+                        "headers": {
+                            "Accept": "application/json, text/plain, */*"
+                        },
+                        "data": "",
+                        "timeout": {}
+                        });
+                            return false;
+            });
+        });
+    </script>
+</head>
+<body>
+    <header><div class="header"></div></header>
+    <section>
+        <div class="admin_lesson_history">
+            <div class="admin_lesson_title">
+                <h1>강좌 심사</h1>
+            </div>
+            <hr>
+            <table class="lesson_list">
+                <thead class="lesson_head">
+                    <tr class="lesson_head_tr">
+                        <th>번호</th>
+                        <th>강좌</th>
+                        <th>선생님</th>
+                        <th>개설 날짜</th>
+                        <th>거절 날짜</th>
+                        <th>거절사유</th>
+                        <th>심사하기</th>
+                    </tr>
+                </thead>
+                <tbody class="lesson_list">               
+                    <tr class="lesson_body_tr,origin">
+                        <td class="lesson_id">1</td>
+                        <td class="lesson_name">꽃 구입충동 생기는 러블릭 꽃병</td>
+                        <td class="student_name">Park Geon-WOO</td>
+                        <td class="lesson_create_date">2021-01-01</td>
+                        <td class="lp_content">썸네일 불량</td>
+                        <td class="lessonps_date">2021-04-29</td>
+                        <td class="lesson_ps">심사</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page_group, origin" style="display: none;">
+                <span class="page_btprev">&#9664;</span>
+                <span class="page_number">1</span>
+                <span class="page_btnext">&#9654;</span>
+            </div>
+            <div class="search">
+                <input type="text" placeholder="검색" class="inputsearch">
+                <input type="button" value="검색" class="btsearch"> 
+            </div>
+        </div>
+    </section>
+    <footer><div class="footer"></div></footer>
+</body>
+</html>

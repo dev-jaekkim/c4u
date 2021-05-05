@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +17,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.my.exception.FindException;
 import com.my.service.AdminLessonService;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+import com.my.vo.PageGroupBean;
+import com.my.vo.QNA;
 
 import lombok.extern.log4j.Log4j;
+import oracle.net.aso.e;
+
+
 @CrossOrigin("*")  
 @RestController
 @Log4j
@@ -28,16 +36,21 @@ public class AdminLessonController {
 	@Autowired
 	private AdminLessonService service;
 
-	//심사 승인
+	// 심사 승인
 	@PutMapping("/admin/lesson/modifylessonstatus/{lessonId}")
 	public Map<String, Object> adminModifyLesson(@PathVariable int lessonId
-			//			,Authentication auth 
-			)throws Exception {
+	// ,Authentication auth
+	) throws Exception {
 		log.info("강좌번호" + lessonId);
 		Map<String, Object> map = new HashMap<>();
-		//		if(auth != null) {
+		// if(auth != null) {
 		service.modifyLesson(lessonId);
 		map.put("status", 1);
+
+		// }else {
+		// log.warn("adminDetail"+auth);
+		// map.put("status", 9);
+		// }
 		//		}else {
 		//			log.warn("adminDetail"+auth);
 		//			map.put("status", -9);
@@ -45,35 +58,35 @@ public class AdminLessonController {
 		return map;
 	}
 
-	//심사 거절 
+	// 심사 거절
 	@PostMapping("/admin/lesson/insertpenaltystatus")
-	public Map<String, Object>  insertLessonPenaltyStatus (@RequestBody LessonPenaltyStatus lessonPs) throws Exception {
+	public Map<String, Object> insertLessonPenaltyStatus(@RequestBody LessonPenaltyStatus lessonPs) throws Exception {
 		log.info(lessonPs);
 		Map<String, Object> map = new HashMap<>();
 		service.addPenaltyStatus(lessonPs);
 		map.put("status", 1);
 		return map;
 	}
-	
+
 	@GetMapping("/admin/lesson/lessonpenaltyall")
-	public Map<String, Object> findLessonPenaltyAll() throws Exception{
+	public Map<String, Object> findLessonPenaltyAll() throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		List<LessonPenalty> list = service.findLessonPenaltyAll();
 		map.put("lessonPenalty", list);
 		map.put("status", 1);
 		return map;
 	}
-	
-	//해당 강좌의 lessonps 조회 
+
+	// 해당 강좌의 lessonps 조회
 	@GetMapping("/admin/lesson/lessonps/{lessonId}")
-	public Map<String,Object> findLessonPs(@PathVariable int lessonId) throws Exception{
+	public Map<String, Object> findLessonPs(@PathVariable int lessonId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		List<LessonPenalty> list = service.findLessonPs(lessonId);
 		map.put("lessonPenalty", list);
 		map.put("status", 1);
 		return map;
 	}
-	
+
 //	@GetMapping("/admin/lesson/detail/{lessonId}")
 //	public Map<String,Object> adminLessonDetail (@PathVariable int lessonId) throws Exception{
 //		Map<String, Object> map = new HashMap<>();
@@ -82,19 +95,39 @@ public class AdminLessonController {
 //		map.put("status",1);
 //		return map;
 //	}
-	
-	@GetMapping("admin/lessonEvaluation/list/{currentPage}/{cnt_per_page}/{word}")
-	public Map<String, Object> adminfindLessonList(@PathVariable ("currentPage") Optional<Integer> optCurrentPage, 
-											  	   @PathVariable ("cnt_per_page") Optional<Integer> optCnt_per_page,
-											  	   @PathVariable ("word") Optional<String> optWord,
-											  	   Authentication auth) throws Exception {
-		String word = null;
+
+	@GetMapping(value = { "/admin/Evaluationlist", 
+						  "/admin/Evaluationlist/{currentPage}",
+						  "/admin/Evaluationlist/{currentPage}/{word}"}, 
+						  produces = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> selectLessonList(@PathVariable("currentPage") Optional<Integer> optCurrentPage,
+												@PathVariable("word") Optional<String> optWord, Authentication auth) throws Exception {
 		int currentPage = 1;
-		List<Lesson> list = null;
-		Map<String, Object> map = new HashMap<String, Object>();
 		int cnt_per_page = 10;
-	
-		return null;
-		
+		int totalCnt = service.findCnt();
+		String word = null;
+
+		List<Lesson> list = null;
+		Map<String, Object> map = new HashMap<>();
+		PageGroupBean<Lesson> pgb = null;
+
+		if (auth != null) {
+			if (optCurrentPage.isPresent()) {
+				currentPage = optCurrentPage.get();
+			}
+
+			if (optWord.isPresent()) {
+				word = optWord.get();
+				list = service.findLessonEvaluationList(currentPage, cnt_per_page, word);
+			} 
+			pgb = new PageGroupBean<>(totalCnt, currentPage, list);
+			log.debug(pgb);
+			map.put("pgb", pgb);
+			map.put("status", 1);
+		} else {
+			log.warn("adminList" + auth);
+			map.put("status", 9);
+		}
+		return map;
 	}
 }

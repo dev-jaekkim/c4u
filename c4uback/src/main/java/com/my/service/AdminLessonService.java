@@ -33,11 +33,6 @@ public class AdminLessonService implements IAdminLessonService {
 		return dao.selectLessonPenaltyAll();
 	}
 	
-	@Override
-	public List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException{
-		return dao.selectLessonEvaluationList(currentPage, cnt_per_page, word);
-		
-	}
 	
 	@Override
 	public List<Lesson> findLessonList(int currentPage, int cnt_per_page, String word) throws FindException{
@@ -55,6 +50,26 @@ public class AdminLessonService implements IAdminLessonService {
 //	public Lesson findDetailByLessonId(int lessonId) throws FindException {
 //		return dao.selectLessonDetail(lessonId);
 //	}
+	@Override
+	public int findCnt() throws FindException{
+		return dao.selectCnt();
+		
+	}
+
+
+	@Override
+	public List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page,String word) throws FindException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Lesson> findLessonEvaluationList(String word) throws FindException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	
 	
 

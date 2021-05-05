@@ -20,7 +20,10 @@ public class MyLoginSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, 
 										HttpServletResponse response,
 										Authentication auth) throws IOException, ServletException {
+
+		log.info("auth: "+auth);
 		log.warn("auth: " + auth);
+
 		List<GrantedAuthority> authorities = (List<GrantedAuthority>) auth.getAuthorities();
 		String strAuth = authorities.get(0).getAuthority();
 		
@@ -29,7 +32,7 @@ public class MyLoginSuccessHandler implements AuthenticationSuccessHandler {
         response.addCookie(cookie); //쿠키를 응답
 		
 		if (strAuth.equals("ROLE_ADMIN")) {
-			response.sendRedirect("http://localhost:8888/c4ufront/admin_notice_list.html");
+			response.sendRedirect("http://localhost:8888/c4ufront/admin_evaluation_list.html");
 		}else {
 			response.sendRedirect("http://localhost:8888/c4ufront/maindraft1.html");
 		}
