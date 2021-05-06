@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.my.exception.AddException;
 import com.my.exception.FindException;
+import com.my.exception.ModifyException;
 import com.my.vo.Lesson;
 
 public interface ILessonService {
@@ -24,4 +25,6 @@ public interface ILessonService {
 	List<Lesson> findByLessonOpen(int studentId) throws FindException;
 
 	void add(Lesson lesson) throws AddException;
+	
+	void modify(Lesson lesson) throws ModifyException;
 }

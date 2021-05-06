@@ -9,6 +9,7 @@ import com.my.dao.LessonDAO;
 import com.my.dao.LessonDAOOracle;
 import com.my.exception.AddException;
 import com.my.exception.FindException;
+import com.my.exception.ModifyException;
 import com.my.vo.Lesson;
 
 @Service(value = "service")
@@ -64,5 +65,10 @@ public class LessonService implements ILessonService {
 	public void add(Lesson lesson) throws AddException {
 		dao.insert(lesson);
 
+	}
+
+	@Override
+	public void modify(Lesson lesson) throws ModifyException {
+		dao.update(lesson);
 	}
 }
