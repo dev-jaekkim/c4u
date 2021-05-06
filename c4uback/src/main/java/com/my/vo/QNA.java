@@ -2,9 +2,12 @@ package com.my.vo;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class QNA {
 	private int qnaId;
 	private String qnaTitle;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date qnaDate;
 	private String qnaContent;
 	private String qnaComment;
