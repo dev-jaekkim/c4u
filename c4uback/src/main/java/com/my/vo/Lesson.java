@@ -3,6 +3,7 @@ package com.my.vo;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,6 +23,8 @@ public class Lesson {
 	private Date lessonCreate;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date lessonEnd;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date lessonStart;
 	private int lessonRecommend;

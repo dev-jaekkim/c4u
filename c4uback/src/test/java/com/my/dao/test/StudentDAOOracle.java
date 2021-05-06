@@ -35,20 +35,20 @@ public class StudentDAOOracle {
 	@Autowired
 	private StudentDAO dao;
 
-	@Test
+	//@Test
 	public void selectStudentList() throws FindException {
 		//검색어 입력한 경우 
-		String word ="abc";
-		List<Student> list = dao.selectStudentList(1, 10, word);	
+		//String word ="abc";
+		//List<Student> list = dao.selectStudentList(1, 10, word);	
 //		assertNotNull(list);
 //		assertEquals(list.get(0).getPenaltyStatus().size(), 1);
-		assertEquals(list.size(), 0);
+		//assertEquals(list.size(), 0);
 		
 		//회원 전체 조회
-//		List<Student> list = dao.selectStudentList(1, 10, null);
-//		int expStudent = 22;
-//		assertNotNull(list);
-//		assertEquals(expStudent, list.size());
+		List<Student> list = dao.selectStudentList(1, 10, null);
+		int expStudent = 22;
+		assertNotNull(list);
+		assertEquals(expStudent, list.size());
 	}
 	
 	//@Test
