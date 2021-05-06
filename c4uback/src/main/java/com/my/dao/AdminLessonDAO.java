@@ -96,7 +96,6 @@ public interface AdminLessonDAO {
 	List<Lesson> selectPerPage(int currentPage,  int cnt_per_page) throws FindException;
 	
 	
-	
 
 
 }

@@ -59,7 +59,7 @@ public class AdminLessonService implements IAdminLessonService {
 	@Override
 	public List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page,String word) throws FindException {
 		// TODO Auto-generated method stub
-		return null;
+		return dao.selectLessonEvaluationList(currentPage, cnt_per_page, word) ;
 	}
 
 	@Override

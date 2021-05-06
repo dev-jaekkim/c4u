@@ -222,8 +222,8 @@
                     return false;
                 }else{
                     var $pageGroupCopyObj = $pageGroupOriginObj.clone();  //원본행객체의 복제본만들기
-                    $pageGroupCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
-                    $pageGroupCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                    $pageGroupOriginObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                    $pageGroupOriginObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
 
                     var $prevArrowObj = $pageGroupCopyObj.find("span.page_btprev"); //복제행 객체의 이전 화살표 찾기
                     var $nextArrowObj = $pageGroupCopyObj.find("span.page_btnext"); //복제행 객체의 다음 화살표 찾기
