@@ -30,8 +30,28 @@ public class LessonController {
 	public Map<String,Object> add(MultipartFile uploadFile1, MultipartFile uploadFile2, Lesson lesson) throws Exception{
 		log.info(lesson);
 		Map<String, Object> map = new HashMap<>();
+		String uploadFolder = "C:\\uploadFolder";
+		log.info("레슨 컨트롤러 lesson: " + lesson);
+		log.info("Upload File Name : " + uploadFile1.getOriginalFilename());
+		log.info("Upload File Size : " + uploadFile1.getSize());
+		log.info("Upload File Name : " + uploadFile2.getOriginalFilename());
+		log.info("Upload File Size : " + uploadFile2.getSize());
+
 		service.add(lesson);
-		map.put("status", 1);
+
+		int lessonId = lesson.getLessonId();
+
+		String uploadFileName =  lessonId + "_thumbnail";
+		String uploadFileName2 =  lessonId + "_detail";
+		File saveFile1 = new File(uploadFolder, uploadFileName);
+		File saveFile2 = new File(uploadFolder, uploadFileName2);
+		try { 
+			uploadFile1.transferTo(saveFile1);
+			uploadFile2.transferTo(saveFile2);
+		}catch(Exception e) {
+			log.error(e.getMessage());
+		}
+		map.put("status",1);
 		return map;
 	}
 
@@ -86,14 +106,13 @@ public class LessonController {
 
 		int lessonId = lesson.getLessonId();
 
-		String uploadFileName =  lessonId + "_thumbnail_" + uploadFile1.getOriginalFilename();
-		String uploadFileName2 =  lessonId + "_detail_" +uploadFile2.getOriginalFilename();
+		String uploadFileName =  lessonId + "_thumbnail";
+		String uploadFileName2 =  lessonId + "_detail";
 		File saveFile1 = new File(uploadFolder, uploadFileName);
 		File saveFile2 = new File(uploadFolder, uploadFileName2);
 		try { 
 			uploadFile1.transferTo(saveFile1);
 			uploadFile2.transferTo(saveFile2);
-
 		}catch(Exception e) {
 			log.error(e.getMessage());
 		}
