@@ -16,6 +16,7 @@ import com.my.exception.RemoveException;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+import com.my.vo.Notice;
 
 import lombok.extern.log4j.Log4j;
 @Repository
@@ -63,6 +64,70 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		if(session != null) session.close();
 
 	}
+	}
+	
+	@Override
+	public int selectCnt(String lesson_name) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("lesson_name", lesson_name);
+			int cnt = session.selectOne("mybatis.AdminLessonMapper.adminEvaluationCountLessonName", map);
+			if(cnt == 0) {
+				throw new FindException("검색결과가  없습니다.");
+			}
+			return cnt;
+		}catch (Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	
+	}
+	
+//	@Override
+//	public int selectCnt() throws FindException {
+//		
+//		SqlSession session = null;
+//		try {
+//			session = sqlSessionFactory.openSession();
+//			int cnt = session.selectOne("mybatis.AdminLessonMapper.adminEvaluationCountStudentId");
+//			if(cnt == 0) {
+//				throw new FindException("심사내역이 없습니다.");
+//			}
+//			return cnt;
+//		}catch (Exception e) {
+//			throw new FindException(e.getMessage());
+//		}finally {
+//			if(session != null) {
+//				session.close();
+//			}
+//		}
+//	}
+	
+	@Override
+	public List<Lesson> selectPerPage(int currentPage, int cnt_per_page) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("currentPage", currentPage);
+			map.put("cnt_per_page", cnt_per_page);
+			List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.selectPerPage", map);
+			if(list.size()==0) {
+				throw new FindException("게시글이 없습니다.");
+			}
+			return list;
+		}catch (Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
+		}
 	}
 	
 	
@@ -179,9 +244,24 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 
 	@Override
 	public int selectCnt() throws FindException {
-		// TODO Auto-generated method stub
-		return 0;
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			int cnt = session.selectOne("mybatis.AdminLessonMapper.adminEvaluationCount");
+			return cnt;
+		}catch(Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) session.close();
+		}	
+		
 	}
+
+	
+
+	
+
+	
 
 
 

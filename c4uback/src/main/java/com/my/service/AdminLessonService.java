@@ -12,6 +12,7 @@ import com.my.exception.ModifyException;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+import com.my.vo.Notice;
 
 @Service
 public class AdminLessonService implements IAdminLessonService {
@@ -52,10 +53,8 @@ public class AdminLessonService implements IAdminLessonService {
 //	}
 	@Override
 	public int findCnt() throws FindException{
-		return dao.selectCnt();
-		
+		return dao.selectCnt();	
 	}
-
 
 	@Override
 	public List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page,String word) throws FindException {
@@ -68,6 +67,19 @@ public class AdminLessonService implements IAdminLessonService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public int findCnt(String lesson_name) throws FindException{
+		return dao.selectCnt(lesson_name);
+	}
+
+	@Override
+	public List<Lesson> findPerPage(int currentPage, int cnt_per_page) throws FindException {
+		
+		return dao.selectPerPage(currentPage, cnt_per_page);
+	}
+	
+
 
 
 	
