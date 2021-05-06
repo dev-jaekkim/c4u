@@ -36,6 +36,9 @@
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+			<location>c:\\uploadFolder</location>
+		</multipart-config>
 	</servlet>
 		
 	<servlet-mapping>
@@ -43,4 +46,5 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+
 </web-app>

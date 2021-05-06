@@ -68,14 +68,14 @@ public class LessonDAOOracle implements LessonDAO {
 				throw new FindException("해당 강좌가 존재하지 않습니다.");
 			}
 			session.commit();
-			Calendar enddate = Calendar.getInstance();
-			Calendar sysdate = Calendar.getInstance();
-			enddate.setTime(lesson.getLessonEnd());
-			long diffDays = (enddate.getTimeInMillis() - sysdate.getTimeInMillis()) / 1000 / (24*60*60);
-			if(diffDays < 0) {
-				diffDays = 0;
-			}
-			lesson.setDiffDays((int)diffDays);
+//			Calendar enddate = Calendar.getInstance();
+//			Calendar sysdate = Calendar.getInstance();
+//			enddate.setTime(lesson.getLessonEnd());
+//			long diffDays = (enddate.getTimeInMillis() - sysdate.getTimeInMillis()) / 1000 / (24*60*60);
+//			if(diffDays < 0) {
+//				diffDays = 0;
+//			}
+//			lesson.setDiffDays((int)diffDays);
 			return lesson;
 		}catch(Exception e) {
 			throw new FindException(e.getMessage());

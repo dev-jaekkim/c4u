@@ -27,7 +27,7 @@
         }
 
         .admin_evaluation_detail {
-            width: 800px;
+            width: 1000px;
             height: 100%;
             margin: 30px auto;
             text-align: center;
@@ -35,7 +35,7 @@
         }
 
         .admin_evaluation_detail table.eval_detail {
-            width: 800px;
+            width: 1000px;
             border-collapse: collapse;
             line-height: 30px;
             word-break: break-all;
@@ -62,6 +62,10 @@
 
         .admin_evaluation_detail tr {
             height: 30px;
+        }
+
+        .admin_evaluation_detail .detail_img {
+            width: 800px;
         }
 
         .admin_evaluation_detail .permission,
@@ -140,10 +144,12 @@
         		location.href="http://localhost:8888/c4uback/myLogin";
         		return;
         	}
+
+            // sessionStorage.setItem("pagingNum", num); -> 리스트에 필요한 코드 
+            let lessonId = sessionStorage.getItem("lessonId");
+            //$("input[name=lesson_id]").val(lessonId);
             $(".header").load("admin_header.html");
-            // let lessonId = getQueryString();
-            //input hidden val -> 레슨 아이디 변수 선언하기 
-            //$("input[name=lesson_id]").val();
+            
 
             //개설신청강좌 상세조회
             $.ajax({
@@ -155,7 +161,7 @@
                     null
                 ],
                 "jsonpCallbackParam": "callback",
-                // "url": "/c4uback/lesson/" + lessonId,
+                // "url": "./c4uback/lesson/" + lessonId,
                 "url": "http://localhost:8888/c4uback/lesson/29",
                 "headers": {
                     "Accept": "application/json, text/plain, */*"
@@ -178,7 +184,9 @@
                     $("#end_date").html(lsdata.lessonEnd);
                     $("#lesson_fee").html(lsdata.lessonFee);
                     $("#target_participant").html(lsdata.lessonTargetFee / lsdata.lessonFee);
-                    // $("#thumbnail").html();
+                    //이미지파일명 (detail/thumbnail_lessonId) -> 불러와서 넣기 
+                    $(".thumb_img").attr("src", "./images/img_mypageheart_1.jpg");
+                    $(".detail_img").attr("src", "./images/lidetail10.jpg");
                     if (!(lsdata.lessonStatus == 3)) {
                         $(".permission, .reject").attr("id", "false");
                     }
@@ -428,11 +436,11 @@
                     <tr>
                         <th>대표 이미지</th>
                         <!-- 첨부파일 다운로드 -->
-                        <td id="thumbnail"></td>
+                        <td id="thumbnail"><img class="thumb_img" src=""></td>
                     </tr>
                     <tr>
                         <th>상세 이미지</th>
-                        <td id="image"></td>
+                        <td id="image"><img class="detail_img" src=""></td>
                     </tr>
                 </tbody>
             </table>
