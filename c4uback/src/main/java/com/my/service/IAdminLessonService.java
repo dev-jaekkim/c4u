@@ -30,7 +30,7 @@ public interface IAdminLessonService {
 
 	List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException;
 
-	int findCnt(String word) throws FindException;
+	int findCnt(String lesson_name) throws FindException;
 
 	List<Lesson> findPerPage(int currentPage, int cnt_per_page) throws FindException;
 

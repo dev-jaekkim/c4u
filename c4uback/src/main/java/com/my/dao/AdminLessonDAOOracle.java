@@ -248,6 +248,9 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 		try {
 			session = sqlSessionFactory.openSession();
 			int cnt = session.selectOne("mybatis.AdminLessonMapper.adminEvaluationCount");
+			if(cnt == 0) {
+				throw new FindException("심사내역이 없습니다.");
+			}
 			return cnt;
 		}catch(Exception e) {
 			throw new FindException(e.getMessage());
