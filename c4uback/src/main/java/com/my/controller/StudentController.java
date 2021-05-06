@@ -65,14 +65,14 @@ public class StudentController {
 				int totalCnt = service.findCnt();
 				PageGroupBean<Student> pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 				pgb.setList(list);
-				map.put("page_group_bean", pgb);
+				map.put("pgb", pgb);
 				map.put("status", 1);
 			}else { 
 				list = service.findStudentList(currentPage, cnt_per_page, null); 
 				int totalCnt = service.findCnt();
 				PageGroupBean<Student> pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 				pgb.setList(list);
-				map.put("page_group_bean", pgb);
+				map.put("pgb", pgb);
 				map.put("status", 1);
 			}
 			return map;

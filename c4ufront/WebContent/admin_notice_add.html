@@ -1,163 +1,124 @@
-<style>
-    @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
-    *{
-        box-sizing:border-box;
-        padding: 0;
-        margin: 0;
-        font-family:'Raleway', sans-serif;
-        color : #222;
-        line-height : 1.5em;
-        font-weight:300;
-    }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>admin_notice_add</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+        *{
+            box-sizing:border-box;
+            padding: 0;
+            margin: 0;
+            font-family:'Raleway', sans-serif;
+            color : #222;
+            line-height : 1.5em;
+            font-weight:300;
+        }
 
-    .admin_notice_add{
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-left: 10%;
-        margin-right: 10%;
-    }
+        .admin_notice_add{
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
 
-    .admin_notice_add .admin_notice_title{
-        margin-top: 30px;
-        margin-bottom: 10px;
-    }
+        .admin_notice_add .admin_notice_title{
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
 
-    .admin_notice_add hr{
-        opacity: 35%;
-        width: 700px;
-    }
+        .admin_notice_add hr{
+            opacity: 35%;
+            width: 700px;
+        }
 
-    .admin_notice_add div.notice_add_info{
-        margin-top: 3%;
-    }
+        .admin_notice_add div.notice_add_info{
+            margin-top: 3%;
+        }
 
-    .admin_notice_add span.span_heading{
-        width: 50px;
-        font-weight: 800;
-        text-align: center;
-        margin-bottom: 2%; 
-        display:inline-block;
-    }
+        .admin_notice_add span.span_heading{
+            width: 50px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2%; 
+            display:inline-block;
+        }
 
-    .admin_notice_add textarea.textarea_add_title{
-        resize: none;
-        width: 650px;
-        height: 24px;
-        text-align:left;
-        padding: 1px;
-        padding-left: 5px;
-        vertical-align: middle; 
-    }
+        .admin_notice_add textarea.textarea_title{
+            resize: none;
+            width: 650px;
+            height: 24px;
+            text-align:left;
+            padding: 1px;
+            padding-left: 5px;
+            vertical-align: middle; 
+        }
 
-    .admin_notice_add textarea.textarea_add_content{
-        resize: none;
-        width: 700px;
-        height: 450px;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-top: 5px;
-    }
+        .admin_notice_add textarea.textarea_content{
+            resize: none;
+            width: 700px;
+            height: 450px;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 5px;
+        }
 
-    .admin_notice_add span.btnoticeaddok, input.btnoticeaddok{
-        margin-left: 30%;
-        margin-top: 3%;
-        margin-bottom: 3%;
-        border: 1px solid;
-        width: 70px;
-        display: inline-block;
-        text-align: center;
-    }
+        .admin_notice_add span.btnoticeok{
+            margin-left: 30%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border: 1px solid;
+            width: 70px;
+            display: inline-block;
+            text-align: center;
+        }
 
-    .admin_notice_add span.btnoticeaddcancel, input.btnoticeaddcancel{
-        margin-left: 5%;
-        margin-top: 3%;
-        margin-bottom: 3%;
-        border: 1px solid;
-        width: 70px;
-        display: inline-block;
-        text-align: center;
-    }
+        .admin_notice_add span.btnoticecancel{
+            margin-left: 5%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border: 1px solid;
+            width: 70px;
+            display: inline-block;
+            text-align: center;
+        }
 
-    .admin_notice_add span.btnoticeaddok:hover{
-        background-color:rgb(255, 87, 87);
-        color:lightyellow;
-        font-weight: 400;
-    }
+        .admin_notice_add span.btnoticeok:hover{
+            background-color:rgb(255, 87, 87);
+            color:lightyellow;
+            font-weight: 400;
+        }
 
-    .admin_notice_add span.btnoticeaddcancel:hover{
-        background-color:rgb(255, 87, 87);
-        color:lightyellow;
-        font-weight: 400;
-    }
-</style>
-<script>
-    $(function(){
-	    var $writeFormObj = $("section>div.admin_notice_add>form");
-	    $writeFormObj.submit(function(){
-            var jsonObj = {};
-            var writeFormSerializeArray = $writeFormObj.serializeArray();
-            console.log(writeFormSerializeArray.length);
-            for(var i = 0 ; i < writeFormSerializeArray.length; i++){
-                var obj = writeFormSerializeArray[i];
-                jsonObj[obj.name] = obj.value;
-            }
-            var data = JSON.stringify(jsonObj);
-            console.log(data);
-            $.ajax({
-                "url": backContextPath+"/admin/notice/write",
-                "method": "POST",
-                "transformRequest": [
-                    null
-                ],
-                "transformResponse": [
-                    null
-                ],
-                "jsonpCallbackParam": "callback",
-                
-                "headers": {
-                    "Accept": "application/json, text/plain, */*",
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                "data": data,
-                "timeout": {},
-                success:function(responseObj){//응답성공이란 응답완료(readyState가 4), 응답코드가 200인 경우를 말함
-                    alert("성공");
-                    // $("header>ul>li>a.list").trigger("click");
-                    $("#adm_notice").trigger("click");
-                },
-                error:function(jqXHR){//응답실패
-                    alert("에러:" + jqXHR.status);
-                }
-            }); //$.ajax
-            return false;
-	    });//submit function()
-
-        //--글쓰기 창에서 취소 버튼 클릭 시작 --
-        $("section>div.admin_notice_add>form>span.btnoticeaddcancel").click(function(){
-            $("#adm_notice").trigger("click");
-        });
-        //--글쓰기 창에서 취소 버튼 클릭 끝 --
-
-    });//$.function()
-</script>
-<div class="admin_notice_add">
-    <div class="admin_notice_title">
-        <h1>공지사항 수정</h1>
-    </div>
-    <hr>
-    <form>
-        <div class="notice_add_info">
-            <div class="notice_add_title">
-                <span class="span_heading">제목</span>
-                <textarea class="textarea_add_title" name="noticeTitle"></textarea>
+        .admin_notice_add span.btnoticecancel:hover{
+            background-color:rgb(255, 87, 87);
+            color:lightyellow;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <header><div class="header"></div></header>
+    <section>
+        <div class="admin_notice_add">
+            <div class="admin_notice_title">
+                <h1>공지사항 수정</h1>
             </div>
-            <div class="notice_add_content">
-                <hr><br>
-                <textarea class="textarea_add_content" name="noticeContent"></textarea>
-            </div>
-        </div>        
-        <!-- <span class="btnoticeaddok">확인</span> -->
-        <input type="submit" class="btnoticeaddok" value="확인">
-        <span class="btnoticeaddcancel">취소</span>
-    </form>
-</div>
+            <hr>
+            <div class="notice_add_info">
+                <div class="notice_add_title">
+                    <span class="span_heading">제목</span>
+                    <textarea class="textarea_title"></textarea>
+                </div>
+                <div class="notice_add_content">
+                    <hr><br>
+                    <textarea class="textarea_content"></textarea>
+                </div>
+            </div>        
+            <span class="btnoticeok">확인</span>
+            <span class="btnoticecancel">취소</span>
+        </div>
+    </section>
+    <footer><div class="footer"></div></footer>
+</body>
+</html>
