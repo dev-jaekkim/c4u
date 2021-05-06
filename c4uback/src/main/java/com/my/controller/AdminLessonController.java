@@ -123,7 +123,7 @@ public class AdminLessonController {
 				word = optWord.get();
 				list = service.findLessonEvaluationList(currentPage, cnt_per_page, word);
 				totalCnt = service.findCnt(word);
-				log.info(word);
+				log.info("front 검색입력" + word);
 			}else { //검색어 입력안된경우
 				list = service.findPerPage(currentPage, cnt_per_page);
 				//totalCnt = service.findCnt();

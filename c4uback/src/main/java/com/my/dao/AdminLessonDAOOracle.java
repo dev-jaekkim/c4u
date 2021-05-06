@@ -118,7 +118,7 @@ public class AdminLessonDAOOracle implements AdminLessonDAO {
 			map.put("cnt_per_page", cnt_per_page);
 			List<Lesson> list = session.selectList("mybatis.AdminLessonMapper.selectPerPage", map);
 			if(list.size()==0) {
-				throw new FindException("게시글이 없습니다.");
+				throw new FindException("심사내역 없습니다.");
 			}
 			return list;
 		}catch (Exception e) {

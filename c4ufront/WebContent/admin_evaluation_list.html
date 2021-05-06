@@ -113,7 +113,7 @@
 	            //테이블객체
 	            var $tableObj =$("section>div.admin_evaluation_list>table.lesson_list");
 
-                $("section>div.admin_evaluation_list>table.lesson_list>table tr.copy").remove();
+                $("section>div.admin_evaluation_list>table.lesson_list tr.copy").remove();
                 //console.log("삭제");
                 
                 //원본행객체
@@ -178,7 +178,7 @@
                 var startPage_val = responseObj.pgb.startPage;
                 var endPage_val = responseObj.pgb.endPage;
                 var totalPage_val = responseObj.pgb.totalPage;
-                var list_size_val = responseObj.pgb.list.length;
+                //var list_size_val = responseObj.pgb.list.length;
 
                 // console.log("totalCnt_val :"+totalCnt_val);
                 // console.log("cnt_per_page_val: "+cnt_per_page_val);
@@ -192,7 +192,7 @@
                 var  $divPageListObj = $("section>div.admin_evaluation_list>div.page_list");
 
                 $("section>div.admin_evaluation_list>div.page_list div.copy").remove();
-                $("section>admin.admin_evaluation_list>div.page_list div.copy").remove();
+                $("section>admin.admin_evaluation_list>div.page_list span.copy").remove();
 
                 //원본객체
                 var $pageGroupOriginObj = $("section>div.admin_evaluation_list>div.page_list>div.origin");
@@ -221,14 +221,14 @@
                 }
 
                 //page number 추가
-                for(var i = startPage_val; i<totalPage_val; i++){
+                for(var i = startPage_val; i<=endPage_val; i++){
                    
                             var $pageNumberObj = $('<span class="page_number, copy">');
                             $pageNumberObj.html("&nbsp;"+"&nbsp;"+"&nbsp;"+i);
                             $nextArrowObj.before($pageNumberObj);
                             $pageNumberObj.show();
 
-                            if(totalCnt_val >= cnt_per_page_val){
+                            if(totalCnt_val < cnt_per_page_val){
                                 break;
                             }
                     }; 
@@ -265,7 +265,7 @@
                 }
             });
             alert("ajax 실행 후");
-            //검색버튼 시작
+            //검색버튼 클릭 시작
             $("section>div.admin_evaluation_list>form input[type=button]").click(function(){
                 $.ajax({
                         url: backContextPath+"/admin/Evaluationlist/1/"+$("section>div.admin_evaluation_list>form input[name=word]").val(),      
@@ -387,9 +387,10 @@
                     </tr>
                 </tbody>
             </table>
+
         <div class="page_list">
             <div class="page_group, origin" style="display: none;">
-               <span class="page_btprev" style="display: none;">&#9664;</span> 
+                <span class="page_btprev" style="display: none;">&#9664;</span> 
                 <span class="page_btnext" style="display: none;">&#9664;</span> 
             </div>
         </div>
