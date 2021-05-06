@@ -277,13 +277,14 @@
                                 $("div.qna_detail_info>div.qna_detail_writer>span.span_writer").html(qnaObj.student.studentName);
                                 $("div.qna_detail_info>div.qna_detail_date>span.span_date").html(qnaObj.qnaDate);
                                 $("div.qna_detail_content>span.content").html(qnaObj.qnaContent);
-
+                                $("div.admin_qna_detail_comment_remove div.admin_qna_detail_comment_remove_hidden_qnaId").html(qnaObj.qnaId);
+                                console.log("실제 세팅값: "+$("div.admin_qna_detail_comment_remove div.admin_qna_detail_comment_remove_hidden_qnaId").html());
                                 if(qnaObj.qnaComment == null){
                                     $("div.qna_detail_comment").html("답변이 없습니다. 답변을 달아주세요!");
                                     $("input.btqnacommentmodify").show();
                                 }else{
                                     $("div.qna_detail_comment").html(qnaObj.qnaComment);
-                                    $("input.btqnacommentdelete").show();
+                                    // $("input.btqnacommentdelete").show(); //추후 구현
                                 }
                             }else{
                                 alert(responseObj.msg);

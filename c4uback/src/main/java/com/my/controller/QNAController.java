@@ -187,6 +187,7 @@ public class QNAController {
 										  Authentication auth) throws Exception{
 		Map<String, Object> map = new HashMap<>();
 		if(auth!=null) {
+			qna.setQnaId(qna_id);
 			qnaService.modify(qna);
 			log.debug(qna);
 			map.put("status", 1);
@@ -197,19 +198,20 @@ public class QNAController {
 		return map;
 	}
 	
-	@DeleteMapping(value="/admin/qna/delete/{qna_id}",
-				   produces=MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> adminDelete(@PathVariable int qna_id,
-											Authentication auth) throws Exception{
-		Map<String, Object> map = new HashMap<>();
-		if(auth!=null) {
-			qnaService.remove(qna_id);
-			log.debug(qna_id);
-			map.put("status", 1);
-		}else {
-			log.warn("adminDelete"+auth);
-			map.put("status", -1);
-		}
-		return map;
-	}
+	//답변 삭제 추후 구현
+//	@DeleteMapping(value="/admin/qna/delete/{qna_id}",
+//				   produces=MediaType.APPLICATION_JSON_VALUE)
+//	public Map<String, Object> adminDelete(@PathVariable int qna_id,
+//											Authentication auth) throws Exception{
+//		Map<String, Object> map = new HashMap<>();
+//		if(auth!=null) {
+//			qnaService.remove(qna_id);
+//			log.debug(qna_id);
+//			map.put("status", 1);
+//		}else {
+//			log.warn("adminDelete"+auth);
+//			map.put("status", -1);
+//		}
+//		return map;
+//	}
 }

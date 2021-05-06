@@ -121,7 +121,6 @@ public class LessonDAOOracle implements LessonDAO {
 			throw new FindException(e.getMessage());
 		}
 		String selectAllCountSQL = "SELECT COUNT (*) FROM lesson";
-		//		String selectAllCountSQL = "SELECT COUNT(*) FROM lesson WHERE lesson_status = 0";
 		try {
 			pstmt = con.prepareStatement(selectAllCountSQL);
 			rs = pstmt.executeQuery();
@@ -140,7 +139,7 @@ public class LessonDAOOracle implements LessonDAO {
 	}
 
 	@Override
-	public List<Lesson> selectByPage(int currPage, int dataPerPage) throws FindException {
+	public List<Lesson> selectPerPage(int currPage, int dataPerPage) throws FindException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -150,8 +149,6 @@ public class LessonDAOOracle implements LessonDAO {
 			e.printStackTrace();
 			throw new FindException(e.getMessage());
 		}
-		//		String selectByPageSQL = "SELECT * FROM (SELECT LESSON_ID,LESSON_TEACHER_ID,LESSON_NAME,LESSON_TOTAL_AMOUNT,LESSON_TARGET_AMOUNT,LESSON_PARTICIPANT,LESSON_STATUS,LESSON_CREATE_DATE,LESSON_END_DATE,LESSON_START_DATE,LESSON_FEE,LESSON_DESCRIPTION,LESSON_CATEGORY_ID,LESSON_RECOMMEND_CNT, row_number() OVER (ORDER BY lesson_end_date) AS rnum FROM lesson) WHERE rnum BETWEEN fun_start_row(?, ?) AND fun_end_row(?, ?)";
-		//		String selectByPageSQL = "SELECT * FROM (SELECT LESSON_ID,LESSON_TEACHER_ID,LESSON_NAME,LESSON_TOTAL_AMOUNT,LESSON_TARGET_AMOUNT,LESSON_PARTICIPANT,LESSON_STATUS,LESSON_CREATE_DATE,LESSON_END_DATE,LESSON_START_DATE,LESSON_FEE,LESSON_DESCRIPTION,LESSON_CATEGORY_ID,LESSON_RECOMMEND_CNT, row_number() OVER (ORDER BY lesson_end_date) AS rnum FROM lesson) WHERE lesson_status = 0 AND rnum BETWEEN fun_start_row(?, ?) AND fun_end_row(?, ?)";
 		String selectByPageSQL = "SELECT * FROM (SELECT LESSON_ID,LESSON_TEACHER_ID,LESSON_NAME,LESSON_TOTAL_AMOUNT,LESSON_TARGET_AMOUNT,LESSON_PARTICIPANT,LESSON_STATUS,LESSON_CREATE_DATE,LESSON_END_DATE,LESSON_START_DATE,LESSON_FEE,LESSON_DESCRIPTION,LESSON_CATEGORY_ID,LESSON_RECOMMEND_CNT, row_number() OVER (ORDER BY lesson_end_date) AS rnum FROM lesson WHERE lesson_status = 0) WHERE rnum BETWEEN fun_start_row(?, ?) AND fun_end_row(?, ?)";
 		List<Lesson> currPageList = new ArrayList<>();
 		try {
@@ -191,6 +188,11 @@ public class LessonDAOOracle implements LessonDAO {
 			MyConnection.close(con,pstmt,rs);
 		}
 	}
+	
+	@Override
+	public List<Lesson> selectByUnionPerPage(String union, int currentPage, int cnt_per_page) throws FindException{
+		return null;
+	};
 
 	@Override
 	public void insert(Lesson lesson) throws AddException {
@@ -226,11 +228,8 @@ public class LessonDAOOracle implements LessonDAO {
 
 	@Override
 	public int selectByTeacherIdCnt(int studentId) throws FindException {
-		
 		return 0;
 	}
-
-
 
 	@Override
 	public List<Lesson> selectByLessonOpen(int studentId) throws FindException {
@@ -254,7 +253,6 @@ public class LessonDAOOracle implements LessonDAO {
 
 	@Override
 	public List<Lesson> selectBySearch(String word) throws FindException {
-
 		SqlSession session = null;
 	try {	
 		session = sqlSessionFactory.openSession();
@@ -274,7 +272,6 @@ public class LessonDAOOracle implements LessonDAO {
 
 	@Override
 	public List<Lesson> selectByLessonStatus01234(int studentId, List<Integer> lessonStatus) throws FindException {
-		
 		SqlSession session = null;
 		try {	
 			session = sqlSessionFactory.openSession();
@@ -295,19 +292,6 @@ public class LessonDAOOracle implements LessonDAO {
 
 	@Override
 	public int selectAllCount() throws FindException {
-	
 		return 0;
 	}
-
-	//	public static void main(String[]args) {
-	//		LessonDAOOracle dao = new LessonDAOOracle();
-	//		try {
-	//			List<Lesson> list = dao.selectAll();
-	//			for(Lesson l: list) {
-	//				System.out.println(l.getTargetPercent());
-	//			}
-	//		} catch (FindException e) {
-	//			e.printStackTrace();
-	//		}	
-	//	}
 }
