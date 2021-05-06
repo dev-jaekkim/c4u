@@ -268,7 +268,7 @@
             //검색버튼 시작
             $("section>div.admin_evaluation_list>form input[type=button]").click(function(){
                 $.ajax({
-                        url: backContextPath+"/admin/admin/Evaluationlist/1/{lesson_name}/"+$("section>div.admin_evaluation_list>form input[name=word]").val(),      
+                        url: backContextPath+"/admin/Evaluationlist/1/"+$("section>div.admin_evaluation_list>form input[name=word]").val(),      
                         "method": "GET",
                         "transformRequest": [
                             null
@@ -319,7 +319,7 @@
                 }
                 //console.log("현재 화살표 값" + str_page_number[1]);
 
-                var word = $("section>div.admin_lesson_list>form input[name=word]").val(); 
+                var word = $("section>div.admin_evaluation_list>form input[name=word]").val(); 
                 var url = backContextPath+"/admin/Evaluationlist/"+str_page_number[1];
                 if(word.trim() != ''){
                     url += '/' + word;

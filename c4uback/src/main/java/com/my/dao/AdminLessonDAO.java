@@ -89,7 +89,7 @@ public interface AdminLessonDAO {
 	 * @return
 	 * @throws FindException
 	 */
-	public int selectCnt() throws FindException;
+	int selectCnt() throws FindException;
 	
 	int selectCnt(String lesson_name) throws FindException;
 	

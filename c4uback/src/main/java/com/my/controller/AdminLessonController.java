@@ -103,17 +103,17 @@ public class AdminLessonController {
 						  "/admin/Evaluationlist/{currentPage}/{word}"}, 
 						  produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> selectLessonList(@PathVariable("currentPage") Optional<Integer> optCurrentPage,
-												@PathVariable("word") Optional<String> optWord, Authentication auth) throws Exception {
-		int currentPage = 1;
-		int cnt_per_page = 10;
-		int totalCnt = service.findCnt();
+												@PathVariable("word") Optional<String> optWord, 
+												Authentication auth) throws Exception {
 		String word = null;
-
+		int currentPage = 1;
 		List<Lesson> list = null;
 		Map<String, Object> map = new HashMap<>();
+		int cnt_per_page = 10;
+		int totalCnt = service.findCnt();
 		PageGroupBean<Lesson> pgb = null;
 
-		if (auth != null) {
+		if (auth!=null) {
 			if (optCurrentPage.isPresent()) {
 				currentPage = optCurrentPage.get();
 				log.info(word);
@@ -126,7 +126,7 @@ public class AdminLessonController {
 				log.info(word);
 			}else { //검색어 입력안된경우
 				list = service.findPerPage(currentPage, cnt_per_page);
-				totalCnt = service.findCnt();
+				//totalCnt = service.findCnt();
 				//totalCnt = 20;
 				
 			}
