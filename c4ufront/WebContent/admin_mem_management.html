@@ -180,7 +180,7 @@
         	}
             //학생 전체 조회 
             $(document).on('click', ".page_num", function (event) {
-                let currentPage = $(event.target).attr("id");
+                let currentPage = $(event.target).html();
                 $(".currentPage").val(currentPage);
                 $.ajax({
                     url: "/c4uback/admin/studentlist/" + currentPage,
@@ -203,7 +203,6 @@
                     },
                     error: function (jqXHR) {
                         console.log(jqXHR.status);
-                        console.log(jqXHR);
                     }
                 });
                 return false;
@@ -311,12 +310,13 @@
             let $tableObj = $(".mem_list");
             let $trOriginObj = $(".slist_origin");
             function showList(responseObj) {
+            	$("tr.copy").remove();
                 $trOriginObj.show();
                 if (responseObj.status == -1) {
                     console.log(responseObj.msg);
                     return false;
                 } else {
-                    $(responseObj.page_group_bean.list).each(function (index, element) {
+                    $(responseObj.pgb.list).each(function (index, element) {
                         let $trCopyObj = $trOriginObj.clone();
                         $trCopyObj.removeClass("slist_origin");
                         $trCopyObj.addClass("copy");
@@ -334,25 +334,40 @@
                     });
                     $trOriginObj.hide();
                     //페이지 Number
-                    let startPage = responseObj.page_group_bean.startPage;
-                    let endPage = responseObj.page_group_bean.endPage;
-                    let totalPage = responseObj.page_group_bean.totalPage;
-                    let $pageNumObj = $(".page_num");
+                    let startPage = responseObj.pgb.startPage;
+                    let endPage = responseObj.pgb.endPage;
+                    let totalPage = responseObj.pgb.totalPage;
+                    
+                    let $pageNumObj = null;
+                    $(".page_num").each(function(index, element){
+                        if($(element).css("display") == 'none'){
+                            $pageNumObj = $(element);
+                        }else{
+                            $(element).remove();
+                        }
+                    });
+                    
+                    //let $pageNum1Obj = $(".page_num");//첫번째 페이지번호
+
+
+                    //$(".page_num").not($pageNum1Obj).remove(); //모든 페이지번호중 첫번째 페이지번호만 제외하고 모두 삭제
                     //prev
-                    if (startPage > 1) {
+                    if(startPage > 1) {
                         $pageNumObj.before("<span>&#5176;</span>");
+                      //  i = startPage;
                     }
-                    for (var i = startPage; i <= endPage; i++) {
+                    
+                    for (var i=startPage; i <= endPage; i++) {
                         let $pageNumCopy = $pageNumObj.clone();
-                        $pageNumCopy.attr("id", i);
                         $pageNumCopy.html(i);
+                        $pageNumCopy.show();
                         $pageNumObj.before($pageNumCopy);
                     }
                     //next
                     if (endPage < totalPage) {
                         $pageNumObj.after("<span>&#5171;</span>");
                     }
-                    $pageNumObj.hide();
+                    //$pageNumObj.hide();
                 }
             }
             //학생 검색 조회 - !!currentPage 
@@ -524,7 +539,7 @@
                 </tbody>
             </table>
             <div class="paging">
-                <span class="page_num" id="1"></span>
+                <span class="page_num" style="display:none">1</span>
             </div>
             <input type="button" id="students_list" value="전체조회 보기">
             <div class="search">

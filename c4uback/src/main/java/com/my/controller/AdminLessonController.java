@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +16,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.my.exception.FindException;
+
 import com.my.service.AdminLessonService;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+import com.my.vo.Notice;
 import com.my.vo.PageGroupBean;
-import com.my.vo.QNA;
+
 
 import lombok.extern.log4j.Log4j;
-import oracle.net.aso.e;
-
 
 @CrossOrigin("*")  
 @RestController
@@ -95,6 +93,10 @@ public class AdminLessonController {
 //		map.put("status",1);
 //		return map;
 //	}
+	
+	
+
+	
 
 	@GetMapping(value = { "/admin/Evaluationlist", 
 						  "/admin/Evaluationlist/{currentPage}",
@@ -114,12 +116,22 @@ public class AdminLessonController {
 		if (auth != null) {
 			if (optCurrentPage.isPresent()) {
 				currentPage = optCurrentPage.get();
+				log.info(word);
 			}
 
-			if (optWord.isPresent()) {
+			if (optWord.isPresent()) { //검색어 입력된경우
 				word = optWord.get();
 				list = service.findLessonEvaluationList(currentPage, cnt_per_page, word);
-			} 
+				totalCnt = service.findCnt(word);
+				log.info(word);
+			}else { //검색어 입력안된경우
+				list = service.findPerPage(currentPage, cnt_per_page);
+				totalCnt = service.findCnt();
+				//totalCnt = 20;
+				
+			}
+			log.info("totalCnt =" + totalCnt +", list ="+ list );
+	
 			pgb = new PageGroupBean<>(totalCnt, currentPage, list);
 			log.debug(pgb);
 			map.put("pgb", pgb);

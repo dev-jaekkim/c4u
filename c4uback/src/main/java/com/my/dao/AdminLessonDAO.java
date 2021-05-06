@@ -9,6 +9,7 @@ import com.my.exception.RemoveException;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+import com.my.vo.Notice;
 
 public interface AdminLessonDAO {
 	
@@ -89,6 +90,10 @@ public interface AdminLessonDAO {
 	 * @throws FindException
 	 */
 	public int selectCnt() throws FindException;
+	
+	int selectCnt(String lesson_name) throws FindException;
+	
+	List<Lesson> selectPerPage(int currentPage,  int cnt_per_page) throws FindException;
 	
 	
 	
