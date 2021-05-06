@@ -27,27 +27,27 @@ public class LessonController {
 	private LessonService service;
 
 	@PostMapping(value = "/lesson/add")
-	public Map<String,Object> add(MultipartFile uploadFile1, MultipartFile uploadFile2, Lesson lesson) throws Exception{
+	public Map<String,Object> add(MultipartFile thumbnail, MultipartFile detail, Lesson lesson) throws Exception{
 		log.info(lesson);
 		Map<String, Object> map = new HashMap<>();
 		String uploadFolder = "C:\\uploadFolder";
 		log.info("레슨 컨트롤러 lesson: " + lesson);
-		log.info("Upload File Name : " + uploadFile1.getOriginalFilename());
-		log.info("Upload File Size : " + uploadFile1.getSize());
-		log.info("Upload File Name : " + uploadFile2.getOriginalFilename());
-		log.info("Upload File Size : " + uploadFile2.getSize());
+		log.info("Upload File Name : " + thumbnail.getOriginalFilename());
+		log.info("Upload File Size : " + thumbnail.getSize());
+		log.info("Upload File Name : " + detail.getOriginalFilename());
+		log.info("Upload File Size : " + detail.getSize());
 
 		service.add(lesson);
 
 		int lessonId = lesson.getLessonId();
 
-		String uploadFileName =  lessonId + "_thumbnail";
-		String uploadFileName2 =  lessonId + "_detail";
-		File saveFile1 = new File(uploadFolder, uploadFileName);
-		File saveFile2 = new File(uploadFolder, uploadFileName2);
+		String thumbnailName =  lessonId + "_thumbnail";
+		String detailName =  lessonId + "_detail";
+		File saveFile1 = new File(uploadFolder, thumbnailName);
+		File saveFile2 = new File(uploadFolder, detailName);
 		try { 
-			uploadFile1.transferTo(saveFile1);
-			uploadFile2.transferTo(saveFile2);
+			thumbnail.transferTo(saveFile1);
+			detail.transferTo(saveFile2);
 		}catch(Exception e) {
 			log.error(e.getMessage());
 		}
@@ -66,53 +66,28 @@ public class LessonController {
 		return map;
 	}
 
-	//	@PutMapping(value ="/lesson/modify")
-	//	public Map<String, Object> modify (
-	////			MultipartFile[] uploadFile, 
-	//	          @RequestBody Lesson lesson) throws Exception{
-	//		log.info(lesson);
-	////		String uploadFolder = "C:\\uploadFolder";
-	////
-	////		for (MultipartFile multipartFile : uploadFile) {
-	////			log.info("Upload File Name : " + multipartFile.getOriginalFilename());
-	////			log.info("Upload File Size : " + multipartFile.getSize());
-	////			
-	////			String uploadFileName = multipartFile.getOriginalFilename();
-	////			File saveFile = new File(uploadFolder, uploadFileName);
-	////			try { 
-	////				multipartFile.transferTo(saveFile);
-	////				
-	////			}catch(Exception e) {
-	////				log.error(e.getMessage());
-	////			}
-	////		}
-	//		Map<String, Object> map = new HashMap<>();
-	//		service.modify(lesson);
-	//		map.put("status", 1);
-	//		return map;
-	//	}
 	@PostMapping("/lesson/modify")
-	public Map<String, Object> modify(MultipartFile uploadFile1, MultipartFile uploadFile2, 
+	public Map<String, Object> modify(MultipartFile thumbnail, MultipartFile detail, 
 			Lesson lesson) throws Exception{
 		Map<String, Object> map = new HashMap<>();
 		String uploadFolder = "C:\\uploadFolder";
 		log.info("레슨 컨트롤러 lesson: " + lesson);
-		log.info("Upload File Name : " + uploadFile1.getOriginalFilename());
-		log.info("Upload File Size : " + uploadFile1.getSize());
-		log.info("Upload File Name : " + uploadFile2.getOriginalFilename());
-		log.info("Upload File Size : " + uploadFile2.getSize());
+		log.info("Upload File Name : " + thumbnail.getOriginalFilename());
+		log.info("Upload File Size : " + thumbnail.getSize());
+		log.info("Upload File Name : " + detail.getOriginalFilename());
+		log.info("Upload File Size : " + detail.getSize());
 
 		service.modify(lesson);
 
 		int lessonId = lesson.getLessonId();
 
-		String uploadFileName =  lessonId + "_thumbnail";
-		String uploadFileName2 =  lessonId + "_detail";
-		File saveFile1 = new File(uploadFolder, uploadFileName);
-		File saveFile2 = new File(uploadFolder, uploadFileName2);
+		String thumbnailName =  lessonId + "_thumbnail";
+		String detailName =  lessonId + "_detail";
+		File saveFile1 = new File(uploadFolder, thumbnailName);
+		File saveFile2 = new File(uploadFolder, detailName);
 		try { 
-			uploadFile1.transferTo(saveFile1);
-			uploadFile2.transferTo(saveFile2);
+			thumbnail.transferTo(saveFile1);
+			detail.transferTo(saveFile2);
 		}catch(Exception e) {
 			log.error(e.getMessage());
 		}
