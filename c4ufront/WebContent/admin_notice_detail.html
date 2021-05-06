@@ -51,7 +51,7 @@
         margin-bottom: 30px;
     }
 
-    .admin_notice_detail span.btnoticemodify{
+    .admin_notice_detail span.btnoticedetailmodify{
         margin-left: 23%;
         margin-top: 3%;
         margin-bottom: 3%;
@@ -61,7 +61,7 @@
         text-align: center;
     }
 
-    .admin_notice_detail span.btnoticedelete{
+    .admin_notice_detail span.btnoticedetaildelete{
         margin-left: 5%;
         margin-top: 3%;
         margin-bottom: 3%;
@@ -71,13 +71,13 @@
         text-align: center;
     }
 
-    .admin_notice_detail span.btnoticemodify:hover{
+    .admin_notice_detail span.btnoticedetailmodify:hover{
         background-color:rgb(255, 87, 87);
         color:lightyellow;
         font-weight: 400;
     }
 
-    .admin_notice_detail span.btnoticedelete:hover{
+    .admin_notice_detail span.btnoticedetailremove:hover{
         background-color:rgb(255, 87, 87);
         color:lightyellow;
         font-weight: 400;
@@ -129,7 +129,7 @@
             padding-top: 5px;
         }
 
-        .admin_notice_modify span.btnoticemodify{
+        .admin_notice_modify input.btnoticemodifyok, span.btnoticemodifyok{
             margin-left: 35%;
             margin-top: 3%;
             margin-bottom: 3%;
@@ -139,7 +139,7 @@
             text-align: center;
         }
 
-        .admin_notice_modify span.btnoticecancel{
+        .admin_notice_modify span.btnoticemodifycancel{
             margin-left: 5%;
             margin-top: 3%;
             margin-bottom: 3%;
@@ -149,98 +149,207 @@
             text-align: center;
         }
 
-        .admin_notice_modify span.btnoticemodify:hover{
+        .admin_notice_modify input.btnoticemodifyok:hover{
             background-color:rgb(255, 87, 87);
             color:lightyellow;
             font-weight: 400;
         }
 
-        .admin_notice_modify span.btnoticecancel:hover{
+        .admin_notice_modify span.btnoticemodifyok:hover{
+            background-color:rgb(255, 87, 87);
+            color:lightyellow;
+            font-weight: 400;
+        }
+
+        .admin_notice_modify span.btnoticemodifycancel:hover{
             background-color:rgb(255, 87, 87);
             color:lightyellow;
             font-weight: 400;
         }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(function(){
         //--수정하기 버튼 클릭 시작--
-        $("section>div.admin_notice_detail>span.btnoticemodify").click(function(){
-            console.log("수정버튼 클릭");
-            // $("section>div.reply").hide();
-            // $("section>div.remove").hide();
+        $("body > section > div.admin_notice_detail > span.btnoticedetailmodify").click(function(){
+            $("section>div.admin_notice_detail").hide(); // 상세 창 감추기
+            $("#notice_modify_form div.notice_modify_date>span.span_date").html($("div.notice_detail_info>div.notice_detail_date>span.span_date").html());
+            $("#notice_modify_form input.notice_board_no").val($("div.admin_notice_detail>div.notice_detail_info>div.notice_board_no").html());
+            $("#notice_modify_form div.notice_modify_title>textarea").val($("div.notice_detail_info>div.notice_detail_title>span.span_title").html());
+            $("#notice_modify_form div.notice_modify_content>textarea").val($("div.notice_detail_info>div.notice_detail_content>div.div_content").html());
+            $("section>div.admin_notice_modify").show(); //수정하기 창 띄우기
             
-            // $("section>div.modify>form>input[name=board_no]").val($("div.detail>span.board_no").html());
-            // $("section>div.modify>form>input[name=board_title]").val($("div.detail>span.board_title").html());
-            // $("section>div.modify").show(); //수정하기 창띄우기
-		    // return false;
+            return false;
 	    });
         //--수정하기 버튼 클릭 끝--
         
         //-- 삭제하기 버튼 클릭 시작 --
-        $("section>div.admin_notice_detail>span.btnoticedelete").click(function(){
-            console.log("삭제버튼 클릭");
-        //     $("section>div.reply").hide();
-        //     $("section>div.remove").hide();
-            
-        //     $("section>div.modify>form>input[name=board_no]").val($("div.detail>span.board_no").html());
-        //     $("section>div.modify>form>input[name=board_title]").val($("div.detail>span.board_title").html());
-        //     $("section>div.modify").show(); //수정하기 창띄우기
-		// return false;
-        //--삭제하기 버튼 클릭 끝--
+        $("section>div.admin_notice_detail>span.btnoticedetailremove").click(function(){
+            $("section>div.admin_notice_detail").hide(); // 상세 창 감추기
+            $("section>div.admin_notice_modify").hide(); //수정하기 창 감추기
+            $("section>div.admin_notice_remove").show(); //삭제하기 창띄우기
+		    
+            return false;
         });
+        //--삭제하기 버튼 클릭 끝--
+
+        //--수정하기 창에서 수정 클릭 시작--
+        $("#notice_modify_form").on("click","#btnoticemodifyok",function(event){
+            var $modifyFormObj = $("#notice_modify_form");
+            
+            console.log("form 안에서 수정하기 버튼 클릭됨"); 
+            var modifyjsonObj = {};
+            var modifyformSerializeArray = $modifyFormObj.serializeArray();
+            console.log("formSerialzeArray: "+modifyformSerializeArray);
+            for(var i= 0; i<modifyformSerializeArray.length;i++){
+                var obj = modifyformSerializeArray[i];
+                console.log("obj 값"+ obj);
+                modifyjsonObj[obj.name] = obj.value;
+                console.log("for 문 안 jsonObj"+modifyjsonObj);
+            }
+            var data = JSON.stringify(modifyjsonObj);
+            console.log("수정 data: "+data);
+            $.ajax({
+            url: backContextPath +"/admin/notice/modify",
+            "method": "PUT",
+            "transformRequest": [
+                null
+            ],
+            "transformResponse": [
+                null
+            ],
+            "jsonpCallbackParam": "callback",
+            "headers": {
+                "Accept": "application/json, text/plain, */*",
+                "Content-Type": "application/json;charset=utf-8"
+            },
+                data: data,
+            "timeout": {},
+            success:function(responseObj){
+                    alert("수정성공!");
+                    if(responseObj.status == 1){
+                        console.log("수정성공");
+                        $("#adm_notice").trigger("click");
+                    }else{
+                        alert(responseObj.msg);
+                    }
+                },
+                error:function(jqXHR){
+                    alert("에러:" + jqXHR.status);
+                }
+            }); //$.ajax
+            return false;
+        });
+        //--수정하기 창에서 수정 클릭 끝--
+
+        //--수정 하기 창에서 취소 버튼 클릭 시작 --
+        $("#notice_modify_form span.btnoticemodifycancel").click(function(){
+            $("#adm_notice").trigger("click");
+        });
+        //--수정 하기 창에서 취소 버튼 클릭 끝 --
+        
+        //--삭제하기 창에서 삭제 클릭 시작--
+        var $removeFormObj = $("div.admin_notice_remove>form");
+        $removeFormObj.submit(function(){
+            
+            var noticeId = $("div.notice_board_no").html();
+            
+            // console.log("삭제 noticeId: "+noticeId);
+            $.ajax({
+                url: backContextPath +"/admin/notice/delete/"+noticeId,
+                "method": "DELETE",
+                "transformRequest": [
+                    null
+                ],
+                "transformResponse": [
+                    null
+                ],
+                "jsonpCallbackParam": "callback",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*"
+                },
+                "timeout": {},
+                success:function(responseObj){
+                    if(responseObj.status == 1){
+                        $("#adm_notice").trigger("click");
+                    }else{
+                        alert(responseObj.msg);
+                    }
+                },
+                error:function(jqXHR){
+                    // alert("에러:" + jqXHR.status);
+                    alert("삭제할 공지사항이 없습니다");
+                }
+            });//$.ajax
+            return false;
+        });
+        //--삭제하기 창에서 삭제 클릭 끝--
+
+        //--삭제 하기 창에서 취소 버튼 클릭 시작 --
+        $("section>div.admin_notice_remove>form>span.btnoticeremovecancel").click(function(){
+            $("#adm_notice").trigger("click");
+        });
+        //--삭제 하기 창에서 취소 버튼 클릭 끝 --
     });//$(function()
 </script>
-<body>
-    <header><div class="header"></div></header>
-    <section>
-        <div class="admin_notice_detail">
-            <div class="admin_notice_title">
-                <h1>공지사항 상세</h1>
-            </div>
-            <hr>
-            <div class="notice_detail_info">
-                <div class="notice_board_no" style="display: none;"></div>
-                <div class="notice_detail_date">
-                    <span class="span_heading">작성일</span>
-                    <span class="span_date">2021-05-07 11:14:01</span>
-                </div>
-                <div class="notice_detail_title">
-                    <span class="span_heading">제목</span>
-                    <span class="span_title">[시스템공지사항] 2021-11-14 정기 정검 시행</span>
-                </div>
-                <div class="notice_detail_content">
-                    <hr><br>
-                    <div class="div_content">정기 점검이 예정되어있습니다. 정기 점검 시간에는 웹 사이트 이용이 불가합니다. <br>
-                    더 나은 강좌를 만드는 Class For You가 되겠습니다. 감사합니다. </div>
-                </div>
-            </div>
-            <hr>        
-            <span class="btnoticemodify">수정</span>
-            <span class="btnoticedelete">삭제</span>
-        </div>
 
-        <div class="admin_notice_modify">
-            <div class="admin_notice_title">
-                <h1>공지사항 수정</h1>
+<div class="admin_notice_detail">
+    <div class="admin_notice_title">
+        <h1>공지사항 상세</h1>
+    </div>
+    <hr>
+    <div class="notice_detail_info">
+        <div class="notice_board_no" style="display: none;"></div>
+        <div class="notice_detail_date">
+            <span class="span_heading">작성일</span>
+            <span class="span_date">2021-05-07 11:14:01</span>
+        </div>
+        <div class="notice_detail_title">
+            <span class="span_heading">제목</span>
+            <span class="span_title">[시스템공지사항] 2021-11-14 정기 정검 시행</span>
+        </div>
+        <div class="notice_detail_content">
+            <hr><br>
+            <div class="div_content">정기 점검이 예정되어있습니다. 정기 점검 시간에는 웹 사이트 이용이 불가합니다. <br>
+            더 나은 강좌를 만드는 Class For You가 되겠습니다. 감사합니다. </div>
+        </div>
+    </div>
+    <hr>        
+    <span class="btnoticedetailmodify">수정</span>
+    <span class="btnoticedetailremove">삭제</span>
+</div>
+
+<div class="admin_notice_modify" style="display:none">
+    <div class="admin_notice_title">
+        <h1>공지사항 수정</h1>
+    </div>
+    <hr>
+    <form id="notice_modify_form">
+        <div class="notice_modify_info">
+            <input type="hidden" class="notice_board_no" style="display: none;" name="noticeId">
+            <div class="notice_modify_date">
+                <span class="span_heading">작성일</span>
+                <span class="span_date" name="noticeDate"></span>
             </div>
-            <hr>
-            <div class="notice_modify_info">
-                <div class="notice_modify_date">
-                    <span class="span_heading">작성일</span>
-                    <span class="span_date">2021-05-07 11:14:01</span>
-                </div>
                 <div class="notice_modify_title">
                     <span class="span_heading">제목</span>
-                    <textarea class="textarea_title">[시스템공지사항] 2021-11-14 정기 정검 시행</textarea>
+                    <textarea class="textarea_title" name="noticeTitle"></textarea>
                 </div>
                 <div class="notice_modify_content">
                     <span class="span_heading">내용</span>
-                    <textarea class="textarea_content">정기 점검이 예정되어있습니다. 정기 점검 시간에는 웹 사이트 이용이 불가합니다. 더 나은 강좌를 만드는 Class For You가 되겠습니다. 감사합니다. </textarea>
+                    <textarea class="textarea_content" name="noticeContent"></textarea>
                 </div>
-            </div>        
-            <span class="btnoticemodify">수정</span>
-            <span class="btnoticecancel">취소</span>
-        </div>
-    </section>
-    <footer><div class="footer"></div></footer>
-</body>
+            <input type="button" id="btnoticemodifyok" value="수정">
+            <!-- <span class="btnoticemodifyok">수정</span> -->
+            <span class="btnoticemodifycancel">취소</span>
+        </div>        
+    </form>
+</div>
+
+<div class="admin_notice_remove" style="display:none">
+    <form>
+        공지사항을 삭제하겠습니까? 
+        <input type="submit" value="삭제">
+        <span class="btnoticeremovecancel">취소</span>
+    </form>     
+</div>
