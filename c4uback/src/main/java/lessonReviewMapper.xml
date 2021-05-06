@@ -25,7 +25,7 @@
 <select id="adminSelectPerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
 SELECT *
 FROM (
-	  SELECT review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
+	  SELECT review_id, review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
 	  FROM lesson_per_student JOIN review ON lps_id = review_lps_id
                               JOIN student ON lps_student_id = student_id
                               JOIN lesson ON lps_lesson_id = lesson_id
@@ -36,7 +36,7 @@ WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_ro
 <select id="userSelectPerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
 SELECT *
 FROM (
-	  SELECT review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
+	  SELECT review_id, review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
 	  FROM lesson_per_student JOIN review ON lps_id = review_lps_id
                               JOIN student ON lps_student_id = student_id
                               JOIN lesson ON lps_lesson_id = lesson_id
@@ -69,7 +69,7 @@ WHERE lesson_name LIKE '%${word}%'
 <select id="selectByLessonTitleORStudentNamePerPage" parameterType = "java.util.HashMap" resultMap="resultmapAssociation">
 SELECT *
 FROM (
-	  SELECT review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
+	  SELECT review_id, review_date, lesson_name, review_recommendation, review_content, student_name, row_number() OVER(ORDER BY review_id DESC) AS rnum 
 	  FROM lesson_per_student JOIN review ON lps_id = review_lps_id
                               JOIN student ON lps_student_id = student_id
                               JOIN lesson ON lps_lesson_id = lesson_id

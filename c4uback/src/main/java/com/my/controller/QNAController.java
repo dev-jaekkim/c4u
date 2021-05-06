@@ -94,11 +94,11 @@ public class QNAController {
 	}
 	
 	//2021-04-29 김재경
-	@GetMapping("/qna/{qna_id}")
+	@GetMapping("/qna/detail/{qna_id}")
 	public Map<String, Object> detail (HttpSession session,
 									   @PathVariable int qna_id) throws Exception{
 		Map<String, Object> map = new HashMap<>();
-		int student_id = 0;
+		int student_id = 1;
 		
 		Integer wrapperStudentId = (Integer)session.getAttribute("loginInfo");
 		if(wrapperStudentId != null) {
@@ -163,7 +163,7 @@ public class QNAController {
 		return map;
 	}
 	
-	@GetMapping(value="/admin/qna/{qna_id}",
+	@GetMapping(value="/admin/qna/detail/{qna_id}",
 				produces=MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> adminDetail(@PathVariable int qna_id,
 											Authentication auth) throws Exception{

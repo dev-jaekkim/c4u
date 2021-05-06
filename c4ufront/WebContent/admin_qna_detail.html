@@ -1,0 +1,291 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+    *{
+        box-sizing:border-box;
+        padding: 0;
+        margin: 0;
+        font-family:'Raleway', sans-serif;
+        color : #222;
+        line-height : 1.5em;
+        font-weight:300;
+    }
+
+    .admin_qna_detail{
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .admin_qna_detail .admin_qna_title{
+        margin-left: 50px;
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+
+    .admin_qna_detail hr{
+        opacity: 35%;
+        width: 1050px;
+        margin-left: 50px;
+    }
+
+    .admin_qna_detail div.qna_detail_info{
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .admin_qna_detail span.span_heading{
+        display: inline-block;
+        font-weight: 800;
+        width: 70px;
+        text-align: left;
+        margin-left: 50px;
+        margin-bottom: 5px;
+    }
+
+    .admin_qna_detail span.span_file:hover{
+        color:rgba(0, 0, 255, 0.623);
+    }
+
+    .admin_qna_detail div.qna_detail_content{
+        margin-left: 50px;
+        margin-right: 50px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 1050px;
+    }
+
+    .admin_qna_detail div.qna_detail_comment{
+        margin-top: 20px;
+        margin-left: 50px;
+        margin-bottom: 50px;
+    }
+
+    .admin_qna_detail input.btqnacommentdelete, btqnacommentmodify{
+        width: 100px;
+        height: 40px;
+        margin-top: 20px;
+        margin-left: 480px;
+        border-radius: 10px;
+        margin-bottom: 100px;
+    }
+
+    .admin_qna_detail input.btqnacommentdelete:hover{
+        background-color:rgb(255, 87, 87);
+        color:lightyellow;
+        font-weight: 400;
+    }
+
+    .admin_qna_detail input.btqnacommentmodify:hover{
+        background-color:rgb(255, 87, 87);
+        color:lightyellow;
+        font-weight: 400;
+    }
+
+    .admin_qna_detail_comment_modify{
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 10%;
+            margin-bottom: 10%;
+        }
+
+        .admin_qna_detail_comment_modify .admin_qna_title{
+            margin-left: 50px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        .admin_qna_detail_comment_modify hr{
+            opacity: 35%;
+            width: 1050px;
+            margin-left: 50px;
+        }
+
+        .admin_qna_detail_comment_modify div.qna_detail_modify_info{
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .admin_qna_detail_comment_modify span.qna_detail_modify_span_heading{
+            display: inline-block;
+            font-weight: 800;
+            width: 70px;
+            text-align: left;
+            margin-left: 50px;
+            margin-bottom: 5px;
+        }
+
+        .admin_qna_detail_comment_modify div.qna_detail_modify_content{
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 1050px;
+        }
+
+        .admin_qna_detail_comment_modify div.qna_detail_modify_comment{
+            margin-top: 20px;
+            margin-left: 50px;
+        }
+
+        .admin_qna_detail_comment_modify textarea.input_comment{
+            width: 1050px;
+            height: 200px;
+            font-size: 1em;
+            border-radius: 10px;
+            padding: 5px;
+            resize: none;
+        }
+
+        .admin_qna_detail_comment_modify input.btqnadetailcommentregister{
+            width: 100px;
+            height: 40px;
+            margin-top: 20px;
+            margin-left: 530px;
+            border-radius: 10px;
+        }
+
+        .admin_qna_detail_comment_modify input.btqnadetailcommentregister:hover{
+            background-color:rgb(255, 87, 87);
+            color:lemonchiffon;
+            font-weight: 400;
+        }
+</style>
+<script>
+    $(function(){
+        
+        //--답변 달기 버튼 클릭 시작--
+        $("div.admin_qna_detail>input.btqnacommentmodify").click(function(){
+            $("div.admin_qna_detail").hide();
+            $("div.admin_qna_detail_comment_modify").show();
+
+            $("div.qna_detail_modify_info span.qna_detail_modify_span_title").html($("div.admin_qna_detail span.span_title").html());
+            $("div.qna_detail_modify_info span.qna_detail_modify_span_writer").html($("div.admin_qna_detail span.span_writer").html());
+            $("div.qna_detail_modify_info span.qna_detail_modify_span_date").html($("div.admin_qna_detail span.span_date").html());
+            $("div.qna_detail_modify_content span.qna_detail_modify_content").html($("div.qna_detail_content span.content").html());
+            
+            return false;
+        });
+        //--답변 달기 버튼 클릭 끝--
+
+
+        //--답변 삭제 버튼 클릭 시작--
+        $("div.admin_qna_detail>input.btqnacommentdelete").click(function(){
+            $("div.admin_qna_detail").hide();
+            $("div.admin_qna_detail_comment_remove").show();
+
+            return false;
+        });
+        //--답변 삭제 버튼 클릭 끝--
+
+
+        //--답변 달기 창에서 답변 달기 시작--
+
+        //--답변 달기 창에서 답변 달기 끝--
+
+
+        //--답변 달기 창에서 답변 달기 취소 시작--
+        $("div.admin_qna_detail_comment_modify span.btqnadeatilcommentmodifycancel").click(function(){
+            $("#adm_qna").trigger("click");
+        });
+        //--답변 달기 창에서 답변 달기 취소 끝--
+
+
+        //--답변 삭제 창에서 답변 삭제 시작--
+
+        //--답변 삭제 창에서 답변 삭제 끝--
+
+        //--답변 삭제 창에서 답변 삭제 취소 시작--
+        $("div.admin_qna_detail_comment_remove span.btqnadeatilcommentremovecancel").click(function(){
+            $("#adm_qna").trigger("click");
+        });
+        //--답변 삭제 창에서 답변 삭제 취소 끝--
+    });
+</script>
+
+<div class="admin_qna_detail">
+    <div class="admin_qna_title">
+        <h1>1:1 문의 상세 관리</h1>
+    </div>
+    <hr>
+    <div class="qna_detail_info">
+        <div class="qna_detail_title">
+            <span class="span_heading">제목</span>
+            <span class="span_title">강사님 연구원님 감사합니다.</span>
+        </div>
+        <div class="qna_detail_writer">
+            <span class="span_heading">작성자</span>
+            <span class="span_writer">강사님연구원님짱</span>
+        </div>
+        <div class="qna_detail_date">
+            <span class="span_heading">작성일</span>
+            <span class="span_date">2021-05-07 11:14:01</span>
+        </div>
+        <!-- <div class="qna_detail_file">
+            <span class="span_heading">첨부파일</span>
+            <span class="span_file">a.jpg</span>
+        </div> -->
+    </div>
+    <hr>
+    <div class="qna_detail_content">
+        <span class="content">
+            5개월 동안 감사했습니다. 덕분에 많은 것을 배웠습니다. 
+        </span>
+    </div>
+    <hr>
+    <div class="qna_detail_comment">
+        다들 화이팅!
+    </div>
+    <hr>
+    <input type="button" value="답변 달기" class="btqnacommentmodify" style="display: none;">
+    <input type="button" value="답변 삭제" class="btqnacommentdelete" style="display: none;">
+</div>
+
+<div class="admin_qna_detail_comment_modify" style="display:none">
+    <div class="admin_qna_title">
+        <h1>1:1 문의 상세</h1>
+    </div>
+    <hr>
+    <div class="qna_detail_modify_info">
+        <div class="qna_detail_modify_title">
+            <span class="qna_detail_modify_span_heading">제목</span>
+            <span class="qna_detail_modify_span_title">강좌가 보이지 않습니다.</span>
+        </div>
+        <div class="qna_detail_modify_writer">
+            <span class="qna_detail_modify_span_heading">작성자</span>
+            <span class="qna_detail_modify_span_writer">코코넛</span>
+        </div>
+        <div class="qna_detail_modify_date">
+            <span class="qna_detail_modify_span_heading">작성일</span>
+            <span class="qna_detail_modify_span_date">2021-05-07 11:14:01</span>
+        </div>
+        <!-- <div class="qna_detail_modify_file">
+            <span class="qna_detail_modify_span_heading">첨부파일</span>
+            <span class="qna_detail_modify_span_file">a.jpg</span>
+        </div> -->
+
+    </div>
+    <hr>
+    <div class="qna_detail_modify_content">
+        <span class="qna_detail_modify_content">
+            안녕하세요. 최근에 강의를 구입했는데 강좌가 보이지 않습니다.
+        </span>
+    </div>
+    <hr>
+    <div class="qna_detail_modify_comment">
+        <textarea placeholder="답변을 등록해주세요!" name="comment" class="input_comment"> </textarea>
+    </div>
+    <input type="button" value="등록" class="btqnadetailcommentregister">
+    <div class="admin_qna_detail_comment_remove_hidden_qnaId" style="display: none;"></div>
+    <span class="btqnadeatilcommentmodifycancel">취소</span>
+</div>
+
+<div class="admin_qna_detail_comment_remove" style="display:none">
+    <form>
+        답변을 삭제하겠습니까? 
+        <input type="submit" value="삭제">
+        <div class="admin_qna_detail_comment_remove_hidden_qnaId" style="display: none;"></div>
+        <span class="btqnadeatilcommentremovecancel">취소</span>
+    </form>     
+</div>
