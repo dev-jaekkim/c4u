@@ -121,4 +121,22 @@ public class AdminLessonDAOOracle {
 		}
 		
 	}
+	@Test
+	public void adminEvaluationCountLessonName() {
+		
+		String lesson_name = "꽃";
+		try {
+			int cnt = dao.selectCnt(lesson_name);
+			int expcnt = 10;
+			assertTrue(cnt == expcnt);
+		} catch (FindException e) {
+		
+			e.printStackTrace();
+		
+		}
+		
+		
+		
+		
+	}
 }

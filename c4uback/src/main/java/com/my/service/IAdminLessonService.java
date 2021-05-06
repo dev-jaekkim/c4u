@@ -8,6 +8,7 @@ import com.my.exception.ModifyException;
 import com.my.vo.Lesson;
 import com.my.vo.LessonPenalty;
 import com.my.vo.LessonPenaltyStatus;
+import com.my.vo.Notice;
 
 public interface IAdminLessonService {
 
@@ -28,6 +29,12 @@ public interface IAdminLessonService {
 	int findCnt() throws FindException;
 
 	List<Lesson> findLessonEvaluationList(int currentPage, int cnt_per_page, String word) throws FindException;
+
+	int findCnt(String word) throws FindException;
+
+	List<Lesson> findPerPage(int currentPage, int cnt_per_page) throws FindException;
+
+
 
 	
 

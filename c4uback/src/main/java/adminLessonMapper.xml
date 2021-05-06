@@ -123,9 +123,56 @@ WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row
 
 </select>
 
-<!-- 강좌심사 count -->
+<!-- 강좌심사 paging -->
 
-<select id="">
+<select id="selectPerPage" parameterType="java.util.HashMap" resultMap="lpssMap">
+SELECT * FROM
+(SELECT lesson_id,lesson_name,student_name,lesson_create_date,
+       lp_content,lessonps_date, row_number() OVER (ORDER BY lps.lessonps_date DESC) AS rnum
+FROM lesson l
+JOIN lesson_penalty_status lps
+     ON l.lesson_id = lps.lessonps_lesson_id
+JOIN lesson_penalty lp 
+     ON lps.lessonps_evaluation_id = lp.lp_id
+JOIN student s
+     ON l.lesson_teacher_id = s.student_id
+)
+WHERE rnum BETWEEN fun_start_row(#{currentPage},#{cnt_per_page}) AND fun_end_row(#{currentPage},#{cnt_per_page})
+
+</select>
+
+<!-- <select id="adminEvaluationCountStudentId" resultType="int">
+SELECT COUNT(*)
+FROM lesson
+JOIN lesson_penalty_status
+     ON lesson_id = lessonps_lesson_id
+JOIN lesson_penalty  
+     ON lessonps_evaluation_id = lp_id
+JOIN student
+     ON lesson_teacher_id = student_id
+WHERE student_id = {studentId}
+</select> -->
+
+<select id="adminEvaluationCount" resultType="int">
+SELECT COUNT(*)
+FROM lesson
+JOIN lesson_penalty_status
+     ON lesson_id = lessonps_lesson_id
+JOIN lesson_penalty  
+     ON lessonps_evaluation_id = lp_id
+JOIN student
+     ON lesson_teacher_id = student_id
+</select>
+<select id="adminEvaluationCountLessonName" resultType="int" parameterType = "java.util.HashMap">
+SELECT COUNT(*)
+FROM lesson
+JOIN lesson_penalty_status
+     ON lesson_id = lessonps_lesson_id
+JOIN lesson_penalty  
+     ON lessonps_evaluation_id = lp_id
+JOIN student
+     ON lesson_teacher_id = student_id
+WHERE lesson_name LIKE '%${lesson_name}%'
 
 </select>
 
