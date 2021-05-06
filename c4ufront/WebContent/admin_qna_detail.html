@@ -169,21 +169,56 @@
         });
         //--답변 달기 버튼 클릭 끝--
 
-
-        //--답변 삭제 버튼 클릭 시작--
-        $("div.admin_qna_detail>input.btqnacommentdelete").click(function(){
-            $("div.admin_qna_detail").hide();
-            $("div.admin_qna_detail_comment_remove").show();
-
+        //--답변 달기 창에서 답변 달기 시작--
+        $("#qna_modify_form").on("click","input.btqnadetailcommentregister",function(event){
+            var $modifyFormObj = $("#qna_modify_form");
+            var qnaId = $("div.admin_qna_detail_comment_remove div.admin_qna_detail_comment_remove_hidden_qnaId").html();
+            console.log("전달된 qnaId: "+qnaId);
+            
+            console.log("form 안에서 수정하기 버튼 클릭됨"); 
+            var modifyjsonObj = {};
+            var modifyformSerializeArray = $modifyFormObj.serializeArray();
+            console.log("formSerialzeArray: "+modifyformSerializeArray);
+            for(var i= 0; i<modifyformSerializeArray.length;i++){
+                var obj = modifyformSerializeArray[i];
+                console.log("obj 값"+ obj);
+                modifyjsonObj[obj.name] = obj.value;
+                console.log("for 문 안 jsonObj"+modifyjsonObj);
+            }
+            var data = JSON.stringify(modifyjsonObj);
+            console.log("수정 data: "+data);
+            $.ajax({
+            url: backContextPath +"/admin/qna/reply/"+qnaId,
+            "method": "PUT",
+            "transformRequest": [
+                null
+            ],
+            "transformResponse": [
+                null
+            ],
+            "jsonpCallbackParam": "callback",
+            "headers": {
+                "Accept": "application/json, text/plain, */*",
+                "Content-Type": "application/json;charset=utf-8"
+            },
+                data: data,
+            "timeout": {},
+            success:function(responseObj){
+                    alert("수정성공!");
+                    if(responseObj.status == 1){
+                        console.log("수정성공");
+                        $("#adm_qna").trigger("click");
+                    }else{
+                        alert(responseObj.msg);
+                    }
+                },
+                error:function(jqXHR){
+                    alert("에러:" + jqXHR.status);
+                }
+            }); //$.ajax
             return false;
         });
-        //--답변 삭제 버튼 클릭 끝--
-
-
-        //--답변 달기 창에서 답변 달기 시작--
-
         //--답변 달기 창에서 답변 달기 끝--
-
 
         //--답변 달기 창에서 답변 달기 취소 시작--
         $("div.admin_qna_detail_comment_modify span.btqnadeatilcommentmodifycancel").click(function(){
@@ -191,15 +226,58 @@
         });
         //--답변 달기 창에서 답변 달기 취소 끝--
 
+        //추후 구현
+        //--답변 삭제 버튼 클릭 시작--
+        // $("div.admin_qna_detail>input.btqnacommentdelete").click(function(){
+        //     $("div.admin_qna_detail").hide();
+        //     $("div.admin_qna_detail_comment_remove").show();
 
+        //     return false;
+        // });
+        //--답변 삭제 버튼 클릭 끝--
+        
+        //추후 구현
         //--답변 삭제 창에서 답변 삭제 시작--
-
+        // var $removeFormObj = $("div.admin_notice_remove>form");
+        // $removeFormObj.submit(function(){
+            
+        //     var noticeId = $("div.notice_board_no").html();
+            
+        //     // console.log("삭제 noticeId: "+noticeId);
+        //     $.ajax({
+        //         url: backContextPath +"/admin/notice/delete/"+noticeId,
+        //         "method": "PUT",
+        //         "transformRequest": [
+        //             null
+        //         ],
+        //         "transformResponse": [
+        //             null
+        //         ],
+        //         "jsonpCallbackParam": "callback",
+        //         "headers": {
+        //             "Accept": "application/json, text/plain, */*"
+        //         },
+        //         "timeout": {},
+        //         success:function(responseObj){
+        //             if(responseObj.status == 1){
+        //                 $("#adm_notice").trigger("click");
+        //             }else{
+        //                 alert(responseObj.msg);
+        //             }
+        //         },
+        //         error:function(jqXHR){
+        //             // alert("에러:" + jqXHR.status);
+        //             alert("삭제할 공지사항이 없습니다");
+        //         }
+        //     });//$.ajax
+        //     return false;
+        // });
         //--답변 삭제 창에서 답변 삭제 끝--
 
         //--답변 삭제 창에서 답변 삭제 취소 시작--
-        $("div.admin_qna_detail_comment_remove span.btqnadeatilcommentremovecancel").click(function(){
-            $("#adm_qna").trigger("click");
-        });
+        // $("div.admin_qna_detail_comment_remove span.btqnadeatilcommentremovecancel").click(function(){
+        //     $("#adm_qna").trigger("click");
+        // });
         //--답변 삭제 창에서 답변 삭제 취소 끝--
     });
 </script>
@@ -247,38 +325,41 @@
         <h1>1:1 문의 상세</h1>
     </div>
     <hr>
-    <div class="qna_detail_modify_info">
-        <div class="qna_detail_modify_title">
-            <span class="qna_detail_modify_span_heading">제목</span>
-            <span class="qna_detail_modify_span_title">강좌가 보이지 않습니다.</span>
-        </div>
-        <div class="qna_detail_modify_writer">
-            <span class="qna_detail_modify_span_heading">작성자</span>
-            <span class="qna_detail_modify_span_writer">코코넛</span>
-        </div>
-        <div class="qna_detail_modify_date">
-            <span class="qna_detail_modify_span_heading">작성일</span>
-            <span class="qna_detail_modify_span_date">2021-05-07 11:14:01</span>
-        </div>
-        <!-- <div class="qna_detail_modify_file">
-            <span class="qna_detail_modify_span_heading">첨부파일</span>
-            <span class="qna_detail_modify_span_file">a.jpg</span>
-        </div> -->
+    <form id="qna_modify_form">
+        <div class="qna_detail_modify_info">
+            <div class="qna_detail_modify_title">
+                <span class="qna_detail_modify_span_heading">제목</span>
+                <span class="qna_detail_modify_span_title">강좌가 보이지 않습니다.</span>
+            </div>
+            <div class="qna_detail_modify_writer">
+                <span class="qna_detail_modify_span_heading">작성자</span>
+                <span class="qna_detail_modify_span_writer">코코넛</span>
+            </div>
+            <div class="qna_detail_modify_date">
+                <span class="qna_detail_modify_span_heading">작성일</span>
+                <span class="qna_detail_modify_span_date">2021-05-07 11:14:01</span>
+            </div>
+            <!-- <div class="qna_detail_modify_file">
+                <span class="qna_detail_modify_span_heading">첨부파일</span>
+                <span class="qna_detail_modify_span_file">a.jpg</span>
+            </div> -->
 
-    </div>
-    <hr>
-    <div class="qna_detail_modify_content">
-        <span class="qna_detail_modify_content">
-            안녕하세요. 최근에 강의를 구입했는데 강좌가 보이지 않습니다.
-        </span>
-    </div>
-    <hr>
-    <div class="qna_detail_modify_comment">
-        <textarea placeholder="답변을 등록해주세요!" name="comment" class="input_comment"> </textarea>
-    </div>
-    <input type="button" value="등록" class="btqnadetailcommentregister">
-    <div class="admin_qna_detail_comment_remove_hidden_qnaId" style="display: none;"></div>
-    <span class="btqnadeatilcommentmodifycancel">취소</span>
+        </div>
+        <hr>
+        <div class="qna_detail_modify_content">
+            <span class="qna_detail_modify_content">
+                안녕하세요. 최근에 강의를 구입했는데 강좌가 보이지 않습니다.
+            </span>
+        </div>
+        <hr>
+
+        <div class="qna_detail_modify_comment">
+            <textarea placeholder="답변을 등록해주세요!" name="qnaComment" class="input_comment"> </textarea>
+        </div>
+        <input type="button" value="등록" class="btqnadetailcommentregister">
+        <div class="admin_qna_detail_comment_remove_hidden_qnaId" style="display: none;"></div>
+        <span class="btqnadeatilcommentmodifycancel">취소</span>
+    </form>
 </div>
 
 <div class="admin_qna_detail_comment_remove" style="display:none">

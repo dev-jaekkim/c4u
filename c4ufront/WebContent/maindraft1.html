@@ -14,7 +14,7 @@
             $("body>div>section>article").empty();
             var cp = 1;
             $.ajax ({
-                url : "./c4uback/lessonlist",
+                url : "/c4uback/lessonlist",
                 method: "get",
                 data: {"current_page" : cp},
                 success: function(responseObj){

@@ -137,7 +137,7 @@ ORDER BY l.lesson_id ASC
 </select>
 
 
-<!-- 내가갱설한 강좌 / 체크박스 -->
+<!-- 내가개설한 강좌 / 체크박스 -->
 
 <select id="selectByLessonStatus01234" resultType="map">
 SELECT l.lesson_id, c.category_name, l.lesson_name,

@@ -76,7 +76,7 @@ public class LessonListServlet extends HttpServlet {
 				List<Lesson> categorylist = (List<Lesson>) session.getAttribute("categorylessonlist");
 				request.setAttribute("categorylessonlist", categorylist);
 				for(Lesson lesson: categorylist) {
-					int totalPage = (int)(Math.ceil(totalData/dataPerPage)); //총페이지 수
+					int totalPage = (int)(Math.ceil((double)totalData/dataPerPage)); //총페이지 수
 					
 					//페이지 구하기
 					//시작 페이지 구하기
