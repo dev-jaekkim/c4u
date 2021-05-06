@@ -183,27 +183,24 @@
                 let currentPage = $(event.target).html();
                 $(".currentPage").val(currentPage);
                 $.ajax({
-                    url: "/c4uback/admin/studentlist/" + currentPage,
-                    "method": "GET",
-                    "transformRequest": [
-                        null
-                    ],
-                    "transformResponse": [
-                        null
-                    ],
-                    "jsonpCallbackParam": "callback",
-                    "headers": {
-                        "Accept": "application/json, text/plain, */*"
-                    },
-                    "timeout": {},
-                    "data": "",
-                    success: function (responseObj) {
-                        console.log(responseObj);
-                        showList(responseObj);
-                    },
-                    error: function (jqXHR) {
-                        console.log(jqXHR.status);
-                    }
+                	 "method": "GET",
+                	  "transformRequest": [
+                	    null
+                	  ],
+                	  "transformResponse": [
+                	    null
+                	  ],
+                	  "jsonpCallbackParam": "callback",
+                	  "url": "/c4uback/admin/studentlist/" + currentPage,
+                	  "headers": {
+                	    "Accept": "application/json, text/plain, */*"
+                	  },
+                	  "data": "",
+                	  "timeout": {},
+                	  success: function(responseObj){
+                		  console.log(responseObj);
+                		  showList(responseObj);
+                	  },
                 });
                 return false;
             });
@@ -317,6 +314,7 @@
                     return false;
                 } else {
                     $(responseObj.pgb.list).each(function (index, element) {
+                    	console.log(element);
                         let $trCopyObj = $trOriginObj.clone();
                         $trCopyObj.removeClass("slist_origin");
                         $trCopyObj.addClass("copy");

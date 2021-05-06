@@ -13,15 +13,15 @@
 <result property="studentPhone" column="student_phone"/>
 <result property="studentStatus" column="student_status"/>
 <collection property="penaltyStatus" ofType="com.my.vo.PenaltyStatus" autoMapping="true">
-	<id property="psId" column="ps_student_id" />
+	<id property="psId" column="ps_id" />
 </collection>
 </resultMap>
 
 <!-- 회원 전체 조회-->
 <select id="selectStudentList" resultMap="studentrm" >
 SELECT *
-FROM (SELECT student_id, student_email, student_name, student_phone, student_status, p.ps_student_id, row_number() OVER(ORDER BY student_id asc) AS rnum
-		FROM student s LEFT JOIN penalty_status p ON (s.student_id = p.ps_student_id)
+FROM (SELECT student_id, student_email, student_name, student_phone, student_status, p.ps_id, p.ps_student_id, row_number() OVER(ORDER BY student_id asc) AS rnum
+		FROM student s RIGHT JOIN penalty_status p ON (s.student_id = p.ps_student_id)
 		WHERE student_name NOT IN ('admin')
 	)
 WHERE rnum BETWEEN FUN_START_ROW(#{currentPage}, 10)
