@@ -106,11 +106,6 @@
             margin-top: 20px;
         }
 
-        .admin_review_list div.reviewsearch{
-            margin-left: 33%;
-            margin-top: 10px;
-            margin-bottom: 30px;
-        }
 
         .admin_review_list input.reviewbtsearch{
             width: 40px;
@@ -121,6 +116,19 @@
         .admin_review_list input.inputreviewsearch{
             width: 200px;
         }
+        .admin_review_list div.page_group\,.copy{
+       		margin-left: 35%;    
+       		margin-bottom: 10px;
+       		margin-top: 10px;   
+        }  
+        
+        /* 리뷰 검색 css */
+        body > section > div > form > div{
+            margin-left: 33%;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
     </style>
     <script>
         let frontContextPath = "http://localhost:8888/c4ufront";
@@ -299,14 +307,13 @@
                             showList(responseObj);
                             pageGroup(responseObj);
                             console.log("검색 버튼이 요청함"+responseObj);
-                            // if(responseObj.status = -1){ //Handler 해결 필요
-                            //     alert("검색 결과가 없습니다.");
-                            //     console.log("상태 확인");
-                            // }
+                            if(responseObj.status = -1){ //Handler 해결 필요
+                                alert("검색 결과가 없습니다.");
+                                $("#adm_review").trigger("click");                                  
+                            }
                         },
                         error: function(jqXHR){
-                            // alert("jqXHR status :"+ jqXHR.status);
-                            alert("검색 결과가 없습니다.");
+                            alert("jqXHR status :"+ jqXHR.status);
                         }
                 });
                 return false;
@@ -462,7 +469,7 @@
                     </tr>
                 </thead>
                 <tbody class="review_body">
-                    <tr class="review_body_tr, origin">
+                    <tr class="review_body_tr, origin" style="display: none">
                         <td class="review_body_date">2021-05-07</td>
                         <td class="review_body_lessontitle">FRONT 과정</td>
                         <td class="review_body_content">JAVA 재밌어요</td>

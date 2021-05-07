@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @Log4j
+@CrossOrigin("*")
 public class LessonReviewController {
 	@Autowired
 	LessonReviewService lessonReviewService;
@@ -36,7 +38,7 @@ public class LessonReviewController {
 		Map<String, Object> map = new HashMap<>();
 		int currentPage = 1;
 		int cnt_per_page = 10;
-		int totalCnt = lessonReviewService.findCnt(lesson_id);
+		int totalCnt = lessonReviewService.findCnt(lesson_id); 
 		List<LessonReview> list = null;
 		PageGroupBean<LessonReview> pgb = null;
 		

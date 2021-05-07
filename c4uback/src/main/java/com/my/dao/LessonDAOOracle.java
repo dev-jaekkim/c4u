@@ -5,10 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -18,19 +19,17 @@ import org.springframework.stereotype.Repository;
 import com.my.exception.AddException;
 import com.my.exception.FindException;
 import com.my.exception.ModifyException;
-import com.my.sql.MyConnection;
 import com.my.vo.Lesson;
 import com.my.vo.Student;
 
 import lombok.extern.log4j.Log4j;
+
 //수정
 @Repository
 @Log4j
 public class LessonDAOOracle implements LessonDAO {
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
-	@Autowired 
-	private Student student;
 
 	@Override
 	public List<Lesson> selectAll() throws FindException {
@@ -113,87 +112,106 @@ public class LessonDAOOracle implements LessonDAO {
 
 	@Override
 	public int selectCnt() throws FindException {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		SqlSession session =  null;
 		try {
-			con = MyConnection.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FindException(e.getMessage());
-		}
-		String selectAllCountSQL = "SELECT COUNT (*) FROM lesson";
-		try {
-			pstmt = con.prepareStatement(selectAllCountSQL);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				int selectAllCount = rs.getInt("COUNT(*)");
-				return selectAllCount;
-			}else {
+			session = sqlSessionFactory.openSession();
+			int cnt = session.selectOne("mybatis.LessonMapper.selectCnt");
+			if(cnt == 0) {
 				throw new FindException("강좌가 없습니다.");
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			return cnt;
+		}catch(Exception e) {
 			throw new FindException(e.getMessage());
 		}finally {
-			MyConnection.close(con,pstmt,rs);
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
+	
+	@Override
+	public int selectCnt(String word) throws FindException {
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("word", word);
+			int cnt = session.selectOne("mybatis.LessonMapper.selectByWordCnt", map);
+			return cnt;
+		}catch(Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 
 	@Override
-	public List<Lesson> selectPerPage(int currPage, int dataPerPage) throws FindException {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+	public List<Lesson> selectPerPage(int currentPage, int cnt_per_page) throws FindException {
+		SqlSession session = null;
 		try {
-			con = MyConnection.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FindException(e.getMessage());
-		}
-		String selectByPageSQL = "SELECT * FROM (SELECT LESSON_ID,LESSON_TEACHER_ID,LESSON_NAME,LESSON_TOTAL_AMOUNT,LESSON_TARGET_AMOUNT,LESSON_PARTICIPANT,LESSON_STATUS,LESSON_CREATE_DATE,LESSON_END_DATE,LESSON_START_DATE,LESSON_FEE,LESSON_DESCRIPTION,LESSON_CATEGORY_ID,LESSON_RECOMMEND_CNT, row_number() OVER (ORDER BY lesson_end_date) AS rnum FROM lesson WHERE lesson_status = 0) WHERE rnum BETWEEN fun_start_row(?, ?) AND fun_end_row(?, ?)";
-		List<Lesson> currPageList = new ArrayList<>();
-		try {
-			pstmt = con.prepareStatement(selectByPageSQL);
-			pstmt.setInt(1, currPage);
-			pstmt.setInt(2, dataPerPage);
-			pstmt.setInt(3, currPage);
-			pstmt.setInt(4, dataPerPage);
-			rs = pstmt.executeQuery();
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("currentPage", currentPage);
+			map.put("cnt_per_page", cnt_per_page);
+			List<Lesson> list = session.selectList("mybatis.LessonMapper.selectPerPage", map);
+			if(list.size() == 0) {
+				throw new FindException("강좌가 없습니다.");
+			}
+			session.commit();
 			Calendar enddate = Calendar.getInstance();
 			Calendar sysdate = Calendar.getInstance();
-			sysdate.setTime(new Date());
-			while(rs.next()) {
-				int lessonId = rs.getInt("lesson_id");
-				String lessonName = rs.getString("lesson_name");
-				int lessonTargetFee = rs.getInt("lesson_target_amount");
-				int lessonTotalFee = rs.getInt("lesson_total_amount");;
-				String lessonDescription = rs.getString("lesson_description");
-				Date lessonEnd = rs.getDate("lesson_end_date");
-				int categoryId = rs.getInt("lesson_category_id");
-				enddate.setTime(lessonEnd);
+			for(Lesson l : list) {
+				enddate.setTime(l.getLessonEnd());
 				long diffDays = (enddate.getTimeInMillis() - sysdate.getTimeInMillis()) / 1000 / (24*60*60);
 				if(diffDays < 0) {
 					diffDays = 0;
 				}
-				Lesson l = new Lesson(lessonId, lessonName, lessonDescription, lessonTargetFee, lessonTotalFee, lessonTotalFee * 100/lessonTargetFee, (int)diffDays, categoryId);
-				currPageList.add(l);
+				l.setDiffDays((int)diffDays);
 			}
-			if(currPageList.size() == 0) {
-				throw new FindException("강좌가 하나도 없습니다");
-			}
-			return currPageList;
-		} catch (SQLException e) {
-			e.printStackTrace();
+			return list;
+		}catch (Exception e){
 			throw new FindException(e.getMessage());
 		}finally {
-			MyConnection.close(con,pstmt,rs);
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 	
 	@Override
 	public List<Lesson> selectByUnionPerPage(String union, int currentPage, int cnt_per_page) throws FindException{
-		return null;
+		SqlSession session = null;
+		try {
+			session = sqlSessionFactory.openSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("union", union);
+			map.put("currentPage", currentPage);
+			map.put("cnt_per_page", cnt_per_page);
+			List<Lesson> list = session.selectList("mybatis.LessonMapper.selectByUnionPerPage", map);
+			if(list.size() == 0) {
+				throw new FindException("검색된 강좌가 없습니다.");
+			}
+			session.commit();
+			Calendar enddate = Calendar.getInstance();
+			Calendar sysdate = Calendar.getInstance();
+			for(Lesson l : list) {
+				enddate.setTime(l.getLessonEnd());
+				long diffDays = (enddate.getTimeInMillis() - sysdate.getTimeInMillis()) / 1000 / (24*60*60);
+				if(diffDays < 0) {
+					diffDays = 0;
+				}
+				l.setDiffDays((int)diffDays);
+			}
+			return list;
+		}catch (Exception e) {
+			throw new FindException(e.getMessage());
+		}finally {
+			if(session != null) {
+				session.close();
+			}
+		}
 	};
 
 	@Override
@@ -226,7 +244,6 @@ public class LessonDAOOracle implements LessonDAO {
 		}finally {
 			if(session != null) session.close();
 		}
-
 	}
 
 	@Override
@@ -298,9 +315,4 @@ public class LessonDAOOracle implements LessonDAO {
 		return 0;
 	}
 
-	@Override
-	public int selectCnt(String word) throws FindException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

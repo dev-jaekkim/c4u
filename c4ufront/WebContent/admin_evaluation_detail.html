@@ -147,7 +147,7 @@
 
             // sessionStorage.setItem("pagingNum", num); -> 리스트에 필요한 코드 
             let lessonId = sessionStorage.getItem("lessonId");
-            //$("input[name=lesson_id]").val(lessonId);
+            $("input[name=lesson_id]").val(lessonId);
             $(".header").load("admin_header.html");
             
 
@@ -161,8 +161,8 @@
                     null
                 ],
                 "jsonpCallbackParam": "callback",
-                // "url": "./c4uback/lesson/" + lessonId,
-                "url": "http://localhost:8888/c4uback/lesson/29",
+                "url": "/c4uback/lesson/" + lessonId,
+                //"url": "http://localhost:8888/c4uback/lesson/29",
                 "headers": {
                     "Accept": "application/json, text/plain, */*"
                 },
@@ -190,6 +190,7 @@
                     if (!(lsdata.lessonStatus == 3)) {
                         $(".permission, .reject").attr("id", "false");
                     }
+                    sessionStorage.clear();
                 },
                 error: function (jqXHR) {
                     console.log(jqXHR.status);

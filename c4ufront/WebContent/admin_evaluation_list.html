@@ -91,10 +91,24 @@
             font-weight: 800;
             text-align: center;
        }
+       .admin_evaluation_list div.page_group\,.copy{
+       		margin-left: 35%;    
+       		margin-bottom: 10px;
+       		margin-top: 10px;   
+       }       
+  
     </style>
     <script>
          let frontContextPath = "http://localhost:8888/c4ufront";
          let backContextPath = "http://localhost:8888/c4uback";
+         
+         $(document).on("click", ".lesson_ps",function(e){
+        	 var lessonId_val = $(e.target).siblings("td.lesson_id").html();
+             console.log(lessonId_val);
+             location.href = "./admin_evaluation_detail.html";
+             sessionStorage.setItem("lessonId", lessonId_val);
+             
+         });
          	
          $(function () {
         	if(adminLoginStatus()==-9){
@@ -105,6 +119,7 @@
         	//console.log("front 쿠키 정보 확인");
             $(".header").load("admin_header.html");
 
+            
             function showList(responseObj){
                 console.log(" admin_evaluation_list showList() 시작");
                 console.log(responseObj);
@@ -132,8 +147,13 @@
                         $trCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
                         $trCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
                         
-                        //복제본행의 내용 채우기 : 심사번호
-                        $trCopyObj.find("td.lesson_id").html(element.lesson.lessonId);
+                         //복제본행의 내용 채우기 : lesson_id
+                         $trCopyObj.find("td.lesson_id").html(element.lesson.lessonId);
+                         console.log("강좌번호"+element.lesson.lessonId);
+                       
+
+                       //복제본행의 내용 채우기 : rnum
+                        $trCopyObj.find("td.lesson_rnum").html(element.lesson.rnum);
                        //console.log("강좌번호"+element.lessonId);
                        
                         //복제본행의 내용 채우기 : 심사강좌제목
@@ -204,14 +224,16 @@
                 }else{
 
                 var $pageGroupCopyObj = $pageGroupOriginObj.clone(); //원본행겍체의 복제본 선언
-                $pageGroupOriginObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
-                $pageGroupOriginObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                $pageGroupCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                $pageGroupCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                //$pageGroupObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                //$pageGroupObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
 
                 var $prevArrowObj  = $pageGroupCopyObj.find("span.page_btprev"); //이전버튼 
                 var $nextArrowObj = $pageGroupCopyObj.find("span.page_btnext");  //다음버튼
 
                 //이전 화살표 show
-                if(startPage_val < cnt_per_page_group_val){
+                if(startPage_val > cnt_per_page_group_val){
                     $nextArrowObj.show();
                 }
 
@@ -239,7 +261,7 @@
             $pageGroupOriginObj.hide();
 
         };
-            alert("ajax 실행 전");
+            //alert("ajax 실행 전");
             $.ajax(
                 {
                 "url": backContextPath+"/admin/Evaluationlist",
@@ -264,7 +286,7 @@
                     alert(jqXHR.status);
                 }
             });
-            alert("ajax 실행 후");
+            //alert("ajax 실행 후");
             //검색버튼 클릭 시작
             $("section>div.admin_evaluation_list>form input[type=button]").click(function(){
                 $.ajax({
@@ -377,7 +399,8 @@
                 </thead>
                 <tbody class="lesson_list">               
                     <tr class="lesson_body_tr origin" style="display: none;">
-                        <td class="lesson_id">1</td>
+                        <td class="lesson_id" style="display: none;">1</td>
+                        <td class="lesson_rnum">1</td>
                         <td class="lesson_name">꽃 구입충동 생기는 러블릭 꽃병</td>
                         <td class="student_name">Park Geon-WOO</td>
                         <td class="lesson_create_date">2021-01-01</td>
@@ -387,11 +410,11 @@
                     </tr>
                 </tbody>
             </table>
-
+ <input type="hidden" class="lessonId">
         <div class="page_list">
             <div class="page_group, origin" style="display: none;">
                 <span class="page_btprev" style="display: none;">&#9664;</span> 
-                <span class="page_btnext" style="display: none;">&#9664;</span> 
+                <span class="page_btnext" style="display: none;">&#9654;</span> 
             </div>
         </div>
     <form>

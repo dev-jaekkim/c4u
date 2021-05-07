@@ -12,7 +12,7 @@ public interface CategoryDAO {
 	 * @return List<Category> 카테고리의 모든객체
 	 * @throws FindException 카테고리가 없으면 예외가 발생한다
 	 */
-	public abstract List<Category> selectAll() throws FindException;
+	List<Category> selectAll() throws FindException;
 	
 	/**<pre>-카테고리 아이디로 검색-
 	 * 저장소의 모든 강좌를 반환한다</pre>
@@ -20,5 +20,5 @@ public interface CategoryDAO {
 	 * @return List<Lesson> 강좌의 모든객체
 	 * @throws FindException 카테고리 아이디에 해당하는 강좌가 없으면 예외가 발생한다
 	 */
-	public abstract List<Lesson> selectById(int categoryId) throws FindException;
+	List<Lesson> selectById(int categoryId) throws FindException;
 }

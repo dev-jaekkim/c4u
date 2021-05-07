@@ -9,12 +9,12 @@
  	 <id property="lessonPsId" column="LESSONPS_ID"/>
 	 <result property="lessonPsDate" column="LESSONPS_DATE"/> 
 	 
-	 <association property="lessonPenalty" javaType="LessonPenalty">
+	 <association property="lessonPenalty" javaType="LessonPenalty" autoMapping="true">
 	 	<id property="lpId" column="LESSONPS_EVALUATION_ID"/>
 	 	<result property="lpContent" column="LP_CONTENT"/>
 	 </association>
 	 
-	 <association property="lesson" javaType="Lesson">
+	 <association property="lesson" javaType="Lesson" autoMapping="true">
 	  	<id property="lessonId" column="LESSONPS_LESSON_ID"/>
 	  	<result property="lessonId" column="LESSON_ID"/>
 	  	<result property="lessonName" column="LESSON_NAME"/>

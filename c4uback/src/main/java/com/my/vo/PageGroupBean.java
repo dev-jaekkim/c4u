@@ -18,10 +18,16 @@ public class PageGroupBean<T> {
 	public PageGroupBean() {
 		super();
 	}
-
+	
+	
 	public PageGroupBean(int totalCnt, int currentPage, List<T> list) {
 		this(totalCnt, currentPage, list, 10, 10);
 	}
+	
+	public PageGroupBean(int totalCnt, int currentPage, List<T> list, int cnt_per_page) {
+		this(totalCnt, currentPage, list, cnt_per_page, 10);
+	}
+	
 	public PageGroupBean(int totalCnt, 
 			int currentPage, 
 			List<T> list, 

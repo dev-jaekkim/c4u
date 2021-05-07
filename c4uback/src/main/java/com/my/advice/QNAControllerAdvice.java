@@ -14,7 +14,7 @@ public class QNAControllerAdvice {
 	@ExceptionHandler
 	public Map<String, Object> except(Exception e) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("status", -1);
+		map.put("status", -1); 
 		map.put("msg", e.getMessage());
 		return map;
 	}

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @Log4j
+@CrossOrigin("*")
 public class QNAController {
 	
 	@Autowired
@@ -56,7 +58,7 @@ public class QNAController {
 		
 		log.debug(pgb);
 		map.put("pgb", pgb);
-		map.put("status", 1);
+		map.put("status", 1); 
 		
 		return map;
 	}

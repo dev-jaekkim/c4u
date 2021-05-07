@@ -1,0 +1,148 @@
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+*{
+    list-style-type: none;
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+div.user_header {
+    font-family:'Raleway', sans-serif;
+    color : #222;
+    line-height : 1.5em;
+    font-weight:300;
+    background-color : white;
+    height : 100px;
+    align-items:center;
+    justify-content:center;
+}
+
+div.user_header li.menu_list {
+    background-color : white;
+    width : 140px;
+    text-align:center;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#category{
+display: inline-block;
+}
+
+#mypage{
+    display: inline-block;
+}
+
+#classopen{
+    display: inline-block;
+}
+
+#logo{
+    display: inline-block;
+    width : 300px;
+}
+
+#search{
+    display: inline-block;
+    background-color: lightgrey;
+    text-align:left;
+    width:200px;
+    border-radius:60px;
+    height: 40px;
+}
+
+#search>input {
+    display: inline-block;
+    background-color: lightgrey;
+    text-align:center;
+    width:200px;
+    border-radius:60px;
+    border-width: 0px;
+    height: 40px;
+}
+
+input:focus {
+    outline:none;
+}
+
+#login{
+    display: inline-block;
+}
+
+#join{
+    display: inline-block;
+}
+
+#mypage{
+    display: inline-block;
+}
+
+#logout{
+    display: inline-block;
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+    $(function(){
+        let backContextPath = "http://localhost:8888/c4uback";
+        let reactContextPath = "http://localhost:3000";
+        let frontContextPath = "http://localhost:8888/c4ufront";
+
+        $("#category").click(function(e){
+            location.href="관리자 메인페이지.html";
+        });
+        $("#classopen").click(function(e){
+            location.href="강좌개설하기.html";
+        });
+
+        $("#logo").click(function(e){
+            location.href= frontContextPath+"/mainpage.html";
+        });
+
+        $("#search").click(function(){
+            location.href="./admin_evaluation_list.html"; //심사할 강좌 리스트 화면으로 
+        });
+        $("#login").click(function(){
+            location.href= backContextPath+"/myLogin";
+        });
+        $("#join").click(function(){
+            location.href= frontContextPath+"/signup1.0.html";
+        });
+        $("#mypage").click(function(){
+            location.href= frontContextPath+"/mypage1.4.html";
+        });
+        $("#logout").click(function(){
+            $.ajax({
+                url: backContextPath+"/logout",
+                method: "GET",
+                success: function(data){
+                    alert("로그아웃 되었습니다");
+                    console.log(data);
+                    location.href="./mainpage.html";
+                }, 
+                error: function(data){
+                console.log(data.status);
+                }
+            }); //$.ajax
+            return false;
+        });
+    });
+</script>
+
+<div class="user_header">
+    <nav>
+        <ul>
+            <li class="menu_list" id="category">카테고리</li>
+            <li class="menu_list" id="classopen">강좌 개설하기</li>
+            <li class="menu_list" id="logo"><p style= "font-size: 25px; font-style: italic; font-weight: 700;">ClassForYou</p></li>
+            <li class="menu_list" id="search"><input type="text" placeholder = "강좌검색" name = "search"></li>
+            <li class="menu_list" id="login">로그인</li>
+            <li class="menu_list" id="join">회원가입</li>
+            <li class="menu_list" id="mypage">마이페이지</li>
+            <li class="menu_list" id="logout">로그아웃</li>
+        </ul>
+    </nav>
+</div>
