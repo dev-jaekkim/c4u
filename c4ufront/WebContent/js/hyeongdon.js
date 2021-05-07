@@ -61,17 +61,24 @@ function loginstatus(){
 		method: "get",
 		success:function(responseObj){
 			var status = responseObj.status;
-			//var logined = responseObj.loginInfo;
-			if(status == 1) {
-				$("header>article.mypage").show();
-				$("header>article.logout").show();				
-				$("header>article.login").hide();				
-				$("header>article.join").hide();
+			var logined = responseObj.studentId;
+			console.log("로그인 id체크"+logined);
+			console.log("loginstatus()체크: "+responseObj.status);
+			
+			var studentId = getCookie("studentId");
+			
+			if(studentId != null) {
+		 	$("#mypage").show();
+            $("#logout").show();            
+            $("#login").hide();            
+            $("#join").hide();
+
 			}else{
-				$("header>article.mypage").hide();
-				$("header>article.logout").hide();
-				$("header>article.login").show();
-				$("header>article.join").show();
+		  	$("#mypage").hide();
+            $("#logout").hide();
+            $("#login").show();
+            $("#join").show();
+
 			}
 		}
 	});

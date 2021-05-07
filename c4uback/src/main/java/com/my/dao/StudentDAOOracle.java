@@ -98,6 +98,7 @@ public class StudentDAOOracle implements StudentDAO {
 			}
 			return student;
 		}catch(Exception e) {
+			e.printStackTrace();
 			throw new FindException(e.getMessage());
 		}finally {
 			if(session != null) session.close();
