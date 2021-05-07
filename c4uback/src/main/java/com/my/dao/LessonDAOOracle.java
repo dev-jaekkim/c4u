@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,8 +21,11 @@ import com.my.exception.ModifyException;
 import com.my.sql.MyConnection;
 import com.my.vo.Lesson;
 import com.my.vo.Student;
+
+import lombok.extern.log4j.Log4j;
 //수정
 @Repository
+@Log4j
 public class LessonDAOOracle implements LessonDAO {
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
@@ -199,6 +201,7 @@ public class LessonDAOOracle implements LessonDAO {
 		SqlSession session = null;
 		try {
 			session = sqlSessionFactory.openSession();
+			log.info("--dao--" + lesson);
 			session.insert("mybatis.LessonMapper.insert", lesson);
 			session.commit();
 		}catch (Exception e){
@@ -292,6 +295,12 @@ public class LessonDAOOracle implements LessonDAO {
 
 	@Override
 	public int selectAllCount() throws FindException {
+		return 0;
+	}
+
+	@Override
+	public int selectCnt(String word) throws FindException {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 }
