@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,22 +24,26 @@ import com.my.vo.PageGroupBean;
 import lombok.extern.log4j.Log4j;
 
 @RestController
+
 @CrossOrigin("*")
 @Log4j
 public class LessonController {
 	@Autowired
 	private LessonService service;
 
-	@PostMapping(value = "/lesson/add")
-	public Map<String,Object> add(MultipartFile thumbnail, MultipartFile detail, Lesson lesson) throws Exception{
+	@PostMapping(value = "/lesson/add" )
+	public Map<String,Object> add(HttpServletRequest request, 
+			MultipartFile thumbnail,
+			MultipartFile detail, 
+			Lesson lesson) throws Exception{
 		log.info(lesson);
 		Map<String, Object> map = new HashMap<>();
 		String uploadFolder = "C:\\uploadFolder";
-		log.info("레슨 컨트롤러 lesson: " + lesson);
-		log.info("Upload File Name : " + thumbnail.getOriginalFilename());
-		log.info("Upload File Size : " + thumbnail.getSize());
-		log.info("Upload File Name : " + detail.getOriginalFilename());
-		log.info("Upload File Size : " + detail.getSize());
+//		log.info("레슨 컨트롤러 lesson: " + lesson);
+//		log.info("Upload File Name : " + thumbnail.getOriginalFilename());
+//		log.info("Upload File Size : " + thumbnail.getSize());
+//		log.info("Upload File Name : " + detail.getOriginalFilename());
+//		log.info("Upload File Size : " + detail.getSize());
 
 		service.add(lesson);
 

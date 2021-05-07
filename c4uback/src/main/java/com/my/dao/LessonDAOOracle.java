@@ -1,5 +1,11 @@
 package com.my.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +20,13 @@ import com.my.exception.AddException;
 import com.my.exception.FindException;
 import com.my.exception.ModifyException;
 import com.my.vo.Lesson;
+import com.my.vo.Student;
+
+import lombok.extern.log4j.Log4j;
 
 //수정
 @Repository
+@Log4j
 public class LessonDAOOracle implements LessonDAO {
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
@@ -209,6 +219,7 @@ public class LessonDAOOracle implements LessonDAO {
 		SqlSession session = null;
 		try {
 			session = sqlSessionFactory.openSession();
+			log.info("--dao--" + lesson);
 			session.insert("mybatis.LessonMapper.insert", lesson);
 			session.commit();
 		}catch (Exception e){
@@ -304,5 +315,4 @@ public class LessonDAOOracle implements LessonDAO {
 		return 0;
 	}
 
-	
 }
