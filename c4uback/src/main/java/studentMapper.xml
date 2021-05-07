@@ -90,7 +90,7 @@ WHERE student_id = #{studentId}
 			student_phone studentPhone,
 			student_status StudentStatus
 	FROM student 
-	WHERE student_email = #{student_mail}
+	WHERE student_email = #{studentEmail}
 </select>
 
 <!--이름으로 찾기-->

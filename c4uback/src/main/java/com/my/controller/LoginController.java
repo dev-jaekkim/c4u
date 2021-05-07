@@ -31,7 +31,6 @@ public class LoginController {
 			//error내용을 view에 전달
 			//model.addAttribute("error", "인증실패되었습니다"); //?
 			model.addAttribute("error", error);
-			
 		}
 		if(logout != null) { //로그아웃된 경우 
 			model.addAttribute("logout", "로그아웃되었습니다");
