@@ -27,44 +27,60 @@ public class LessonService implements ILessonService {
 	public Lesson findById(int lessonId) throws FindException {
 		return dao.selectById(lessonId);
 	}
-
+	
 	@Override
-	public List<Lesson> findUnion(String union) throws FindException {
+	public List<Lesson> findByUnion(String union) throws FindException {
 		return dao.selectByUnion(union);
 	}
-
+	
+	@Override
+	public int findCnt() throws FindException {
+		return dao.selectCnt();
+	}
+	
+	@Override
+	public int findCnt(String word) throws FindException {
+		return dao.selectCnt(word);
+	}
+	
 	@Override
 	public int findAllCount() throws FindException {
 		return dao.selectCnt();
 	}
 
 	@Override
-	public List<Lesson> findByPage(int currPage, int dataPerPage) throws FindException {
-		return dao.selectByPage(currPage, dataPerPage);
+	public List<Lesson> findPerPage(int currentPage, int cnt_per_page) throws FindException {
+		return dao.selectPerPage(currentPage, cnt_per_page);
+	}
+	
+	@Override
+	public List<Lesson> findByUnionPerPage(String union, int currentPage, int cnt_per_page) throws FindException {
+		return dao.selectByUnionPerPage(union, currentPage, cnt_per_page);
 	}
 
 	@Override
 	public List<Lesson> findBySearch(String word) throws FindException {
-
 		return dao.selectBySearch(word);
 	}
 
 	@Override
 	public List<Lesson> findByLessonStatus01234(int studentId, List<Integer> lesson_status) throws FindException {
-
 		return dao.selectByLessonStatus01234(studentId, lesson_status);
+	}
+	
+	@Override
+	public int findByTeacherIdCnt(int studentId) throws FindException {
+		return 0;
 	}
 
 	@Override
 	public List<Lesson> findByLessonOpen(int studentId) throws FindException {
-
 		return dao.selectByLessonOpen(studentId);
 	}
 
 	@Override
 	public void add(Lesson lesson) throws AddException {
 		dao.insert(lesson);
-
 	}
 
 	@Override
