@@ -294,4 +294,10 @@ public class LessonDAOOracle implements LessonDAO {
 	public int selectAllCount() throws FindException {
 		return 0;
 	}
+
+	@Override
+	public int selectCnt(String word) throws FindException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

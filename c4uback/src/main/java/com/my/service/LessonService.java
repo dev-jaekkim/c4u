@@ -40,7 +40,7 @@ public class LessonService implements ILessonService {
 
 	@Override
 	public List<Lesson> findByPage(int currPage, int dataPerPage) throws FindException {
-		return dao.selectByPage(currPage, dataPerPage);
+		return dao.selectPerPage(currPage, dataPerPage);
 	}
 
 	@Override
