@@ -1,303 +1,314 @@
-<!DOCTYPE html>
-<html>
-    <style>
-       @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
-    *{
-        list-style-type: none;
-        box-sizing: border-box;
-        padding: 0px;
-        margin: 0px;
-    }
-    body {
-        font-family:'Raleway', sans-serif;
-        color : #222;
-        line-height : 1.5em;
-        font-weight:300;
-    }
-    .container {
-        border : 1px solid white;
-        width : 1920px;
-        text-align:center;
-        vertical-align:middle;
-        display:table-cell;
-        justify-content:center;
-    }
-    header {
-        background-color : white;
-        height : 100px;
-        /* position: fixed; */
-        
-        align-items:center;
-        justify-content:center;
-    }
-
-    header article {
-        background-color : white;
-        width : 140px;
-        text-align:center;
-        margin-top: 30px;
-        font-size: 20px;
-        font-weight: bold;
-    }
-    .category{
-    display: inline-block;
-    }
-    .mypage{
-        display: inline-block;
-    }
-    .classopen{
-        display: inline-block;
-    }
-    .logo{
-        display: inline-block;
-        width : 300px;
-    }
-    .search{
-        display: inline-block;
-        background-color: lightgrey;
-        text-align:left;
-        width:200px;
-        border-radius:60px;
-        height: 40px;
-    }
-    .search>input {
-        display: inline-block;
-        background-color: lightgrey;
-        text-align:center;
-        width:200px;
-        border-radius:60px;
-        border-width: 0px;
-        height: 40px;
-    }
-    input:focus {outline:none;}
-    .login{
-        display: inline-block;
-    }
-    .join{
-        display: inline-block;
-    }
-    .mypage{
-        display: inline-block;
-    }
-    .logout{
-        display: inline-block;
-    }
-
-    .thebiggestbox {
-        /* padding-top: 50px; */
-    }
-
-    .pic {
-        width: 1040px;
-        height :350px;
-        background-image: url("./images/main.jpg");
-        display:inline-block;
-    }
-    .text {
-        width:250px;
-        height :350px;
-        background-color:white;
-        display:inline-block;
-    }
-    .classname1 {
-        display:inline-block;
-        width: 1080px;
-        text-align:left;
-    }
-    .classname1>article{
-        width:330px;
-        height:350px;
-        background-color:lightgrey;
-        display:inline-block;
-        margin:80px 15px 15px 15px;
-        text-align:left;
-    }
-
-    div.bg{
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        border: 1px solid;
-        left: 0px;
-        top: 50px;
-        width: 140px;
-        height: 610px;
-        margin: 10px;
-        overflow: auto;
-        /* 레이어 색깔 */
-        background-color: rgb(231, 231, 231, 0.5);
-        border-width: 0px;
-    }
-    div.bg>div.modal{
-        margin-top: 15px;
-    }
-    img {
-        width : 330px;
-        height : 240px;
-    }
-    input.seemore{
-        margin-left: 415px;
-        border: 0px; 
-        background-color: #A5E3E6; 
-        color: white;
-        height:50px; 
-        width:250px;
-        font-size: 18px;
-        font-weight: bold;
-    } 
-    </style>
-<head>
-    <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+*{
+    list-style-type: none;
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+body {
+    font-family:'Raleway', sans-serif;
+    color : #222;
+    line-height : 1.5em;
+    font-weight:300;
+}
+.container {
+    border : 1px solid white;
+    width : 1920px;
+    text-align:center;
+    vertical-align:middle;
+    display:table-cell;
+    justify-content:center;
+}
+header {
+    background-color : white;
+    height : 100px;
+    /* position: fixed; */
     
-    <script>
-        $(function(){
-            $("article.search>input[name=search]").keyup(function(e){if(e.keyCode == 13) search(); });
-        let $menuObj = $("header>article>a");
-        $menuObj.click(function(){
-            let hrefValue = $(this).attr("href");
-            switch(hrefValue) {
-            case 'categorylist':
-                $("div.bg").show();
-                $("div.modal").empty();
-                $.ajax({
-                    url: hrefValue,
-                    method: "get",
-                    success: function(responseObj){ //data는 응답내용, 성공응답
-                        if(responseObj.status == undefined) {
-                            var $tableObj = $("<table>");
-                            var arr = responseObj;
-                            var ct = 100;
-                            var tableData = '<tr>';
-                            $(arr).each(function(index, element){
-                                if(element.categoryId - ct < 10){
-                                    if(element.categoryId%100 == 0){
-                                        tableData += '<th>';
-                                        tableData += element.categoryName;
-                                        tableData += '</th>';
-                                        tableData += '<tr>';
-                                        tableData += '<td><input type="hidden" class="ctid" value="';
-                                        tableData += element.categoryId;
-                                        tableData += '">모든 ';
-                                        tableData += element.categoryName;
-                                        tableData += '</td>';
-                                        tableData += '</tr>';
-                                    }
-                                    if(element.categoryId%100 != 0){
-                                        tableData += '<td><input type="hidden" class="ctid" value="';
-                                        tableData += element.categoryId;
-                                        tableData += '">';
-                                        tableData += element.categoryName;  
-                                        tableData += "</td>";
-                                    }                                	
-                                ct += 100;
+    align-items:center;
+    justify-content:center;
+}
+
+header article {
+    background-color : white;
+    width : 140px;
+    text-align:center;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.category{
+display: inline-block;
+}
+.mypage{
+    display: inline-block;
+}
+.classopen{
+    display: inline-block;
+}
+.logo{
+    display: inline-block;
+    width : 300px;
+}
+.search{
+    display: inline-block;
+    background-color: lightgrey;
+    text-align:left;
+    width:200px;
+    border-radius:60px;
+    height: 40px;
+}
+.search>input {
+    display: inline-block;
+    background-color: lightgrey;
+    text-align:center;
+    width:200px;
+    border-radius:60px;
+    border-width: 0px;
+    height: 40px;
+}
+input:focus {outline:none;}
+.login{
+    display: inline-block;
+}
+.join{
+    display: inline-block;
+}
+.mypage{
+    display: inline-block;
+}
+.logout{
+    display: inline-block;
+}
+
+.thebiggestbox {
+    /* padding-top: 50px; */
+}
+
+.pic {
+    width: 1040px;
+    height :350px;
+    background-image: url("./images/main.jpg");
+    display:inline-block;
+}
+.text {
+    width:250px;
+    height :350px;
+    background-color:white;
+    display:inline-block;
+}
+.classname1 {
+    display:inline-block;
+    width: 1080px;
+    text-align:left;
+}
+.classname1>article{
+    width:330px;
+    height:350px;
+    background-color:lightgrey;
+    display:inline-block;
+    margin:80px 15px 15px 15px;
+    text-align:left;
+}
+
+div.bg{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    border: 1px solid;
+    left: 0px;
+    top: 50px;
+    width: 140px;
+    height: 610px;
+    margin: 10px;
+    overflow: auto;
+    /* 레이어 색깔 */
+    background-color: rgb(231, 231, 231, 0.5);
+    border-width: 0px;
+}
+div.bg>div.modal{
+    margin-top: 15px;
+}
+img {
+    width : 330px;
+    height : 240px;
+}
+input.seemore{
+    margin-left: 415px;
+    border: 0px; 
+    background-color: #A5E3E6; 
+    color: white;
+    height:50px; 
+    width:250px;
+    font-size: 18px;
+    font-weight: bold;
+} 
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    
+<script>
+    $(function(){
+        $("article.search>input[name=search]").keyup(function(e){if(e.keyCode == 13) search(); });
+    let $menuObj = $("header>article>a");
+    let backContextPath = "http://location:8888/c4uback";
+    let frontContextPath = "http://location:8888/c4ufront";
+    $menuObj.click(function(){
+        let hrefValue = $(this).attr("href");
+        switch(hrefValue) {
+        case 'categorylist':
+            $("div.bg").show();
+            $("div.modal").empty();
+            $.ajax({
+                "method": "GET",
+                "transformRequest": [
+                    null
+                ],
+                "transformResponse": [
+                    null
+                ],
+                "jsonpCallbackParam": "callback",
+                "url": backContextPath+"/lesson/categoryall",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*"
+                },
+                "data": "",
+                "timeout": {},
+                success: function(responseObj){ //data는 응답내용, 성공응답
+                    if(responseObj.status == 1) {
+                        var $tableObj = $("<table>");
+                        var arr = responseObj.category;
+                        var ct = 100;
+                        var tableData = '<tr>';
+                        $(arr).each(function(index, element){
+                            if(element.categoryId - ct < 10){
+                                if(element.categoryId%100 == 0){
+                                    tableData += '<th>';
+                                    tableData += element.categoryName;
+                                    tableData += '</th>';
+                                    tableData += '<tr>';
+                                    tableData += '<td><input type="hidden" class="ctid" value="';
+                                    tableData += element.categoryId;
+                                    tableData += '">모든 ';
+                                    tableData += element.categoryName;
+                                    tableData += '</td>';
+                                    tableData += '</tr>';
                                 }
-                            tableData += '</tr>';
-                            tableData += '<tr>';
-                            });
-                            console.log(tableData);
-                            tableData += '</tr>';
-                            $tableObj.html(tableData);
-                            $("div.modal").append($tableObj);
-                        }
-                        $("div.bg").toggleClass("hide");
-                        var $categoryNameObj = $("div.modal td");
-                        $categoryNameObj.click(function(event){
-                            $("section.classname1").empty();
-                            var categoryIdValue = $(event.target).find("input").val();
-                            $.ajax({
-                                url: "./categorylist",
-                                method: "post",
-                                data: {"categoryId": categoryIdValue},
-                                success: function(responseObj){
-                                    if(responseObj.status == undefined) {
-                                        console.log(responseObj);
-                                        $(responseObj).each(function(index, element){
-                                        //article객체생성
-                                        var $articleObj = $('<article>');
-                                        var articleHtml = "<ul>";
-                                        articleHtml += '<li>';
-                                        articleHtml += "<img src='./images/th"+ element.lesson_id +".jpg' alt='th" + element.lesson_id +".jpg'>";
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li><b>&nbsp;&nbsp;&nbsp;";
-                                        articleHtml += element.lesson_name;
-                                        articleHtml += "</b></li>";
-                                        articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
-                                        articleHtml += element.lesson_total_amount;
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
-                                        articleHtml += element.targetpercent + "%";
-                                        articleHtml += "</li>";
-                                        articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
-                                        articleHtml += element.lesson_diffdays + "일 남음";
-                                        articleHtml += "</li>";
-                                        
-                                        
-                                        articleHtml += "</ul>";
-                                        //    var idValue = getQuery 
-                                        //     data: {"lessonId" : idValue}
-                                        $articleObj.attr("class", element.lesson_id);
-                                        $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lesson_id+"'" );
-                                        $articleObj.html(articleHtml);
-
-                                        $("section.classname1").append($articleObj);
-
-                                        });
-                                        
-                                    }else if(responseObj.status == -1) {
-                                        console.log(responseObj.status);
-                                        var $categoryzeroObj = $('<article>');
-                                        var categoryzeroHtml = "<h5>해당 카테고리에 진행중인 강좌가 없습니다</h5>";
-                                        $categoryzeroObj.html(categoryzeroHtml);
-                                        $categoryzeroObj.css("background-color","white");
-                                        $("section.classname1").append($categoryzeroObj);
-                                    }
-                                    $("div.bg").hide();
-                                },
-                                error: function(jqXHR){ //실패응답
-                                    alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
-                                } 
-                            });
+                                if(element.categoryId%100 != 0){
+                                    tableData += '<td><input type="hidden" class="ctid" value="';
+                                    tableData += element.categoryId;
+                                    tableData += '">';
+                                    tableData += element.categoryName;  
+                                    tableData += "</td>";
+                                }                                	
+                            ct += 100;
+                            }
+                        tableData += '</tr>';
+                        tableData += '<tr>';
                         });
-                    },
-                    error: function(jqXHR){ //실패
-                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                        console.log(tableData);
+                        tableData += '</tr>';
+                        $tableObj.html(tableData);
+                        $("div.modal").append($tableObj);
                     }
-                });
-                return false;
-                break;
-            case 'logout' :
-                $.ajax({
-                    url : hrefValue,
-                    success: function(){
-                        location.href = "http://localhost:8888/C4U";
-                    },
-                    error: function(jqXHR){ //실패
-                        alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
-                    }
-                });
-                return false;
-                break;
-            }
-        });
+                    $("div.bg").toggleClass("hide");
+                    var $categoryNameObj = $("div.modal td");
+                    $categoryNameObj.click(function(event){
+                        $("section.classname1").empty();
+                        var categoryIdValue = $(event.target).find("input").val();
+                        $.ajax({
+                            "method": "GET",
+                            "transformRequest": [
+                                null
+                            ],
+                            "transformResponse": [
+                                null
+                            ],
+                            "jsonpCallbackParam": "callback",
+                            "url": backContextPath+"/lesson/category/"+categoryIdValue,
+                            "headers": {
+                                "Accept": "application/json, text/plain, */*"
+                            },
+                            "data": "",
+                            "timeout": {},
+                            success: function(responseObj){
+                                if(responseObj.status == 1) {
+                                    console.log(responseObj);
+                                    $(responseObj.list).each(function(index, element){
+                                    //article객체생성
+                                    var $articleObj = $('<article>');
+                                    var articleHtml = "<ul>";
+                                    articleHtml += '<li>';
+                                    articleHtml += "<img src='./images/th"+ element.lessonId +".jpg' alt='th" + element.lessonId +".jpg'>";
+                                    articleHtml += "</li>";
+                                    articleHtml += "<li><b>&nbsp;&nbsp;&nbsp;";
+                                    articleHtml += element.lessonName;
+                                    articleHtml += "</b></li>";
+                                    articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                    articleHtml += element.lessonTotalFee;
+                                    articleHtml += "</li>";
+                                    articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                    articleHtml += element.targetPercent + "%";
+                                    articleHtml += "</li>";
+                                    articleHtml += "<li>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                    articleHtml += element.diffDays + "일 남음";
+                                    articleHtml += "</li>";
+                                    
+                                    articleHtml += "</ul>";
+                                    $articleObj.attr("class", element.lessonId);
+                                    $articleObj.attr("onclick", "location.href='classdetail.html?lessonId=" + element.lessonId+"'" );
+                                    $articleObj.html(articleHtml);
+
+                                    $("section.classname1").append($articleObj);
+                                    });
+                                    
+                                }else if(responseObj.status == -1) {
+                                    console.log(responseObj.status);
+                                    var $categoryzeroObj = $('<article>');
+                                    var categoryzeroHtml = "<h5>해당 카테고리에 진행중인 강좌가 없습니다</h5>";
+                                    $categoryzeroObj.html(categoryzeroHtml);
+                                    $categoryzeroObj.css("background-color","white");
+                                    $("section.classname1").append($categoryzeroObj);
+                                }
+                                $("div.bg").hide();
+                            },
+                            error: function(jqXHR){ //실패응답
+                                alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                            } 
+                        });
+                    });
+                },
+                error: function(jqXHR){ //실패
+                    alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                }
+            });
+            return false;
+            break;
+        case 'logout' :
+            $.ajax({
+                url : hrefValue,
+                success: function(){
+                    location.href = backContextPath+"/logout";
+                },
+                error: function(jqXHR){ //실패
+                    alert("AJAX요청응답 실패 : 에러코드=" + jqXHR.status);
+                }
+            });
+            return false;
+            break;
+        }
     });
-    </script>
-</head>
+});
+</script>
 <body>
-
-    <!-- $("header>article.mypage").hide();
-				$("header>article.logout").hide();
-				$("header>article.login").show();
-				$("header>article.join").show(); -->
     <article class = "category"><a href="categorylist">카테고리</a></article>
-        <article class = "classopen"><a href="C4UOpeningACourse.html" onclick="window.open(this.href, '_blank', 'width=1100, height=600'); return false;">강좌 개설하기</a></article>
-        <article class = "logo"><a href="http://localhost:8888/C4U"><p style= "font-size: 25px; font-style: italic; font-weight: 700;">ClassForYou</p></a></article>
-        <article class = "search"><input type="text" placeholder = "강좌검색" name = "search"></article>
+    <!--보람 언니 코드로 바꾸기: 강좌 개설하기 localhost:3000/react?-->
+    <article class = "classopen"><a href="C4UOpeningACourse.html" onclick="window.open(this.href, '_blank', 'width=1100, height=600'); return false;">강좌 개설하기</a></article>
+    <article class = "logo"><a href="http://localhost:8888/c4ufront/mainpage.html"><p style= "font-size: 25px; font-style: italic; font-weight: 700;">ClassForYou</p></a></article>
+    <article class = "search"><input type="text" placeholder = "강좌검색" name = "search"></article>
 
-        <article class = "login"><a href="login.html">로그인</a></article>
-        <article class = "join"><a href="signup1.0.html">회원가입</a></article>
+    <article class = "login"><a href="http:localhost:8888/c4uback/myLogin">로그인</a></article>
+    <article class = "join"><a href="signup1.0.html">회원가입</a></article>
 
-        <article class = "mypage"><a href="mypage1.4.html">마이페이지</a></article>	
-        <article class = "logout"><a href="logout">로그아웃</a></article>
+    <article class = "mypage"><a href="mypage1.4.html">마이페이지</a></article>	
+    <article class = "logout"><a href="logout">로그아웃</a></article>
 </body>
-</html>

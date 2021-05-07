@@ -28,13 +28,13 @@ public class MyLoginSuccessHandler implements AuthenticationSuccessHandler {
 		String strAuth = authorities.get(0).getAuthority();
 		
 		Cookie cookie = new Cookie("auth", strAuth);
-        cookie.setPath("/"); //쿠키를 설정한 경로 root라고 생각하면 됨
+        cookie.setPath("/"); //쿠키를 설정한 경로 root라고 생각하면 됨 
         response.addCookie(cookie); //쿠키를 응답
 		
 		if (strAuth.equals("ROLE_ADMIN")) {
 			response.sendRedirect("http://localhost:8888/c4ufront/admin_evaluation_list.html");
 		}else {
-			response.sendRedirect("http://localhost:8888/c4ufront/maindraft1.html");
+			response.sendRedirect("http://localhost:8888/c4ufront/mainpage.html");
 		}
 	}
 }

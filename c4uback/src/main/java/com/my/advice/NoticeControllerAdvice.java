@@ -22,7 +22,7 @@ public class NoticeControllerAdvice {
 		Map<String, Object> map = new HashMap<>();
 		map.put("status", -1);
 		map.put("msg", e.getMessage());
-		return map;
+		return map; 
 	}
 	
 }
