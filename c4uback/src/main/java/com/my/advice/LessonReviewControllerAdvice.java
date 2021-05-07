@@ -16,6 +16,6 @@ public class LessonReviewControllerAdvice {
 		Map<String, Object> map = new HashMap<>();
 		map.put("status", -1);
 		map.put("msg", e.getMessage());
-		return map;
+		return map; 
 	}
 }

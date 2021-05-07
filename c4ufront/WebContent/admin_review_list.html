@@ -299,14 +299,13 @@
                             showList(responseObj);
                             pageGroup(responseObj);
                             console.log("검색 버튼이 요청함"+responseObj);
-                            // if(responseObj.status = -1){ //Handler 해결 필요
-                            //     alert("검색 결과가 없습니다.");
-                            //     console.log("상태 확인");
-                            // }
+                            if(responseObj.status = -1){ //Handler 해결 필요
+                                alert("검색 결과가 없습니다.");
+                                $("#adm_review").trigger("click");                                  
+                            }
                         },
                         error: function(jqXHR){
-                            // alert("jqXHR status :"+ jqXHR.status);
-                            alert("검색 결과가 없습니다.");
+                            alert("jqXHR status :"+ jqXHR.status);
                         }
                 });
                 return false;

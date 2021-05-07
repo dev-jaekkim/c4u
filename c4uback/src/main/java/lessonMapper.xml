@@ -62,11 +62,7 @@ SELECT lesson_id,
 FROM lesson l LEFT JOIN student s ON (l.lesson_teacher_id = s.student_id)
 			JOIN category c ON (l.lesson_category_id = c.category_id)
 WHERE lesson_id = #{lessonId}
-
-
-
 </select>
-
 
 <!--selectByUnion-->
 <select id="selectByUnion" resultMap="lessonrm" parameterType="java.lang.String">
@@ -77,6 +73,74 @@ OR lesson_category_id IN (SELECT category_id FROM category WHERE category_parent
 OR lesson_category_id IN (SELECT category_id FROM category WHERE category_name LIKE '%'||#{union}||'%')) 
 ORDER BY lesson_end_date
 </select>
+
+<!-- 메인페이지 - 페이징 DB에 저장된 강좌 개수 -->
+<select id="selectCnt" resultType="int">
+SELECT COUNT(*)
+FROM lesson
+WHERE lesson_status = 0
+</select>
+
+<!-- 메인페이지 - 검색용 페이징 DB에 저장된 강좌 개수 -->
+<select id="selectByWordCnt" resultType="int" parameterType="map">
+SELECT COUNT(*)
+FROM lesson JOIN category ON lesson_category_id = category_id
+            JOIN student ON lesson_teacher_id = student_id
+WHERE lesson_name LIKE '%${word}%'
+	  OR category_name LIKE '%${word}%'
+	  OR student_name LIKE '%${word}%'  
+</select>
+
+<!-- 메인페이지 - 페이징 처리 -->
+<select id="selectPerPage" resultMap="lessonrm" parameterType="map">
+SELECT * 
+FROM (SELECT LESSON_ID,LESSON_TEACHER_ID,LESSON_NAME,LESSON_TOTAL_AMOUNT,LESSON_TARGET_AMOUNT,LESSON_PARTICIPANT,LESSON_STATUS,LESSON_CREATE_DATE,LESSON_END_DATE,LESSON_START_DATE,LESSON_FEE,LESSON_DESCRIPTION,LESSON_CATEGORY_ID,LESSON_RECOMMEND_CNT, row_number() OVER (ORDER BY lesson_end_date) AS rnum 
+      FROM lesson 
+      WHERE lesson_status = 0) 
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select>
+
+<!-- 메인페이지 검색 페이징처리 -->
+<select id="selectByUnionPerPage" resultMap="lessonrm" parameterType="map">
+SELECT * 
+FROM (SELECT LESSON_ID,LESSON_TEACHER_ID,LESSON_NAME,LESSON_TOTAL_AMOUNT,LESSON_TARGET_AMOUNT,LESSON_PARTICIPANT,LESSON_STATUS,LESSON_CREATE_DATE,LESSON_END_DATE,LESSON_START_DATE,LESSON_FEE,LESSON_DESCRIPTION,LESSON_CATEGORY_ID,LESSON_RECOMMEND_CNT, row_number() OVER (ORDER BY lesson_end_date) AS rnum 
+      FROM lesson JOIN category ON lesson_category_id = category_id
+            	  JOIN student ON lesson_teacher_id = student_id
+      WHERE lesson_name LIKE '%${word}%'
+	  OR category_name LIKE '%${word}%'
+	  OR student_name LIKE '%${word}%') 
+WHERE rnum BETWEEN fun_start_row(#{currentPage}, #{cnt_per_page}) AND fun_end_row(#{currentPage}, #{cnt_per_page})
+</select>
+
+<!--개설하기-->
+<insert id="insert" parameterType="Lesson">
+	INSERT INTO lesson (lesson_id, 
+			lesson_teacher_id, 
+			lesson_name, 
+			lesson_target_amount, 
+			lesson_status, 
+			lesson_start_date, 
+	        lesson_fee, 
+			lesson_description,
+	        lesson_category_id)
+	VALUES (seq_lesson_id.NEXTVAL, #{studentId}, #{lessonName}, 
+        		#{lessonTargetFee}, 3, #{lessonStart}, 
+      	  		#{lessonFee}, #{lessonDescription},
+        		#{lessonCategory})
+</insert>
+
+<!--재심사 신청-->
+<update id="update" parameterType="Lesson">
+	UPDATE lesson
+	<set>
+		<if test="lessonName != null"> lesson_name =#{lessonName}, </if>
+		<if test="lessonTargetFee != null"> lesson_target_amount = #{lessonTargetFee}, </if>
+		<if test="lessonStart != null"> lesson_start_date = #{lessonStart}, </if>
+		<if test="lessonFee != null"> lesson_fee = #{lessonFee}, </if>
+		<if test="lessonDescription != null"> lesson_description = #{lessonDescription} </if>
+	</set>
+	WHERE lesson_id =#{lessonId} 
+</update>
 
 <!--내가 개설한 강좌  -->
 <select id="selectByLessonOpen" resultType="map">
@@ -136,9 +200,7 @@ AND l.lesson_status = #{lesson_status}
 ORDER BY l.lesson_id ASC
 </select>
 
-
 <!-- 내가개설한 강좌 / 체크박스 -->
-
 <select id="selectByLessonStatus01234" resultType="map">
 SELECT l.lesson_id, c.category_name, l.lesson_name,
        l.lesson_start_date,l.lesson_create_date,l.lesson_end_date,
@@ -162,37 +224,6 @@ lesson_status IN
 </foreach>
 ORDER BY l.lesson_id ASC
 </select>
-
-<!--개설하기-->
-<insert id="insert" parameterType="Lesson">
-	INSERT INTO lesson (lesson_id, 
-			lesson_teacher_id, 
-			lesson_name, 
-			lesson_target_amount, 
-			lesson_status, 
-			lesson_start_date, 
-	        lesson_fee, 
-			lesson_description,
-	        lesson_category_id)
-	VALUES (seq_lesson_id.NEXTVAL, #{studentId}, #{lessonName}, 
-        		#{lessonTargetFee}, 3, #{lessonStart}, 
-      	  		#{lessonFee}, #{lessonDescription},
-        		#{lessonCategory})
-</insert>
-
-<!--재심사 신청-->
-<update id="update" parameterType="Lesson">
-	UPDATE lesson
-	<set>
-		<if test="lessonName != null"> lesson_name =#{lessonName}, </if>
-		<if test="lessonTargetFee != null"> lesson_target_amount = #{lessonTargetFee}, </if>
-		<if test="lessonStart != null"> lesson_start_date = #{lessonStart}, </if>
-		<if test="lessonFee != null"> lesson_fee = #{lessonFee}, </if>
-		<if test="lessonDescription != null"> lesson_description = #{lessonDescription} </if>
-	</set>
-	WHERE lesson_id =#{lessonId} 
-</update>
-
 </mapper>
 
 

@@ -32,14 +32,14 @@ public interface LessonDAO {
 	 */
 	List<Lesson> selectByUnion(String union) throws FindException;
 	
-	/** 사용자 사용
+	/** (SPRING) 사용자 사용
 	 * 메인페이지 페이징 처리를 위하여, 강좌 리스트 전체 조회
 	 * @return int DB에 저장된 강좌 개수 (개설된 강좌만 조회)
 	 * @throws FindException 개설된 강좌가 없으면, 예외가 발생한다.
 	 */
 	int selectCnt() throws FindException;
 	
-	/** 사용자 사용
+	/** (SPRING) 사용자 사용
 	 * 메인 페이지 강좌 검색 시 페이징 처리를 위하여, 검색된 강좌 리스트 전체 조회
 	 * @param word 검색 단어
 	 * @return int DB에 검색된 word와 일치하는 검색 결과
@@ -47,7 +47,7 @@ public interface LessonDAO {
 	 */
 	int selectCnt(String word) throws FindException;
 	
-	/** 사용자 사용
+	/** (SPRING) 사용자 사용
 	 * 메인페이지 현재 개설된 강좌를 보여준다.(페이지별로)
 	 * @param currentPage 메인 페이지의 강좌 리스트 현재 페이지
 	 * @param cnt_per_page 한 페이지 당 존재하는 게시물 수 
@@ -56,7 +56,7 @@ public interface LessonDAO {
 	 */
 	List<Lesson> selectPerPage(int currentPage, int cnt_per_page) throws FindException;
 	
-	/** 사용자 사용
+	/** (SPRING) 사용자 사용
 	 * 메인페이지 검색 결과를 페이지별로 보여준다. 
 	 * @param union 검색 단어
 	 * @param currentPage 검색된 강좌의 강좌 리스트 현재 페이지
@@ -107,12 +107,12 @@ public interface LessonDAO {
 	 */
 	List<Lesson> selectBySearch(String word) throws FindException;
 	
-	/*(SPRING)
+	/**
+	 * (SPRING)
 	 * @param studentId
 	 * @param lesson_status
 	 * @return
 	 * @throws FindException 해당 아이디에 개설한 강좌가 없을때 예외 발생
-	 * 
 	 */
 	List<Lesson> selectByLessonStatus01234 (int studentId, List<Integer> lesson_status) throws FindException;
 

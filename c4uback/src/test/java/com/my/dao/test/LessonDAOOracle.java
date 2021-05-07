@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.my.dao.CategoryDAO;
 import com.my.dao.LessonDAO;
@@ -50,7 +49,7 @@ public class LessonDAOOracle {
 		assertEquals(expListSize, list.size());
 	}
 	
-	@Test
+//	@Test
 	public void selectById() throws FindException {
 		int lessonId = 35;
 		Lesson lesson =dao.selectById(lessonId);
@@ -69,6 +68,32 @@ public class LessonDAOOracle {
 		int expListSize = 1;
 		assertEquals(expListSize, list.size());
 	}
+	
+//	@Test
+	public void selectCnt() throws FindException{
+		int cnt= dao.selectCnt();
+		int expCnt = 4;
+		equals(expCnt == cnt);
+	}
+	
+//	@Test
+	public void selectByWordCnt() throws FindException{
+		String word = "꽃";
+		int cnt = dao.selectCnt(word);
+		int expCnt = 2;
+		equals(expCnt == cnt);
+	}
+	
+//	@Test
+	public void selectPerPage() throws FindException{
+		int currentPage = 1;
+		int cnt_per_page = 2;
+		List<Lesson> list = dao.selectPerPage(currentPage, cnt_per_page);
+		
+		int expSize = 2;
+		equals(expSize == list.size());
+	}
+	
 
 	//@Test
 	public void insert() throws AddException, FindException, ParseException{
