@@ -56,6 +56,7 @@ public class LessonService implements ILessonService {
 	@Override
 	public List<Lesson> findByUnionPerPage(String union, int currentPage, int cnt_per_page) throws FindException {
 		return dao.selectByUnionPerPage(union, currentPage, cnt_per_page);
+
 	}
 
 	@Override

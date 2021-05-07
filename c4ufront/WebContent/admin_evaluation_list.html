@@ -204,8 +204,10 @@
                 }else{
 
                 var $pageGroupCopyObj = $pageGroupOriginObj.clone(); //원본행겍체의 복제본 선언
-                $pageGroupOriginObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
-                $pageGroupOriginObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                $pageGroupCopyObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                $pageGroupCopyObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
+                //$pageGroupObj.addClass("copy"); //복제본행의 클래스속성으로 copy설정
+                //$pageGroupObj.removeClass("origin"); //복제본행의 클래스속성중 origin제거
 
                 var $prevArrowObj  = $pageGroupCopyObj.find("span.page_btprev"); //이전버튼 
                 var $nextArrowObj = $pageGroupCopyObj.find("span.page_btnext");  //다음버튼
