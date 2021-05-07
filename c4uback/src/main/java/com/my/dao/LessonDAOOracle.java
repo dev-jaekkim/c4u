@@ -304,9 +304,5 @@ public class LessonDAOOracle implements LessonDAO {
 		return 0;
 	}
 
-	@Override
-	public int selectCnt(String word) throws FindException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 }
