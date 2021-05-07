@@ -31,11 +31,16 @@ public class LoginStatus {
 
 		Map<String, Object> map = new HashMap<>();
 		HttpSession session = request.getSession();
-		String loginedId = (String) session.getAttribute("loginInfo");
-
-		if (loginedId != null) {
+//		String loginedId = (String) session.getAttribute("loginInfo");
+		
+		Integer wrapperStudent_id = (Integer)session.getAttribute("loginInfo");
+		
+		
+		
+		if (wrapperStudent_id != null) {
 			log.debug("로그인O, 권한 O");
 			map.put("status", 1);
+			map.put("studentId", wrapperStudent_id);
 		} else {
 			log.debug("로그인X, 권한 X");
 			map.put("status", -1);
